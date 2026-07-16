@@ -1,0 +1,2129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul Ajar Digital - SDIT Gema Insan Mandiri</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome untuk Icon -->
+    <link class="no-print" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-area {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                background: white !important;
+                color: black !important;
+            }
+            body {
+                background: white !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col text-slate-800 transition-colors duration-200">
+
+    <!-- NOTIFIKASI TOAST -->
+    <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <!-- HEADER / NAVIGATION (no-print) -->
+    <nav class="bg-indigo-900 text-white shadow-md no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Brand -->
+                <div class="flex items-center gap-3">
+                    <div class="bg-white text-indigo-900 p-2 rounded-lg font-bold text-xl shadow">
+                        <i class="fa-solid fa-graduation-cap"></i> MAD
+                    </div>
+                    <div>
+                        <span class="font-bold text-lg tracking-wide block leading-none">Modul Ajar Digital</span>
+                        <span class="text-xs text-indigo-200">SDIT Gema Insan Mandiri</span>
+                    </div>
+                </div>
+
+                <!-- Info User Aktif -->
+                <div class="flex items-center gap-4">
+                    <div id="nav-user-info" class="hidden sm:flex flex-col text-right">
+                        <span id="nav-user-name" class="font-semibold text-sm">Nama User</span>
+                        <span id="nav-user-role" class="text-xs text-indigo-300">Role</span>
+                    </div>
+                    <button id="btn-logout" onclick="logout()" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 flex items-center gap-2">
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- AREA UTAMA -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- 1. HALAMAN LOGIN (Awal Aplikasi) -->
+        <div id="page-login" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
+            <div class="text-center mb-8">
+                <div class="inline-flex bg-indigo-100 text-indigo-800 p-4 rounded-full mb-3 text-3xl">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Guru</h2>
+                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun simulasi Anda</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username / NIP</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-user"></i>
+                        </span>
+                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username/NIP">
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                            <i class="fa-solid fa-lock"></i>
+                        </span>
+                        <input type="password" id="login-password" required class="w-full pl-10 pr-10 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility('login-password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600">
+                            <i class="fa-solid fa-eye" id="login-password-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-indigo-500/20 transition duration-150">
+                    Masuk Sekarang <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
+                </button>
+            </form>
+        </div>
+
+        <!-- 2. DASHBOARD ADMIN -->
+        <div id="page-admin-dashboard" class="hidden no-print space-y-6">
+            <!-- Ringkasan Statistik -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="p-4 bg-indigo-100 text-indigo-600 rounded-xl text-2xl">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Guru</p>
+                        <p id="stat-total-guru" class="text-2xl font-bold text-slate-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="p-4 bg-emerald-100 text-emerald-600 rounded-xl text-2xl">
+                        <i class="fa-solid fa-file-invoice"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Modul Ajar</p>
+                        <p id="stat-total-modul" class="text-2xl font-bold text-slate-800">0</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+                    <div class="p-4 bg-purple-100 text-purple-600 rounded-xl text-2xl">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Metode TTD Valid</p>
+                        <p class="text-lg font-bold text-indigo-700">QR Code Otomatis</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigasi Admin -->
+            <div class="flex border-b border-slate-200">
+                <button onclick="switchAdminTab('guru')" id="tab-admin-guru" class="px-6 py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear"></i> Manajemen Guru
+                </button>
+                <button onclick="switchAdminTab('ttd')" id="tab-admin-ttd" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-qrcode"></i> Kelola TTD & QR Barcode
+                </button>
+                <button onclick="switchAdminTab('profil')" id="tab-admin-profil" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-gears"></i> Pengaturan Sistem
+                </button>
+            </div>
+
+            <!-- Sub-Page: Manajemen Guru -->
+            <div id="sub-admin-guru" class="space-y-6">
+                <!-- Aksi & Impor Ekspor -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Database Master Guru</h3>
+                        <p class="text-xs text-slate-400">Kelola dan impor/ekspor massal database guru pendidik</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                        <button onclick="openModalGuru()" class="flex-grow md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Tambah Guru Manual
+                        </button>
+                        <button onclick="exportDataGuru()" class="flex-grow md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-excel"></i> Ekspor Data
+                        </button>
+                        <label class="flex-grow md:flex-none cursor-pointer bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-import"></i> Impor Data (CSV)
+                            <input type="file" id="import-guru-file" accept=".csv" onchange="importDataGuru(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Tabel Master Guru -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+                    <div class="p-4 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-3">
+                        <div class="relative w-full sm:w-64">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                                <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                            </span>
+                            <input type="text" id="search-guru" oninput="renderTableGuru()" class="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Cari Guru atau Mapel...">
+                        </div>
+                        <span class="text-xs text-slate-400" id="table-guru-info">Menampilkan 0 Guru</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 text-slate-400 uppercase text-[11px] font-bold tracking-wider border-b border-slate-100">
+                                    <th class="p-4">NIP/NIY</th>
+                                    <th class="p-4">Nama Lengkap</th>
+                                    <th class="p-4">Mata Pelajaran</th>
+                                    <th class="p-4">Username Akun</th>
+                                    <th class="p-4">Password Awal</th>
+                                    <th class="p-4 text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-guru-body" class="divide-y divide-slate-100 text-sm text-slate-600">
+                                <!-- Terisi dinamis -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-Page: Kelola TTD & QR Barcode -->
+            <div id="sub-admin-ttd" class="hidden space-y-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Pemberian Otorisasi Tanda Tangan QR Barcode</h3>
+                    <p class="text-xs text-slate-500">Sistem memetakan NIP/NIY guru dan Kepala Sekolah untuk secara otomatis digenerasikan menjadi QR Code Verifikasi Dokumen.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Pengaturan Guru -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <h4 class="font-bold text-sm text-indigo-950 flex items-center gap-2 pb-2 border-b">
+                            <i class="fa-solid fa-signature text-indigo-600"></i> Status QR Guru Pengampu
+                        </h4>
+                        <div id="admin-ttd-guru-list" class="space-y-3">
+                            <!-- Terisi dinamis status registrasi barcode guru -->
+                        </div>
+                    </div>
+
+                    <!-- Pengaturan Kepala Sekolah -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                        <h4 class="font-bold text-sm text-emerald-950 flex items-center gap-2 pb-2 border-b">
+                            <i class="fa-solid fa-qrcode text-emerald-600"></i> QR Barcode Kepala Sekolah
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kepala Sekolah Aktif</label>
+                                    <input type="text" id="admin-kepsek-name" value="Muhamad Fadlillah, S.Kom." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">NIY Kepala Sekolah</label>
+                                    <input type="text" id="admin-kepsek-niy" value="NIY.005.039.023" class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-indigo-500 focus:outline-none">
+                                </div>
+                            </div>
+                            <div class="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-xs flex gap-2 items-center">
+                                <i class="fa-solid fa-badge-check text-base"></i>
+                                <span>QR Barcode Keabsahan Kepala Sekolah aktif & terintegrasi ke modul cetak.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sub-Page: Pengaturan Sistem -->
+            <div id="sub-admin-profil" class="hidden max-w-xl bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-8">
+                <!-- BAGIAN 1: PENGATURAN TAHUN AJARAN (UNTUK JANGKA PANJANG) -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
+                        <i class="fa-regular fa-calendar-days text-indigo-600"></i> Pengaturan Tahun Ajaran Aktif
+                    </h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Tahun Ajaran Sistem Saat Ini</label>
+                            <input type="text" id="admin-tahun-ajaran" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: 2025/2026">
+                            <p class="text-[11px] text-slate-400 mt-1.5">Tahun ajaran ini akan menjadi nilai bawaan otomatis saat guru membuat rencana modul baru.</p>
+                        </div>
+                        <button type="button" onclick="saveTahunAjaran()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
+                            Simpan Tahun Ajaran Baru
+                        </button>
+                    </div>
+                </div>
+
+                <!-- BAGIAN 2: KEAMANAN ADMIN -->
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
+                        <i class="fa-solid fa-lock-open text-indigo-600"></i> Keamanan & Akun Admin
+                    </h3>
+                    <form onsubmit="handleUpdateProfilAdmin(event)">
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Username Admin Baru</label>
+                            <input type="text" id="admin-new-username" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Password Baru</label>
+                            <input type="password" id="admin-new-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan password baru">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
+                            <input type="password" id="admin-confirm-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Ulangi password baru">
+                        </div>
+                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition text-xs">
+                            Simpan Perubahan Akun
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. DASHBOARD GURU -->
+        <div id="page-guru-dashboard" class="hidden no-print space-y-6">
+            <!-- Header Guru Info -->
+            <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold" id="guru-welcome-name">Selamat Datang, Bapak/Ibu Guru</h2>
+                    <p class="text-sm text-emerald-100 flex items-center gap-2 mt-1">
+                        <i class="fa-solid fa-book-open"></i> Mata Pelajaran Diampu: <span id="guru-welcome-mapel" class="font-bold underline">-</span>
+                    </p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow animate-pulse">
+                        <i class="fa-solid fa-plus-circle"></i> Buat Modul Baru
+                    </button>
+                    <label class="flex-grow md:flex-none cursor-pointer bg-emerald-800 text-white hover:bg-emerald-900 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-file-import"></i> Impor Berkas (.json / .csv)
+                        <input type="file" id="import-modul-file" accept=".json,.csv" onchange="importDataModul(event)" class="hidden">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Daftar Modul Ajar -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-bold text-slate-900">Arsip Rencana Pelaksanaan Pembelajaran (Modul Ajar)</h3>
+                    <div class="flex gap-2">
+                        <button onclick="downloadJSONTemplate()" class="text-xs text-emerald-600 hover:text-emerald-800 border border-emerald-200 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1 font-bold">
+                            <i class="fa-solid fa-file-code"></i> Unduh Template (.json)
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="grid-modul" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Terisi dinamis -->
+                </div>
+
+                <div id="empty-state-modul" class="hidden text-center py-12">
+                    <div class="text-5xl text-slate-300 mb-3"><i class="fa-regular fa-folder-open"></i></div>
+                    <p class="text-slate-500 text-sm">Belum ada modul ajar yang dibuat.</p>
+                    <p class="text-slate-400 text-xs mt-1">Klik tombol "Buat Modul Baru" untuk memulai.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. HALAMAN CREATOR/EDITOR MODUL (FORM GURU) -->
+        <div id="page-modul-creator" class="hidden no-print space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <button onclick="backToGuruDashboard()" class="text-slate-500 hover:text-slate-800 font-semibold text-sm flex items-center gap-2 mb-2">
+                        <i class="fa-solid fa-arrow-left-long"></i> Kembali ke Dashboard
+                    </button>
+                    <h2 id="creator-title" class="text-2xl font-bold text-slate-900">Buat Modul Ajar Baru</h2>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <button onclick="saveModul()" class="flex-grow sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 shadow-md">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Modul
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Multi-Bagian -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form Inputs -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- BAGIAN 1: INFORMASI UMUM -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b border-slate-100">
+                            <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">1</span>
+                            Informasi Umum & Identitas Modul
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Materi Pokok / Judul Modul*</label>
+                                <input type="text" id="modul-judul" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Contoh: Jaringan Komputer dan Internet">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Penyusun (Guru)*</label>
+                                <input type="text" id="modul-penyusun" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Institusi / Sekolah*</label>
+                                <input type="text" id="modul-institusi" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="SDIT Gema Insan Mandiri">
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tahun Ajaran*</label>
+                                    <input type="text" id="modul-tahun" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="2025/2026">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Alokasi Waktu*</label>
+                                    <input type="text" id="modul-alokasi" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="2 JP X 35 Menit">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Jenjang Pendidikan*</label>
+                                <select id="modul-jenjang" class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                                    <option value="SD">SD</option>
+                                    <option value="SMP">SMP</option>
+                                    <option value="SMA">SMA</option>
+                                    <option value="SMK">SMK</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas / Semester / Fase*</label>
+                                <input type="text" id="modul-kelas" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="VI/II / Fase C">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Gambar Cover Utama Modul (Opsional)</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="modul-gambar-url" oninput="updateFormCoverPreview()" class="flex-grow px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="https://domain.com/gambar-ilustrasi.jpg atau pilih unggah file">
+                                    <label class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition font-sans">
+                                        <i class="fa-solid fa-cloud-arrow-up"></i> Unggah File
+                                        <input type="file" accept="image/*" onchange="uploadMainImage(event)" class="hidden">
+                                    </label>
+                                </div>
+                                <div id="form-cover-preview-container" class="mt-2 hidden border border-slate-100 rounded-lg p-1.5 bg-slate-50 inline-block">
+                                    <img id="form-cover-preview-img" src="" class="max-h-32 object-contain rounded" alt="Pratinjau Cover">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BAGIAN 2: POIN DINAMIS MODUL AJAR (Kustomisasi Poin Penting) -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+                                <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
+                                Komponen & Poin Inti Pembelajaran (Dinamis)
+                            </h3>
+                            <button onclick="addCustomPoin()" class="text-xs text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1">
+                                <i class="fa-solid fa-plus-circle"></i> Tambah Poin Kustom
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4 font-medium text-amber-700">Tips: Gunakan tombol "Unggah File" di samping input URL gambar ilustrasi untuk memasukkan gambar langsung dari HP/Laptop Anda tanpa ribet menggunakan link luar!</p>
+                        
+                        <div id="dynamic-points-container" class="space-y-4">
+                            <!-- Terisi komponen default yang bisa diedit/ditambah secara dinamis -->
+                        </div>
+                    </div>
+
+                    <!-- BAGIAN 3: VALIDASI & TANDA TANGAN -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b border-slate-100">
+                            <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">3</span>
+                            Pengesahan & Validasi Tanda Tangan Digital / Manual
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Pihak 1: Guru Pengampu -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <h4 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-1">
+                                    <i class="fa-solid fa-user-tie text-indigo-600"></i> Guru Kelas / Mata Pelajaran
+                                </h4>
+                                <div class="space-y-3 mb-4">
+                                    <div>
+                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Lengkap & Gelar*</label>
+                                        <input type="text" id="ttd-nama-guru" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Nama Guru">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP / NIY*</label>
+                                        <input type="text" id="ttd-nip-guru" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="NIP/NIY">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200 pt-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="ttd-check-guru" checked class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                                        <label for="ttd-check-guru" class="ml-2 text-xs text-indigo-900 font-bold">Gunakan QR-Barcode Validasi Sistem</label>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">Hilangkan ceklis jika ingin menggunakan kolom tanda tangan manual kosong tradisional.</p>
+                                </div>
+                            </div>
+
+                            <!-- Pihak 2: Kepala Sekolah -->
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                <h4 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-1">
+                                    <i class="fa-solid fa-user-shield text-emerald-600"></i> Kepala Sekolah (Pihak Pengesah)
+                                </h4>
+                                <div class="space-y-3 mb-4">
+                                    <div>
+                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Kepala Sekolah*</label>
+                                        <input type="text" id="ttd-nama-kepsek" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Nama Kepsek">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP / NIY*</label>
+                                        <input type="text" id="ttd-nip-kepsek" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="NIP/NIY Kepsek">
+                                    </div>
+                                </div>
+                                <div class="border-t border-slate-200 pt-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="ttd-check-kepsek" checked class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500">
+                                        <label for="ttd-check-kepsek" class="ml-2 text-xs text-emerald-900 font-bold">Gunakan QR-Barcode Validasi Sistem</label>
+                                    </div>
+                                    <p class="text-[10px] text-slate-400 mt-1">Hilangkan ceklis jika ingin menggunakan kolom tanda tangan manual kosong tradisional.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Preview Real-Time Modul -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 sticky top-4">
+                        <h3 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-1.5">
+                            <i class="fa-solid fa-eye text-indigo-600"></i> Mode Cetak Preview
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-4">Aplikasi ini menyusun ulang Modul Ajar ke dalam format cetakan fisik standar kurikulum.</p>
+                        
+                        <div class="border border-slate-100 rounded-xl p-4 bg-slate-50 text-center">
+                            <i class="fa-solid fa-file-pdf text-4xl text-red-500 mb-2"></i>
+                            <p class="text-xs font-bold text-slate-800">Cetak Modul format PDF Resmi</p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Disertai Kop Surat, Tabel Kegiatan, Rubrik Penilaian, Gambar Ilustrasi, dan Barcode Keabsahan Pilihan Anda.</p>
+                            <button onclick="previewFinalModul()" class="mt-4 w-full bg-slate-800 hover:bg-slate-950 text-white text-xs font-semibold py-2 rounded-lg transition font-sans">
+                                <i class="fa-solid fa-print"></i> Lihat Hasil Cetak
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. HALAMAN PREVIEW FINAL / CETAK (Bisa cetak langsung) -->
+        <div id="page-print-preview" class="hidden space-y-6">
+            <!-- Navigasi preview di atas dokumen (hanya nampak di web, tersembunyi saat cetak) -->
+            <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+                <button onclick="closePrintPreview()" class="text-slate-600 hover:text-slate-800 font-semibold text-sm flex items-center gap-1">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Form Penyuntingan
+                </button>
+                <div class="flex gap-2">
+                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
+                        <i class="fa-solid fa-print"></i> Cetak Dokumen (PDF)
+                    </button>
+                </div>
+            </div>
+
+            <!-- HALAMAN KERTAS UTAMA MODUL (Bentuk Cetak Dokumen) -->
+            <div class="print-area max-w-4xl mx-auto bg-white shadow-2xl p-8 sm:p-12 md:p-16 border border-slate-300 rounded-lg text-slate-900 leading-relaxed text-sm">
+                
+                <!-- Kop Surat / Header Dokumen -->
+                <div class="border-b-4 border-double border-slate-900 pb-4 text-center">
+                    <h1 class="text-lg font-bold uppercase tracking-wider">MODUL AJAR DIGITAL - KURIKULUM MERDEKA</h1>
+                    <p class="text-xs text-slate-600 mt-1 uppercase" id="print-header-sekolah">-</p>
+                    <p class="text-xs text-slate-400">Tahun Pelajaran: <span id="print-header-tahun">-</span></p>
+                </div>
+
+                <!-- Judul Utama Modul -->
+                <div class="my-8 text-center">
+                    <span class="text-xs bg-slate-100 text-slate-800 px-3 py-1 rounded-full uppercase font-bold tracking-widest border border-slate-200" id="print-badge-mapel">-</span>
+                    <h2 class="text-xl font-bold uppercase text-slate-900 mt-3" id="print-judul">-</h2>
+                    <p class="text-slate-500 text-[11px] mt-1" id="print-verification-status">Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-badge-check"></i> Barcode QR Terverifikasi Sistem</span></p>
+                </div>
+
+                <!-- Bagian 1: Informasi Umum -->
+                <div class="mb-8">
+                    <h3 class="text-sm font-bold text-indigo-900 border-b-2 border-indigo-900 pb-1 mb-3 uppercase tracking-wide">
+                        A. INFORMASI UMUM
+                    </h3>
+                    <div class="grid grid-cols-2 border border-slate-300 rounded-sm divide-x divide-slate-300">
+                        <div class="p-3 space-y-2.5">
+                            <div class="flex text-xs">
+                                <span class="w-1/3 font-bold text-slate-700">Institusi Sekolah</span>
+                                <span class="w-2/3" id="print-guru-sekolah">: -</span>
+                            </div>
+                            <div class="flex text-xs">
+                                <span class="w-1/3 font-bold text-slate-700">Kelas / Semester / Fase</span>
+                                <span class="w-2/3" id="print-guru-kelas">: -</span>
+                            </div>
+                        </div>
+                        <div class="p-3 space-y-2.5">
+                            <div class="flex text-xs">
+                                <span class="w-1/3 font-bold text-slate-700">Nama Penyusun</span>
+                                <span class="w-2/3" id="print-guru-name">: -</span>
+                            </div>
+                            <div class="flex text-xs">
+                                <span class="w-1/3 font-bold text-slate-700">Alokasi Waktu</span>
+                                <span class="w-2/3" id="print-guru-alokasi">: -</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Area Otomatis Menampilkan Gambar Ilustrasi Utama jika ada -->
+                <div id="print-image-container" class="hidden mb-8 text-center break-inside-avoid">
+                    <div class="border border-slate-200 rounded-lg p-2 inline-block bg-slate-50">
+                        <img id="print-modul-img" src="" class="max-h-64 object-contain mx-auto rounded" alt="Gambar Ilustrasi Modul Ajar">
+                        <p class="text-[10px] text-slate-400 mt-1 italic">Gambar Pendukung Utama Pembelajaran</p>
+                    </div>
+                </div>
+
+                <!-- Bagian 2: Konten Dinamis yang diinput guru -->
+                <div id="print-dynamic-sections" class="space-y-6">
+                    <!-- Terisi dinamis sesuai poin input -->
+                </div>
+
+                <!-- Bagian 3: Section Tanda Tangan Ganda Terintegrasi QR Code / Manual -->
+                <div class="mt-16 pt-8 border-t border-slate-200 break-inside-avoid">
+                    <div class="grid grid-cols-2 text-center text-xs gap-8">
+                        <!-- Tanda Tangan Kepala Sekolah (Kiri) -->
+                        <div class="flex flex-col items-center justify-between h-52">
+                            <div>
+                                <p class="text-slate-500 text-[11px]">Mengetahui,</p>
+                                <p class="font-bold">Kepala Sekolah</p>
+                            </div>
+                            
+                            <!-- Area QR Barcode Verifikasi / Manual TTD -->
+                            <div class="my-3 h-24 flex flex-col items-center justify-center">
+                                <div id="print-ttd-area-kepsek" class="flex flex-col items-center">
+                                    <!-- Terisi dinamis QR atau Tanda Tangan Manual -->
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-bold underline text-xs" id="print-nama-kepsek">NAMA KEPALA SEKOLAH</p>
+                                <p class="text-[10px] text-slate-600">NIY: <span id="print-nip-kepsek">-</span></p>
+                            </div>
+                        </div>
+
+                        <!-- Tanda Tangan Guru Pengampu (Kanan) -->
+                        <div class="flex flex-col items-center justify-between h-52">
+                            <div>
+                                <p class="text-slate-500 text-[11px]" id="print-date-today">Jakarta, -</p>
+                                <p class="font-bold">Guru Mata Pelajaran</p>
+                            </div>
+
+                            <!-- Area QR Barcode Verifikasi / Manual TTD -->
+                            <div class="my-3 h-24 flex flex-col items-center justify-center">
+                                <div id="print-ttd-area-guru" class="flex flex-col items-center">
+                                    <!-- Terisi dinamis QR atau Tanda Tangan Manual -->
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="font-bold underline text-xs" id="print-nama-guru">NAMA GURU</p>
+                                <p class="text-[10px] text-slate-600">NIY: <span id="print-nip-guru">-</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Footnote -->
+                <div class="mt-16 text-center text-[10px] text-slate-400 border-t border-slate-100 pt-4 flex justify-between items-center">
+                    <span>Aplikasi Modul Ajar Digital (MAD)</span>
+                    <span id="print-datetime">Dibuat otomatis secara digital</span>
+                    <span>SDIT Gema Insan Mandiri</span>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- FOOTER UTAMA (no-print) -->
+    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 no-print">
+        <p>© 2026 Modul Ajar Digital. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p class="mt-1">Dibuat untuk Efisiensi Administrasi Guru & Supervisi Sekolah Mandiri.</p>
+    </footer>
+
+    <!-- MODAL POPUP: TAMBAH / EDIT GURU -->
+    <div id="modal-guru" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl border border-slate-100 mx-4">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                <h3 id="modal-guru-title" class="text-lg font-bold text-slate-900">Tambah Guru Baru</h3>
+                <button onclick="closeModalGuru()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="saveGuru(event)">
+                <input type="hidden" id="guru-id">
+                
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NIY</label>
+                    <input type="text" id="guru-nip" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Contoh: NIY.005.054.024">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Guru Lengkap beserta Gelar</label>
+                    <input type="text" id="guru-nama" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Contoh: Suci Safina Suliasanu, S.Kom.">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Mata Pelajaran yang Diampu</label>
+                    <input type="text" id="guru-mapel" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Koding dan Kecerdasan Artifisial">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Username Login</label>
+                    <input type="text" id="guru-username" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="suci">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Awal Akun</label>
+                    <div class="relative">
+                        <input type="text" id="guru-password" required class="w-full px-3 py-2 pr-10 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Password login pertama kali">
+                        <button type="button" onclick="generateAutoPassword()" class="absolute inset-y-0 right-0 pr-3 flex items-center text-xs text-indigo-600 hover:text-indigo-800 font-bold">
+                            Auto
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeModalGuru()" class="w-1/2 border border-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition">Batal</button>
+                    <button type="submit" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- LOGIK SISTEM DAN STATE MANAGEMENT -->
+    <script>
+        // STATE INITIALIZATION DARI DATA PDF YANG DIUNGGAH
+        let admins = [
+            { id: 1, username: 'admin', password: 'admin123', role: 'admin' }
+        ];
+
+        let teachers = [
+            { id: 1, nip: 'NIY.005.054.024', nama_guru: 'Suci Safina Suliasanu, S.Kom.', username: 'suci', password: 'suci123', mata_pelajaran: 'Koding dan Kecerdasan Artifial', role: 'guru', verified: true }
+        ];
+
+        // VARIABEL STATE TAHUN AJARAN AKTIF SISTEM (DAPAT DIATUR ADMIN SECARA DINAMIS)
+        let active_tahun_ajaran = '2025/2026';
+
+        // SINKRONISASI DATA DARI MODUL AJAR GEMA INSAN MANDIRI DENGAN FORMAT TABEL YANG RAPI
+        let modul_ajar = [
+            {
+                id: 101,
+                teacher_id: 1,
+                judul_modul: 'Jaringan Komputer dan Internet',
+                kelas: 'VI/II / Fase C',
+                alokasi_waktu: '2 JP X 35 Menit',
+                nama_penyusun: 'Suci Safina Suliasanu, S.Kom.',
+                institusi: 'SDIT Gema Insan Mandiri',
+                tahun: '2025/2026',
+                jenjang: 'SD',
+                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: 'NIY.005.054.024' },
+                ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
+                nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
+                nip_kepsek: 'NIY.005.039.023',
+                gambar_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop', // default illustration image
+                details: [
+                    { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: 'Jaringan komputer, internet, modem Wi-Fi, keamanan online, keamanan jaringan.', component_img: 'https://images.unsplash.com/photo-1551703599-6b3dbb3f6a23?w=500&auto=format&fit=crop' },
+                    { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa: Senantiasa melaksanakan kewajiban yang diperintahkan Allah Swt.\nb. Berpikir Kritis: Tidak tertarik untuk melakukan kegiatan-kegiatan yang tidak bermanfaat.\nc. Bergotong Royong: Selalu menjaga kebersamaan dan saling menolong dalam kebaikan.\nd. Kreatif: Mempersiapkan diri untuk menjadi dewasa serta mampu melaksanakan semua kewajiban sesuai kemampuan.', component_img: '' },
+                    { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board\ne. Buku Pelajaran Koding dan Kecerdasan Artifisial kelas 6', component_img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop' },
+                    { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: 'a. Perangkat ini digunakan untuk mengajar peserta didik reguler.\nb. Jumlah peserta didik per kelas maksimum 30 orang.', component_img: '' },
+                    { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Model pembelajaran menggunakan Deep Learning yang menekankan pemahaman mendalam, bukan sekadar hafalan. Siswa diajak aktif bertanya, berdiskusi, dan berpikir kritis, sementara guru berperan sebagai pendamping dan fasilitator.', component_img: '' },
+                    { id: 6, nama_poin: 'Capaian Pembelajaran', isi_poin: 'Peserta didik mampu memahami konsep dasar, manfaat, and dampak teknologi digital, memahami sistem komputer tingkat pradasar, menerapkan pengamanan informasi pribadi dalam komunikasi daring, memanfaatkan internet dan memproduksi serta mendiseminasi konten digital dalam bentuk teks dan gambar.', component_img: '' },
+                    { id: 7, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'With studying this lesson, students are expected to:\na. Mengenal jaringan komputer.\nb. Mengenal perangkat jaringan.\nc. Menggunakan internet secara bertanggung jawab.\nd. Mengetahui aspek keamanan dalam penggunaan internet.', component_img: '' },
+                    { id: 8, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Peserta didik akan mempelajari cara berhubungan ke situs lewat internet, merawat modem wi-fi, menggunakan fasilitas internet secara bertanggung jawab, menjaga privasi data saat online.', component_img: '' },
+                    { id: 9, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah perangkat jaringan seperti modem wi-fi perlu perawatan?\n2. Apakah internet sebuah tempat yang aman?\n3. Bagaimana praktik yang baik saat berkomunikasi lewat internet?', component_img: '' },
+                    { 
+                        id: 10, 
+                        nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', 
+                        isTable: true,
+                        isi_poin: JSON.stringify([
+                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'a. Guru memasuki ruang kelas dengan ramah, kemudian mengucapkan salam kepada seluruh peserta didik.\nb. Guru menanyakan kabar peserta didik dan memastikan kesiapan mereka mengikuti pembelajaran.\nc. Guru memimpin doa, atau menunjuk salah satu peserta didik untuk memimpin doa sebelum belajar.\nd. Guru melakukan pengecekan kehadiran dengan memanggil nama peserta didik satu per satu.\ne. Guru mengajak peserta didik berdiri untuk menyanyikan salah satu lagu wajib nasional sebagai bentuk pembiasaan sikap cinta tanah air.\nf. Guru menjelaskan tujuan pembelajaran yang ingin dicapai pada pertemuan tersebut.\ng. Guru melakukan permainan singkat untuk meningkatkan antusiasme belajar.' },
+                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'a. Guru menayangkan video atau slide PPT yang berisi materi inti.\nb. Setelah video atau ppt selesai, guru memberikan beberapa pertanyaan untuk mengukur pemahaman awal peserta didik.\nc. Guru memberikan penjelasan tambahan, meluruskan konsep yang belum tepat, dan memperkaya pemahaman peserta didik.\nd. Peserta didik dibagi menjadi beberapa kelompok kecil untuk berdiskusi.\ne. Guru membagikan LKPD yang berisi tugas.\nf. Setiap kelompok mempresentasikan hasil diskusi di depan kelas.\ng. Ice breaking.' },
+                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Penyimpulan:\na. Guru memberikan beberapa soal atau pertanyaan untuk mengukur pemahaman peserta didik.\nb. Guru mengajak peserta didik merefleksikan apa yang sudah dipelajari.\nc. Guru bersama peserta didik menyimpulkan materi.\nd. Guru memberikan apresiasi dan koreksi atas partisipasi serta pemahaman peserta didik.\ne. Guru memimpin peserta didik untuk menutup pembelajaran dengan berdoa.\nf. Guru mengucapkan salam.' }
+                        ]),
+                        component_img: ''
+                    },
+                    { 
+                        id: 11, 
+                        nama_poin: 'Rubrik Penilaian Pembelajaran', 
+                        isRubric: true,
+                        isi_poin: JSON.stringify([
+                            { kriteria: 'Pemahaman Materi', s4: 'Menunjukkan pemahaman sangat jelas tentang materi jaringan komputer dan internet.', s3: 'Memahami materi dengan cukup jelas.', s2: 'Memahami sebagian materi.', s1: 'Tidak memahami materi.' },
+                            { kriteria: 'Kerjasama Kelompok', s4: 'Sangat aktif berkontribusi, menghargai pendapat teman, bekerja sama dengan harmonis.', s3: 'Berkontribusi baik, sesekali kurang aktif.', s2: 'Terlibat namun pasif, hanya bekerja jika diminta.', s1: 'Tidak bekerja sama, mengganggu atau tidak ikut kontribusi.' },
+                            { kriteria: 'Kerapihan & Ketepatan LKPD', s4: 'LKPD lengkap, rapi, bersih, jawaban tepat sesuai instruksi.', s3: 'Cukup rapi dan bersih, ada sedikit kesalahan kecil.', s2: 'Kurang rapi, beberapa jawaban tidak lengkap.', s1: 'Sangat tidak rapi, banyak jawaban kosong atau tidak sesuai instruksi.' },
+                            { kriteria: 'Presentasi atau Komunikasi', s4: 'Menjelaskan dengan lancar, percaya diri, informasi akurat dan mudah dipahami.', s3: 'Menjelaskan dengan cukup baik, beberapa bagian kurang jelas.', s2: 'Menjelaskan dengan terbata-bata, informasi tidak lengkap.', s1: 'Tidak mampu menjelaskan, hanya membaca atau diam.' }
+                        ]),
+                        component_img: ''
+                    },
+                    { id: 12, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan: Siswa diberikan soal analisis evaluasi tambahan dan kuis interaktif.\nRemedial: Guru membimbing kembali siswa yang memiliki skor pemahaman di bawah skala 2.4.', component_img: '' },
+                    { id: 13, nama_poin: 'Lampiran LKPD', isi_poin: 'a. Bagaimana cara menghubungkan komputer kita ke situs web melalui internet?\nb. Apa yang kamu ketahui tentang ISP? Sebutkan tiga operator seluler yang memberikan layanan internet!\nc. Sebutkan lima langkah praktik baik dalam merawat modem wi-fi!\nd. Menurutmu mengapa mengakses jaringan wi-fi orang lain tanpa izin merupakan tindakan yang tidak baik?\ne. Sebutkan lima langkah panduan yang baik saat menggunakan email!', component_img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&auto=format&fit=crop' }
+                ]
+            }
+        ];
+
+        let currentUser = null;
+        let selectedModulId = null;
+        let activeAdminTab = 'guru';
+
+        // COMPONENT DEFAULT UNTUK MODUL AJAR BARU
+        const DEFAULT_COMPONENTS = [
+            { nama_poin: 'Kompetensi Awal', isi_poin: '', component_img: '' },
+            { nama_poin: 'Profil Pelajar Pancasila', isi_poin: '', component_img: '' },
+            { nama_poin: 'Sarana dan Prasarana', isi_poin: '', component_img: '' },
+            { nama_poin: 'Target Peserta Didik', isi_poin: '', component_img: '' },
+            { nama_poin: 'Tujuan Pembelajaran', isi_poin: '', component_img: '' },
+            { nama_poin: 'Pemahaman Bermakna', isi_poin: '', component_img: '' },
+            { nama_poin: 'Pertanyaan Pemantik', isi_poin: '', component_img: '' },
+            { nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', isTable: true, isi_poin: JSON.stringify([
+                { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: '' },
+                { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: '' },
+                { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: '' }
+            ]), component_img: '' },
+            { nama_poin: 'Rubrik Penilaian Pembelajaran', isRubric: true, isi_poin: JSON.stringify([
+                { kriteria: 'Pemahaman Materi', s4: '', s3: '', s2: '', s1: '' },
+                { kriteria: 'Kerjasama Kelompok', s4: '', s3: '', s2: '', s1: '' }
+            ]), component_img: '' },
+            { nama_poin: 'Remedial & Pengayaan', isi_poin: '', component_img: '' },
+            { nama_poin: 'Lampiran LKPD', isi_poin: '', component_img: '' }
+        ];
+
+        // MOCK QR CODE GENERATION HELPER (SVG)
+        function generateQRCodeSVG(text) {
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = text.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            
+            let matrixSize = 21;
+            let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${matrixSize} ${matrixSize}" class="w-20 h-20">`;
+            svg += `<rect width="${matrixSize}" height="${matrixSize}" fill="white"/>`;
+            
+            // Kiri Atas
+            svg += `<rect x="0" y="0" width="7" height="7" fill="black"/>`;
+            svg += `<rect x="1" y="1" width="5" height="5" fill="white"/>`;
+            svg += `<rect x="2" y="2" width="3" height="3" fill="black"/>`;
+            
+            // Kanan Atas
+            svg += `<rect x="${matrixSize-7}" y="0" width="7" height="7" fill="black"/>`;
+            svg += `<rect x="${matrixSize-6}" y="1" width="5" height="5" fill="white"/>`;
+            svg += `<rect x="${matrixSize-5}" y="2" width="3" height="3" fill="black"/>`;
+            
+            // Kiri Bawah
+            svg += `<rect x="0" y="${matrixSize-7}" width="7" height="7" fill="black"/>`;
+            svg += `<rect x="1" y="${matrixSize-6}" width="5" height="5" fill="white"/>`;
+            svg += `<rect x="2" y="${matrixSize-5}" width="3" height="3" fill="black"/>`;
+            
+            for (let r = 0; r < matrixSize; r++) {
+                for (let c = 0; c < matrixSize; c++) {
+                    if ((r < 8 && c < 8) || (r < 8 && c > matrixSize - 9) || (r > matrixSize - 9 && c < 8)) {
+                        continue;
+                    }
+                    let val = Math.abs(Math.sin(hash + (r * 13) + (c * 37)));
+                    if (val > 0.48) {
+                        svg += `<rect x="${c}" y="${r}" width="1" height="1" fill="black"/>`;
+                    }
+                }
+            }
+            svg += `</svg>`;
+            return svg;
+        }
+
+        // ON LOAD INITIALIZATION
+        window.onload = function() {
+            navigate('page-login');
+            updateStatistics();
+        };
+
+        // NAVIGASI ANTAR HALAMAN
+        function navigate(pageId) {
+            document.getElementById('page-login').classList.add('hidden');
+            document.getElementById('page-admin-dashboard').classList.add('hidden');
+            document.getElementById('page-guru-dashboard').classList.add('hidden');
+            document.getElementById('page-modul-creator').classList.add('hidden');
+            document.getElementById('page-print-preview').classList.add('hidden');
+
+            document.getElementById(pageId).classList.remove('hidden');
+
+            const navUserInfo = document.getElementById('nav-user-info');
+            const btnLogout = document.getElementById('btn-logout');
+
+            if (currentUser) {
+                navUserInfo.classList.remove('hidden');
+                btnLogout.classList.remove('hidden');
+                document.getElementById('nav-user-name').innerText = currentUser.nama_guru || currentUser.username;
+                document.getElementById('nav-user-role').innerText = currentUser.role.toUpperCase() + (currentUser.mata_pelajaran ? ` - ${currentUser.mata_pelajaran}` : '');
+            } else {
+                navUserInfo.classList.add('hidden');
+                btnLogout.classList.add('hidden');
+            }
+        }
+
+        // SHOW/HIDE PASSWORD
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            const eye = document.getElementById(fieldId + '-eye');
+            if (field.type === 'password') {
+                field.type = 'text';
+                eye.classList.remove('fa-eye');
+                eye.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                eye.classList.remove('fa-eye-slash');
+                eye.classList.add('fa-eye');
+            }
+        }
+
+        // PROSES LOGIN
+        function handleLogin(event) {
+            event.preventDefault();
+            const userInp = document.getElementById('login-username').value.trim();
+            const passInp = document.getElementById('login-password').value.trim();
+
+            const adminAcc = admins.find(a => a.username === userInp && a.password === passInp);
+            if (adminAcc) {
+                currentUser = adminAcc;
+                showToast('Login Berhasil sebagai Administrator', 'success');
+                navigate('page-admin-dashboard');
+                switchAdminTab('guru');
+                renderTableGuru();
+                updateStatistics();
+                return;
+            }
+
+            const teacherAcc = teachers.find(t => (t.username === userInp || t.nip === userInp) && t.password === passInp);
+            if (teacherAcc) {
+                currentUser = teacherAcc;
+                showToast(`Login Berhasil. Pengampu: ${teacherAcc.nama_guru}`, 'success');
+                navigate('page-guru-dashboard');
+                renderGuruDashboard();
+                return;
+            }
+
+            showToast('Username atau password salah', 'error');
+        }
+
+        function logout() {
+            currentUser = null;
+            selectedModulId = null;
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            showToast('Anda telah logout dengan aman', 'info');
+            navigate('page-login');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgClass = 'bg-slate-800 text-white';
+            let icon = '<i class="fa-solid fa-circle-info"></i>';
+            if (type === 'success') {
+                bgClass = 'bg-emerald-600 text-white';
+                icon = '<i class="fa-solid fa-circle-check"></i>';
+            } else if (type === 'error') {
+                bgClass = 'bg-red-600 text-white';
+                icon = '<i class="fa-solid fa-triangle-exclamation"></i>';
+            }
+
+            toast.className = `${bgClass} flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-lg text-sm font-medium border border-white/10 transition-all duration-300 transform translate-y-2 opacity-0`;
+            toast.innerHTML = `${icon} <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', '-translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // ADMIN TAB SWITCH
+        function switchAdminTab(tab) {
+            activeAdminTab = tab;
+            const tabGuru = document.getElementById('tab-admin-guru');
+            const tabTtd = document.getElementById('tab-admin-ttd');
+            const tabProfil = document.getElementById('tab-admin-profil');
+            const subGuru = document.getElementById('sub-admin-guru');
+            const subTtd = document.getElementById('sub-admin-ttd');
+            const subProfil = document.getElementById('sub-admin-profil');
+
+            tabGuru.className = "px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+            tabTtd.className = "px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+            tabProfil.className = "px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2";
+            
+            subGuru.classList.add('hidden');
+            subTtd.classList.add('hidden');
+            subProfil.classList.add('hidden');
+
+            if (tab === 'guru') {
+                tabGuru.className = "px-6 py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center gap-2";
+                subGuru.classList.remove('hidden');
+                renderTableGuru();
+            } else if (tab === 'ttd') {
+                tabTtd.className = "px-6 py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center gap-2";
+                subTtd.classList.remove('hidden');
+                renderAdminTtdGuruList();
+            } else {
+                tabProfil.className = "px-6 py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center gap-2";
+                subProfil.classList.remove('hidden');
+                document.getElementById('admin-new-username').value = currentUser.username;
+                document.getElementById('admin-tahun-ajaran').value = active_tahun_ajaran;
+            }
+        }
+
+        // FUNGSI UPDATE TAHUN AJARAN AKTIF SISTEM OLEH ADMIN
+        function saveTahunAjaran() {
+            const val = document.getElementById('admin-tahun-ajaran').value.trim();
+            if (!val) {
+                showToast('Tahun Ajaran tidak boleh kosong', 'error');
+                return;
+            }
+            active_tahun_ajaran = val;
+            showToast(`Tahun Ajaran aktif berhasil diperbarui menjadi: ${val}`, 'success');
+        }
+
+        function renderAdminTtdGuruList() {
+            const container = document.getElementById('admin-ttd-guru-list');
+            container.innerHTML = '';
+            teachers.forEach(t => {
+                const div = document.createElement('div');
+                div.className = "p-3 bg-slate-50 rounded-lg flex items-center justify-between border border-slate-100";
+                div.innerHTML = `
+                    <div>
+                        <p class="text-xs font-bold text-slate-800">${t.nama_guru}</p>
+                        <p class="text-[10px] text-slate-500">NIY/NIP: ${t.nip}</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1 text-[10px] font-bold ${t.verified ? 'text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200' : 'text-slate-500 bg-slate-100 px-2 py-0.5 rounded'}">
+                            <i class="fa-solid ${t.verified ? 'fa-shield-check' : 'fa-clock'}"></i> QR-Barcode Aktif
+                        </span>
+                        <input type="checkbox" ${t.verified ? 'checked' : ''} onchange="toggleTeacherVerification(${t.id})" class="w-4 h-4 text-indigo-600 border-slate-300 rounded focus:ring-indigo-500">
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function toggleTeacherVerification(id) {
+            const idx = teachers.findIndex(t => t.id === id);
+            if (idx !== -1) {
+                teachers[idx].verified = !teachers[idx].verified;
+                showToast(`Otorisasi status verifikasi QR ${teachers[idx].nama_guru} diperbarui`, 'success');
+                renderAdminTtdGuruList();
+            }
+        }
+
+        function updateStatistics() {
+            document.getElementById('stat-total-guru').innerText = teachers.length;
+            document.getElementById('stat-total-modul').innerText = modul_ajar.length;
+        }
+
+        function renderTableGuru() {
+            const body = document.getElementById('table-guru-body');
+            const query = document.getElementById('search-guru').value.toLowerCase().trim();
+            body.innerHTML = '';
+
+            const filtered = teachers.filter(t => 
+                t.nama_guru.toLowerCase().includes(query) || 
+                t.mata_pelajaran.toLowerCase().includes(query) ||
+                t.nip.includes(query)
+            );
+
+            document.getElementById('table-guru-info').innerText = `Menampilkan ${filtered.length} dari ${teachers.length} Guru`;
+
+            if (filtered.length === 0) {
+                body.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">Tidak ada data guru ditemukan</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(guru => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-4 font-mono font-semibold text-xs">${guru.nip}</td>
+                    <td class="p-4 font-semibold text-slate-800">${guru.nama_guru}</td>
+                    <td class="p-4"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium border border-indigo-100">${guru.mata_pelajaran}</span></td>
+                    <td class="p-4 font-mono text-xs">${guru.username}</td>
+                    <td class="p-4 font-mono text-xs">${guru.password}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex justify-center gap-1.5">
+                            <button onclick="editGuru(${guru.id})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                                <i class="fa-solid fa-edit"></i>
+                            </button>
+                            <button onclick="deleteGuru(${guru.id})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                body.appendChild(tr);
+            });
+        }
+
+        function openModalGuru() {
+            document.getElementById('modal-guru-title').innerText = "Tambah Guru Baru";
+            document.getElementById('guru-id').value = '';
+            document.getElementById('guru-nip').value = '';
+            document.getElementById('guru-nama').value = '';
+            document.getElementById('guru-mapel').value = '';
+            document.getElementById('guru-username').value = '';
+            document.getElementById('guru-password').value = '';
+            document.getElementById('modal-guru').classList.remove('hidden');
+        }
+
+        function closeModalGuru() {
+            document.getElementById('modal-guru').classList.add('hidden');
+        }
+
+        function generateAutoPassword() {
+            const randomPass = 'gema' + Math.floor(100 + Math.random() * 900);
+            document.getElementById('guru-password').value = randomPass;
+        }
+
+        function saveGuru(event) {
+            event.preventDefault();
+            const id = document.getElementById('guru-id').value;
+            const nip = document.getElementById('guru-nip').value.trim();
+            const nama = document.getElementById('guru-nama').value.trim();
+            const mapel = document.getElementById('guru-mapel').value.trim();
+            const username = document.getElementById('guru-username').value.trim();
+            const password = document.getElementById('guru-password').value.trim();
+
+            if (id) {
+                const idx = teachers.findIndex(t => t.id == id);
+                if (idx !== -1) {
+                    teachers[idx] = { ...teachers[idx], nip, nama_guru: nama, mata_pelajaran: mapel, username, password };
+                    showToast('Data guru sukses diperbarui', 'success');
+                }
+            } else {
+                const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+                teachers.push({ id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true });
+                showToast('Guru baru terdaftar', 'success');
+            }
+
+            closeModalGuru();
+            renderTableGuru();
+            updateStatistics();
+        }
+
+        function editGuru(id) {
+            const guru = teachers.find(t => t.id === id);
+            if (!guru) return;
+
+            document.getElementById('modal-guru-title').innerText = "Edit Data Guru";
+            document.getElementById('guru-id').value = guru.id;
+            document.getElementById('guru-nip').value = guru.nip;
+            document.getElementById('guru-nama').value = guru.nama_guru;
+            document.getElementById('guru-mapel').value = guru.mata_pelajaran;
+            document.getElementById('guru-username').value = guru.username;
+            document.getElementById('guru-password').value = guru.password;
+
+            document.getElementById('modal-guru').classList.remove('hidden');
+        }
+
+        function deleteGuru(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus data guru ini?")) {
+                teachers = teachers.filter(t => t.id !== id);
+                showToast('Data guru telah dihapus', 'info');
+                renderTableGuru();
+                updateStatistics();
+            }
+        }
+
+        function handleUpdateProfilAdmin(event) {
+            event.preventDefault();
+            const usernameInp = document.getElementById('admin-new-username').value.trim();
+            const newPass = document.getElementById('admin-new-password').value.trim();
+            const confirmPass = document.getElementById('admin-confirm-password').value.trim();
+
+            if (newPass !== confirmPass) {
+                showToast('Password baru tidak cocok', 'error');
+                return;
+            }
+
+            const idx = admins.findIndex(a => a.id === currentUser.id);
+            if (idx !== -1) {
+                admins[idx].username = usernameInp;
+                admins[idx].password = newPass;
+                currentUser = admins[idx];
+                showToast('Kredensial Admin berhasil diubah', 'success');
+                switchAdminTab('guru');
+            }
+        }
+
+        function exportDataGuru() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "NIP,Nama Guru,Username,Password,Mata Pelajaran\n";
+            teachers.forEach(t => {
+                csvContent += `"${t.nip}","${t.nama_guru}","${t.username}","${t.password}","${t.mata_pelajaran}"\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Database_Guru_GemaInsanMandiri.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Ekspor data CSV berhasil diunduh', 'success');
+        }
+
+        function importDataGuru(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split('\n');
+                let importedCount = 0;
+
+                for (let i = 1; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    const columns = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, ''));
+                    if (columns.length >= 5) {
+                        const nip = columns[0];
+                        const nama_guru = columns[1];
+                        const username = columns[2];
+                        const password = columns[3];
+                        const mata_pelajaran = columns[4];
+
+                        const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+                        teachers.push({ id: newId, nip, nama_guru, username, password, mata_pelajaran, role: 'guru', verified: true });
+                        importedCount++;
+                    }
+                }
+
+                showToast(`Impor berhasil. ${importedCount} guru ditambahkan`, 'success');
+                renderTableGuru();
+                updateStatistics();
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // --- SISTEM GURU: DASHBOARD & PEMBUATAN MODUL ---
+        function renderGuruDashboard() {
+            document.getElementById('guru-welcome-name').innerText = `Selamat Datang, ${currentUser.nama_guru}`;
+            document.getElementById('guru-welcome-mapel').innerText = currentUser.mata_pelajaran;
+
+            const grid = document.getElementById('grid-modul');
+            const emptyState = document.getElementById('empty-state-modul');
+            grid.innerHTML = '';
+
+            const myModul = modul_ajar.filter(m => m.teacher_id === currentUser.id);
+
+            if (myModul.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+
+            myModul.forEach(m => {
+                const isAnyTtdChecked = m.ttd_guru?.isChecked || m.ttd_kepsek?.isChecked;
+                const badgeText = isAnyTtdChecked ? 'BARCODE AKTIF' : 'TTD MANUAL';
+                const badgeColorClass = isAnyTtdChecked 
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
+                    : 'bg-amber-50 text-amber-700 border-amber-100';
+
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition flex flex-col justify-between h-56";
+                
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-start gap-2">
+                            <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">${m.kelas}</span>
+                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 ${badgeColorClass}">
+                                <i class="fa-solid ${isAnyTtdChecked ? 'fa-qrcode' : 'fa-signature'}"></i> ${badgeText}
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 line-clamp-2 leading-snug hover:text-indigo-600 transition cursor-pointer" onclick="editExistingModul(${m.id})">${m.judul_modul}</h4>
+                        <p class="text-[11px] text-slate-400">Penyusun: ${m.nama_penyusun} | Alokasi: ${m.alokasi_waktu}</p>
+                    </div>
+
+                    <div class="border-t border-slate-100 pt-3 flex justify-between items-center mt-3">
+                        <div class="flex gap-1.5">
+                            <button onclick="editExistingModul(${m.id})" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
+                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                            </button>
+                            <button onclick="deleteModul(${m.id})" class="text-red-600 hover:bg-red-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
+                                <i class="fa-solid fa-trash"></i> Hapus
+                            </button>
+                        </div>
+                        <div class="flex gap-1">
+                            <button onclick="downloadModulJSON(${m.id})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 p-2 rounded-lg text-xs font-bold transition" title="Unduh Backup Berkas (.json)">
+                                <i class="fa-solid fa-download"></i> Backup
+                            </button>
+                            <button onclick="viewCetakModul(${m.id})" class="bg-slate-800 hover:bg-slate-950 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-file-pdf"></i> Lihat Cetak
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openFormModul() {
+            selectedModulId = null;
+            document.getElementById('creator-title').innerText = "Buat Modul Ajar Baru";
+            
+            document.getElementById('modul-judul').value = '';
+            document.getElementById('modul-penyusun').value = currentUser.nama_guru;
+            document.getElementById('modul-institusi').value = 'SDIT Gema Insan Mandiri';
+            document.getElementById('modul-tahun').value = active_tahun_ajaran;
+            document.getElementById('modul-alokasi').value = '2 JP X 35 Menit';
+            document.getElementById('modul-jenjang').value = 'SD';
+            document.getElementById('modul-kelas').value = 'VI/II / Fase C';
+            document.getElementById('modul-gambar-url').value = '';
+
+            document.getElementById('ttd-nama-guru').value = currentUser.nama_guru;
+            document.getElementById('ttd-nip-guru').value = currentUser.nip;
+            document.getElementById('ttd-nama-kepsek').value = 'Muhamad Fadlillah, S.Kom.';
+            document.getElementById('ttd-nip-kepsek').value = 'NIY.005.039.023';
+
+            document.getElementById('ttd-check-guru').checked = true;
+            document.getElementById('ttd-check-kepsek').checked = true;
+
+            document.getElementById('form-cover-preview-container').classList.add('hidden');
+
+            renderDynamicPoints(DEFAULT_COMPONENTS);
+            navigate('page-modul-creator');
+        }
+
+        function editExistingModul(id) {
+            const m = modul_ajar.find(mod => mod.id === id);
+            if (!m) return;
+
+            selectedModulId = m.id;
+            document.getElementById('creator-title').innerText = "Penyuntingan Rencana Modul";
+
+            document.getElementById('modul-judul').value = m.judul_modul;
+            document.getElementById('modul-penyusun').value = m.nama_penyusun;
+            document.getElementById('modul-institusi').value = m.institusi;
+            document.getElementById('modul-tahun').value = m.tahun;
+            document.getElementById('modul-alokasi').value = m.alokasi_waktu;
+            document.getElementById('modul-jenjang').value = m.jenjang;
+            document.getElementById('modul-kelas').value = m.kelas;
+            document.getElementById('modul-gambar-url').value = m.gambar_url || '';
+
+            document.getElementById('ttd-nama-guru').value = m.nama_penyusun;
+            document.getElementById('ttd-nip-guru').value = m.ttd_guru?.nip || currentUser.nip;
+            document.getElementById('ttd-nama-kepsek').value = m.nama_kepsek;
+            document.getElementById('ttd-nip-kepsek').value = m.nip_kepsek;
+
+            document.getElementById('ttd-check-guru').checked = m.ttd_guru?.isChecked !== false;
+            document.getElementById('ttd-check-kepsek').checked = m.ttd_kepsek?.isChecked !== false;
+
+            updateFormCoverPreview();
+
+            renderDynamicPoints(m.details);
+            navigate('page-modul-creator');
+        }
+
+        // PRATINJAU GAMBAR COVER UTAMA DI FORM
+        function updateFormCoverPreview() {
+            const urlVal = document.getElementById('modul-gambar-url').value.trim();
+            const container = document.getElementById('form-cover-preview-container');
+            const img = document.getElementById('form-cover-preview-img');
+            
+            if (urlVal) {
+                img.src = urlVal;
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        // UNGGAL FILE GAMBAR UTAMA (BASE64)
+        function uploadMainImage(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('modul-gambar-url').value = e.target.result;
+                updateFormCoverPreview();
+                showToast('Gambar cover berhasil diunggah secara lokal!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // UNGGUH FILE GAMBAR DI SETIAP KOMPONEN (BASE64)
+        function uploadComponentImage(event, fileInput) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const textInput = fileInput.closest('.flex').querySelector('.dynamic-comp-img');
+                textInput.value = e.target.result;
+                showToast('Gambar komponen berhasil diunggah secara lokal!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // FUNGSI RENDER POINT-POINT KOMPONEN DENGAN DUKUNGAN TABEL KHUSUS & URL GAMBAR ILUSTRASI / UNGGAHAN LOKAL
+        function renderDynamicPoints(components) {
+            const container = document.getElementById('dynamic-points-container');
+            container.innerHTML = '';
+
+            components.forEach((comp, idx) => {
+                const item = document.createElement('div');
+                item.className = "p-5 bg-slate-50 rounded-xl border border-slate-200 relative group dynamic-point-row";
+                
+                let inputArea = '';
+                const compImgValue = comp.component_img || '';
+
+                if (comp.isTable) {
+                    // Tipe tabel Kegiatan Pembelajaran
+                    let data = [];
+                    try {
+                        data = JSON.parse(comp.isi_poin);
+                    } catch(e) {
+                        data = [
+                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: '' },
+                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: '' },
+                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: '' }
+                        ];
+                    }
+
+                    let rowsHtml = '';
+                    data.forEach((row, rIdx) => {
+                        rowsHtml += `
+                            <tr class="activity-row">
+                                <td class="p-2 border">
+                                    <input type="text" value="${row.fase}" class="w-full bg-transparent text-xs font-semibold focus:outline-none act-fase">
+                                </td>
+                                <td class="p-2 border w-24">
+                                    <input type="text" value="${row.waktu}" class="w-full bg-transparent text-xs text-center focus:outline-none act-waktu">
+                                </td>
+                                <td class="p-2 border">
+                                    <textarea class="w-full bg-transparent text-xs focus:outline-none h-20 resize-y act-detail" placeholder="Detail langkah-langkah kegiatan...">${row.detail}</textarea>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    inputArea = `
+                        <div class="overflow-x-auto mt-2">
+                            <table class="w-full text-left border-collapse border bg-white rounded-lg overflow-hidden text-xs">
+                                <thead>
+                                    <tr class="bg-indigo-50 text-indigo-900">
+                                        <th class="p-2 border font-bold">Kegiatan / Fase</th>
+                                        <th class="p-2 border font-bold text-center">Waktu</th>
+                                        <th class="p-2 border font-bold">Detail Langkah-langkah Pembelajaran</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                        <input type="hidden" class="dynamic-content-type" value="table">
+                    `;
+                } else if (comp.isRubric) {
+                    // Tipe tabel Rubrik Penilaian
+                    let data = [];
+                    try {
+                        data = JSON.parse(comp.isi_poin);
+                    } catch(e) {
+                        data = [
+                            { kriteria: 'Pemahaman Materi', s4: '', s3: '', s2: '', s1: '' },
+                            { kriteria: 'Kerjasama Kelompok', s4: '', s3: '', s2: '', s1: '' }
+                        ];
+                    }
+
+                    let rowsHtml = '';
+                    data.forEach((row, rIdx) => {
+                        rowsHtml += `
+                            <tr class="rubric-row">
+                                <td class="p-2 border font-semibold">
+                                    <input type="text" value="${row.kriteria}" class="w-full bg-transparent text-xs font-bold focus:outline-none rub-kriteria">
+                                </td>
+                                <td class="p-2 border">
+                                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s4" placeholder="Sangat Baik">${row.s4}</textarea>
+                                </td>
+                                <td class="p-2 border">
+                                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s3" placeholder="Baik">${row.s3}</textarea>
+                                </td>
+                                <td class="p-2 border">
+                                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s2" placeholder="Cukup">${row.s2}</textarea>
+                                </td>
+                                <td class="p-2 border">
+                                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s1" placeholder="Kurang">${row.s1}</textarea>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    inputArea = `
+                        <div class="overflow-x-auto mt-2">
+                            <table class="w-full text-left border-collapse border bg-white rounded-lg overflow-hidden text-xs">
+                                <thead>
+                                    <tr class="bg-indigo-50 text-indigo-900 text-center font-bold">
+                                        <th class="p-2 border text-left">Kriteria Penilaian</th>
+                                        <th class="p-2 border w-1/5">Sangat Baik (4)</th>
+                                        <th class="p-2 border w-1/5">Baik (3)</th>
+                                        <th class="p-2 border w-1/5">Cukup (2)</th>
+                                        <th class="p-2 border w-1/5">Kurang (1)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rowsHtml}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="flex justify-end gap-2 mt-2">
+                            <button type="button" onclick="addRubricRow(this)" class="px-2 py-1 bg-indigo-100 hover:bg-indigo-200 text-indigo-800 rounded text-[10px] font-bold"><i class="fa-solid fa-plus-circle"></i> Tambah Kriteria</button>
+                        </div>
+                        <input type="hidden" class="dynamic-content-type" value="rubric">
+                    `;
+                } else {
+                    // Tipe standard teks biasa
+                    inputArea = `
+                        <textarea class="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-28 dynamic-content-text" placeholder="Tulis rincian isi materi poin ini...">${comp.isi_poin}</textarea>
+                        <input type="hidden" class="dynamic-content-type" value="text">
+                    `;
+                }
+
+                item.innerHTML = `
+                    <button onclick="removeDynamicPoin(this)" class="absolute top-3 right-3 text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition text-xs flex items-center gap-1">
+                        <i class="fa-solid fa-trash-can"></i> Hapus
+                    </button>
+                    <div class="mb-2 mr-16">
+                        <input type="text" class="bg-transparent font-bold text-slate-800 text-sm border-b border-transparent focus:border-indigo-400 focus:outline-none w-full py-0.5 dynamic-title" value="${comp.nama_poin}">
+                    </div>
+                    ${inputArea}
+                    
+                    <!-- INPUT GAMBAR ILUSTRASI SETIAP KOMPONEN (PILIHAN LINK ATAU UPLOAD LANGSUNG) -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-200">
+                        <label class="block text-[10px] font-semibold text-slate-500 mb-1 flex items-center gap-1">
+                            <i class="fa-regular fa-image text-indigo-600 text-xs"></i> Gambar Ilustrasi Komponen (Opsional)
+                        </label>
+                        <div class="flex gap-2">
+                            <input type="text" class="flex-grow px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dynamic-comp-img" value="${compImgValue}" placeholder="URL Gambar atau pilih unggah file di samping">
+                            <label class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition font-sans">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> Unggah
+                                <input type="file" accept="image/*" onchange="uploadComponentImage(event, this)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function addCustomPoin() {
+            const container = document.getElementById('dynamic-points-container');
+            const item = document.createElement('div');
+            item.className = "p-5 bg-slate-50 rounded-xl border border-slate-200 relative group dynamic-point-row";
+            item.innerHTML = `
+                <button onclick="removeDynamicPoin(this)" class="absolute top-3 right-3 text-red-500 hover:text-red-700 transition text-xs flex items-center gap-1">
+                    <i class="fa-solid fa-trash-can"></i> Hapus
+                </button>
+                <div class="mb-2 mr-16">
+                    <input type="text" class="bg-transparent font-bold text-slate-800 text-sm border-b border-slate-300 focus:border-indigo-400 focus:outline-none w-full py-0.5 dynamic-title" value="Materi Tambahan">
+                </div>
+                <textarea class="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-28 dynamic-content-text" placeholder="Ketik rincian di sini..."></textarea>
+                <input type="hidden" class="dynamic-content-type" value="text">
+
+                <!-- INPUT GAMBAR ILUSTRASI SETIAP KOMPONEN -->
+                <div class="mt-3 pt-2.5 border-t border-slate-200">
+                    <label class="block text-[10px] font-semibold text-slate-500 mb-1 flex items-center gap-1">
+                        <i class="fa-regular fa-image text-indigo-600 text-xs"></i> Gambar Ilustrasi Komponen (Opsional)
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" class="flex-grow px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 dynamic-comp-img" value="" placeholder="URL Gambar atau pilih unggah file di samping">
+                        <label class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-lg text-[11px] font-bold flex items-center justify-center gap-1 transition font-sans">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Unggah
+                            <input type="file" accept="image/*" onchange="uploadComponentImage(event, this)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+            showToast('Komponen dinamis baru ditambahkan', 'info');
+        }
+
+        function removeDynamicPoin(btn) {
+            if (confirm("Hapus komponen ini dari modul?")) {
+                btn.closest('.dynamic-point-row').remove();
+                showToast('Komponen dihapus', 'info');
+            }
+        }
+
+        function addRubricRow(btn) {
+            const tbody = btn.closest('.dynamic-point-row').querySelector('tbody');
+            const tr = document.createElement('tr');
+            tr.className = "rubric-row";
+            tr.innerHTML = `
+                <td class="p-2 border font-semibold">
+                    <input type="text" value="Kriteria Baru" class="w-full bg-transparent text-xs font-bold focus:outline-none rub-kriteria">
+                </td>
+                <td class="p-2 border">
+                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s4" placeholder="Sangat Baik"></textarea>
+                </td>
+                <td class="p-2 border">
+                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s3" placeholder="Baik"></textarea>
+                </td>
+                <td class="p-2 border">
+                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s2" placeholder="Cukup"></textarea>
+                </td>
+                <td class="p-2 border">
+                    <textarea class="w-full bg-transparent text-xs h-16 resize-none focus:outline-none rub-s1" placeholder="Kurang"></textarea>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+        function saveModul() {
+            const judul = document.getElementById('modul-judul').value.trim();
+            const penyusun = document.getElementById('modul-penyusun').value.trim();
+            const institusi = document.getElementById('modul-institusi').value.trim();
+            const tahun = document.getElementById('modul-tahun').value.trim();
+            const alokasi = document.getElementById('modul-alokasi').value.trim();
+            const jenjang = document.getElementById('modul-jenjang').value;
+            const kelas = document.getElementById('modul-kelas').value.trim();
+            const gambar_url = document.getElementById('modul-gambar-url').value.trim();
+
+            if (!judul || !penyusun || !institusi) {
+                showToast('Mohon lengkapi kolom bertanda bintang (*)', 'error');
+                return;
+            }
+
+            // Memproses penyimpanan dinamis baik teks murni maupun tabel
+            const details = [];
+            document.querySelectorAll('.dynamic-point-row').forEach((row, i) => {
+                const nama_poin = row.querySelector('.dynamic-title').value.trim();
+                const type = row.querySelector('.dynamic-content-type').value;
+                const component_img = row.querySelector('.dynamic-comp-img').value.trim();
+                
+                let isi_poin = '';
+                let isTable = false;
+                let isRubric = false;
+
+                if (type === 'table') {
+                    isTable = true;
+                    const rowsData = [];
+                    row.querySelectorAll('.activity-row').forEach(tr => {
+                        rowsData.push({
+                            fase: tr.querySelector('.act-fase').value.trim(),
+                            waktu: tr.querySelector('.act-waktu').value.trim(),
+                            detail: tr.querySelector('.act-detail').value.trim()
+                        });
+                    });
+                    isi_poin = JSON.stringify(rowsData);
+                } else if (type === 'rubric') {
+                    isRubric = true;
+                    const rowsData = [];
+                    row.querySelectorAll('.rubric-row').forEach(tr => {
+                        rowsData.push({
+                            kriteria: tr.querySelector('.rub-kriteria').value.trim(),
+                            s4: tr.querySelector('.rub-s4').value.trim(),
+                            s3: tr.querySelector('.rub-s3').value.trim(),
+                            s2: tr.querySelector('.rub-s2').value.trim(),
+                            s1: tr.querySelector('.rub-s1').value.trim()
+                        });
+                    });
+                    isi_poin = JSON.stringify(rowsData);
+                } else {
+                    isi_poin = row.querySelector('.dynamic-content-text').value;
+                }
+
+                if (nama_poin) {
+                    details.push({ id: i + 1, nama_poin, isi_poin, isTable, isRubric, component_img });
+                }
+            });
+
+            const ttd_guru = {
+                hasImage: false,
+                isChecked: document.getElementById('ttd-check-guru').checked,
+                imageBase64: '',
+                nip: document.getElementById('ttd-nip-guru').value.trim()
+            };
+
+            const ttd_kepsek = {
+                hasImage: false,
+                isChecked: document.getElementById('ttd-check-kepsek').checked,
+                imageBase64: ''
+            };
+
+            const nama_kepsek = document.getElementById('ttd-nama-kepsek').value.trim();
+            const nip_kepsek = document.getElementById('ttd-nip-kepsek').value.trim();
+
+            if (selectedModulId) {
+                const idx = modul_ajar.findIndex(m => m.id === selectedModulId);
+                if (idx !== -1) {
+                    modul_ajar[idx] = {
+                        ...modul_ajar[idx],
+                        judul_modul: judul,
+                        kelas,
+                        alokasi_waktu: alokasi,
+                        nama_penyusun: penyusun,
+                        institusi,
+                        tahun,
+                        jenjang,
+                        ttd_guru,
+                        ttd_kepsek,
+                        nama_kepsek,
+                        nip_kepsek,
+                        gambar_url,
+                        details
+                    };
+                    showToast('Modul berhasil diperbarui', 'success');
+                }
+            } else {
+                const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
+                modul_ajar.push({
+                    id: newId,
+                    teacher_id: currentUser.id,
+                    judul_modul: judul,
+                    kelas,
+                    alokasi_waktu: alokasi,
+                    nama_penyusun: penyusun,
+                    institusi,
+                    tahun,
+                    jenjang,
+                    ttd_guru,
+                    ttd_kepsek,
+                    nama_kepsek,
+                    nip_kepsek,
+                    gambar_url,
+                    details
+                });
+                showToast('Modul baru sukses ditambahkan', 'success');
+            }
+
+            backToGuruDashboard();
+        }
+
+        function deleteModul(id) {
+            if (confirm("Hapus modul ajar ini?")) {
+                modul_ajar = modul_ajar.filter(m => m.id !== id);
+                showToast('Modul dihapus', 'info');
+                renderGuruDashboard();
+            }
+        }
+
+        function backToGuruDashboard() {
+            selectedModulId = null;
+            navigate('page-guru-dashboard');
+            renderGuruDashboard();
+        }
+
+        // --- PREVIEW CETAK DOKUMEN ---
+        function viewCetakModul(id) {
+            selectedModulId = id;
+            previewFinalModul();
+        }
+
+        function previewFinalModul() {
+            let m = null;
+            if (selectedModulId) {
+                m = modul_ajar.find(mod => mod.id === selectedModulId);
+            }
+
+            if (!m) return;
+
+            // Header Kop
+            document.getElementById('print-header-sekolah').innerText = m.institusi;
+            document.getElementById('print-header-tahun').innerText = m.tahun;
+            document.getElementById('print-badge-mapel').innerText = currentUser ? currentUser.mata_pelajaran : 'Koding dan Kecerdasan Artifial';
+            document.getElementById('print-judul').innerText = m.judul_modul;
+
+            // Metadata Informasi Umum
+            document.getElementById('print-guru-sekolah').innerText = `: ${m.institusi}`;
+            document.getElementById('print-guru-kelas').innerText = `: ${m.kelas}`;
+            document.getElementById('print-guru-name').innerText = `: ${m.nama_penyusun}`;
+            document.getElementById('print-guru-alokasi').innerText = `: ${m.alokasi_waktu}`;
+
+            // Status TTD di Header Print
+            const isAnyBarcodeActive = m.ttd_guru?.isChecked || m.ttd_kepsek?.isChecked;
+            const printVerificationStatus = document.getElementById('print-verification-status');
+            if (isAnyBarcodeActive) {
+                printVerificationStatus.innerHTML = `Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-shield-check"></i> Barcode QR Terverifikasi Sistem</span>`;
+            } else {
+                printVerificationStatus.innerHTML = `Status Keabsahan: <span class="text-amber-600 font-semibold"><i class="fa-solid fa-file-signature"></i> Tanda Tangan Basah Manual</span>`;
+            }
+
+            // Handle Gambar Ilustrasi Utama
+            const printImgContainer = document.getElementById('print-image-container');
+            const printModulImg = document.getElementById('print-modul-img');
+            if (m.gambar_url && m.gambar_url.trim() !== '') {
+                printModulImg.src = m.gambar_url;
+                printImgContainer.classList.remove('hidden');
+            } else {
+                printModulImg.src = '';
+                printImgContainer.classList.add('hidden');
+            }
+
+            const printSec = document.getElementById('print-dynamic-sections');
+            printSec.innerHTML = '';
+
+            const ROMANS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
+
+            m.details.forEach((det, index) => {
+                const section = document.createElement('div');
+                section.className = "mb-6 break-inside-avoid";
+                
+                let contentHtml = '';
+
+                if (det.isTable) {
+                    // Tampilkan sebagai TABEL KEGIATAN PEMBELAJARAN
+                    let rowsData = [];
+                    try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
+
+                    let trs = '';
+                    rowsData.forEach(row => {
+                        const formattedDetail = row.detail.replace(/\n/g, '<br>');
+                        trs += `
+                            <tr class="align-top border-b border-slate-300">
+                                <td class="p-2.5 font-bold text-xs bg-slate-50 w-1/4">${row.fase}</td>
+                                <td class="p-2.5 text-xs text-center border-l border-r border-slate-300 w-20 font-semibold">${row.waktu}</td>
+                                <td class="p-2.5 text-xs leading-relaxed whitespace-pre-wrap">${formattedDetail}</td>
+                            </tr>
+                        `;
+                    });
+
+                    contentHtml = `
+                        <div class="overflow-hidden border border-slate-400 rounded-sm mt-2">
+                            <table class="w-full text-left border-collapse bg-white">
+                                <thead>
+                                    <tr class="bg-indigo-900 text-white text-xs">
+                                        <th class="p-2.5 border-b border-slate-400 font-bold">Kegiatan Pembelajaran</th>
+                                        <th class="p-2.5 border-b border-l border-r border-slate-400 font-bold text-center">Alokasi</th>
+                                        <th class="p-2.5 border-b border-slate-400 font-bold">Langkah-langkah Pembelajaran</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${trs}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else if (det.isRubric) {
+                    // Tampilkan sebagai TABEL RUBRIK PENILAIAN
+                    let rowsData = [];
+                    try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
+
+                    let trs = '';
+                    rowsData.forEach(row => {
+                        trs += `
+                            <tr class="align-top border-b border-slate-300">
+                                <td class="p-2.5 font-bold text-xs bg-slate-50 border-r border-slate-300">${row.kriteria}</td>
+                                <td class="p-2.5 text-[11px] leading-relaxed border-r border-slate-300">${row.s4.replace(/\n/g, '<br>')}</td>
+                                <td class="p-2.5 text-[11px] leading-relaxed border-r border-slate-300">${row.s3.replace(/\n/g, '<br>')}</td>
+                                <td class="p-2.5 text-[11px] leading-relaxed border-r border-slate-300">${row.s2.replace(/\n/g, '<br>')}</td>
+                                <td class="p-2.5 text-[11px] leading-relaxed">${row.s1.replace(/\n/g, '<br>')}</td>
+                            </tr>
+                        `;
+                    });
+
+                    contentHtml = `
+                        <div class="overflow-hidden border border-slate-400 rounded-sm mt-2">
+                            <table class="w-full text-left border-collapse bg-white">
+                                <thead>
+                                    <tr class="bg-indigo-900 text-white text-xs text-center font-bold">
+                                        <th class="p-2.5 border-b border-r border-slate-400 text-left">Kriteria Penilaian</th>
+                                        <th class="p-2.5 border-b border-r border-slate-400 w-1/5">Sangat Baik (4)</th>
+                                        <th class="p-2.5 border-b border-r border-slate-400 w-1/5">Baik (3)</th>
+                                        <th class="p-2.5 border-b border-r border-slate-400 w-1/5">Cukup (2)</th>
+                                        <th class="p-2.5 border-b border-slate-400 w-1/5">Kurang (1)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${trs}
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                } else {
+                    const formattedText = det.isi_poin.replace(/\n/g, '<br>');
+                    contentHtml = `<p class="text-slate-800 text-xs whitespace-pre-wrap leading-relaxed pl-2">${formattedText || '<span class="text-slate-300 italic">Belum diisi</span>'}</p>`;
+                }
+
+                // TAMBAHAN RENDERING GAMBAR ILUSTRASI KHUSUS DI TIAP SEKSI/KOMPONEN
+                let compImgHtml = '';
+                if (det.component_img && det.component_img.trim() !== '') {
+                    compImgHtml = `
+                        <div class="mt-3 text-center break-inside-avoid">
+                            <div class="border border-slate-150 rounded p-1.5 inline-block bg-slate-50">
+                                <img src="${det.component_img}" class="max-h-48 object-contain rounded" alt="Ilustrasi ${det.nama_poin}">
+                                <p class="text-[9px] text-slate-400 mt-1 italic">Ilustrasi: ${det.nama_poin}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                section.innerHTML = `
+                    <h3 class="text-xs font-bold text-indigo-900 border-b-2 border-indigo-900 pb-1 mb-2 uppercase tracking-wide">
+                        ${ROMANS[index + 1] || 'X'}. ${det.nama_poin}
+                    </h3>
+                    ${contentHtml}
+                    ${compImgHtml}
+                `;
+                printSec.appendChild(section);
+            });
+
+            // Tanda Tangan QR Code Otomatis vs TTD Tradisional Manual
+            document.getElementById('print-nama-kepsek').innerText = m.nama_kepsek.toUpperCase();
+            document.getElementById('print-nip-kepsek').innerText = m.nip_kepsek;
+            document.getElementById('print-nama-guru').innerText = m.nama_penyusun.toUpperCase();
+            document.getElementById('print-nip-guru').innerText = m.ttd_guru?.nip || '-';
+
+            // 1. Render Area Kepala Sekolah
+            const ttdAreaKepsek = document.getElementById('print-ttd-area-kepsek');
+            ttdAreaKepsek.innerHTML = '';
+            if (m.ttd_kepsek?.isChecked) {
+                const qrKepsek = generateQRCodeSVG(`MAD-VERIFY-KEPSEK:${m.nama_kepsek}:${m.nip_kepsek}`);
+                ttdAreaKepsek.innerHTML = `
+                    <div class="p-1 bg-white border border-slate-300 rounded-md shadow-sm">
+                        ${qrKepsek}
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Kepala Sekolah</span>
+                `;
+            } else {
+                ttdAreaKepsek.innerHTML = `
+                    <div class="h-16 flex items-end justify-center">
+                        <span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span>
+                    </div>
+                    <div class="w-40 border-b border-slate-400 mt-2"></div>
+                `;
+            }
+
+            // 2. Render Area Guru Pengampu
+            const ttdAreaGuru = document.getElementById('print-ttd-area-guru');
+            ttdAreaGuru.innerHTML = '';
+            if (m.ttd_guru?.isChecked) {
+                const qrGuru = generateQRCodeSVG(`MAD-VERIFY-GURU:${m.nama_penyusun}:${m.ttd_guru?.nip}`);
+                ttdAreaGuru.innerHTML = `
+                    <div class="p-1 bg-white border border-slate-300 rounded-md shadow-sm">
+                        ${qrGuru}
+                    </div>
+                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Guru Pengampu</span>
+                `;
+            } else {
+                ttdAreaGuru.innerHTML = `
+                    <div class="h-16 flex items-end justify-center">
+                        <span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span>
+                    </div>
+                    <div class="w-40 border-b border-slate-400 mt-2"></div>
+                `;
+            }
+
+            // Setting tanggal hari ini
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('id-ID', options);
+            document.getElementById('print-date-today').innerText = `Jakarta, ${today}`;
+
+            const now = new Date();
+            document.getElementById('print-datetime').innerText = `Dicetak otomatis: ${now.toLocaleDateString('id-ID')} - ${now.toLocaleTimeString('id-ID')}`;
+
+            navigate('page-print-preview');
+        }
+
+        function closePrintPreview() {
+            if (selectedModulId) {
+                navigate('page-guru-dashboard');
+            } else {
+                navigate('page-modul-creator');
+            }
+        }
+
+        // --- SISTEM IMPOR / EKSPOR FULL BARU (.JSON) ---
+
+        // 1. Download Backup Modul Satuan (.json)
+        function downloadModulJSON(id) {
+            const m = modul_ajar.find(mod => mod.id === id);
+            if (!m) return;
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(m, null, 4));
+            const link = document.createElement("a");
+            link.setAttribute("href", dataStr);
+            link.setAttribute("download", `MAD_Backup_${m.judul_modul.replace(/\s+/g, '_')}.json`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Berkas cadangan Modul (.json) berhasil diunduh!', 'success');
+        }
+
+        // 2. Download Template Kosong yang Bersih dan Terstruktur (.json)
+        function downloadJSONTemplate() {
+            const template = {
+                judul_modul: "Jaringan Komputer dan Internet",
+                kelas: "VI/II / Fase C",
+                alokasi_waktu: "2 JP X 35 Menit",
+                nama_penyusun: currentUser ? currentUser.nama_guru : "Nama Guru Anda",
+                institusi: "SDIT Gema Insan Mandiri",
+                tahun: active_tahun_ajaran,
+                jenjang: "SD",
+                gambar_url: "",
+                details: DEFAULT_COMPONENTS
+            };
+            
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 4));
+            const link = document.createElement("a");
+            link.setAttribute("href", dataStr);
+            link.setAttribute("download", "Template_Modul_Digital_SDIT_GMI.json");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Template Modul (.json) berhasil diunduh! Edit dengan nyaman.', 'success');
+        }
+
+        // 3. Parser Multi-Format (Mendukung .json maupun .csv warisan)
+        function importDataModul(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                
+                // JIKA FILE ADALAH FORMAT JSON TERSTURKTUR
+                if (file.name.endsWith('.json')) {
+                    try {
+                        const imported = JSON.parse(text);
+                        const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
+                        
+                        const newModul = {
+                            id: newId,
+                            teacher_id: currentUser ? currentUser.id : 1,
+                            judul_modul: imported.judul_modul || 'Modul Impor JSON',
+                            kelas: imported.kelas || 'VI/II / Fase C',
+                            alokasi_waktu: imported.alokasi_waktu || '2 JP X 35 Menit',
+                            nama_penyusun: imported.nama_penyusun || (currentUser ? currentUser.nama_guru : 'Nama Guru'),
+                            institusi: imported.institusi || 'SDIT Gema Insan Mandiri',
+                            tahun: imported.tahun || active_tahun_ajaran,
+                            jenjang: imported.jenjang || 'SD',
+                            ttd_guru: imported.ttd_guru || { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser ? currentUser.nip : '' },
+                            ttd_kepsek: imported.ttd_kepsek || { hasImage: false, isChecked: true, imageBase64: '' },
+                            nama_kepsek: imported.nama_kepsek || 'Muhamad Fadlillah, S.Kom.',
+                            nip_kepsek: imported.nip_kepsek || 'NIY.005.039.023',
+                            gambar_url: imported.gambar_url || '',
+                            details: imported.details || DEFAULT_COMPONENTS
+                        };
+
+                        modul_ajar.push(newModul);
+                        showToast(`Sukses Impor Modul: '${newModul.judul_modul}' dari berkas JSON!`, 'success');
+                        renderGuruDashboard();
+                    } catch (err) {
+                        showToast('Berkas JSON tidak valid atau rusak.', 'error');
+                        console.error(err);
+                    }
+                } 
+                // JIKA FILE ADALAH FORMAT CSV WARISAN
+                else {
+                    const lines = text.split('\n');
+                    if (lines.length < 2) {
+                        showToast('File template kosong atau tidak valid', 'error');
+                        return;
+                    }
+
+                    const dataLine = lines[1].trim();
+                    if (!dataLine) {
+                        showToast('Tidak ada baris data di dalam template Excel', 'error');
+                        return;
+                    }
+
+                    const columns = dataLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, '').trim());
+
+                    if (columns.length < 15) {
+                        showToast('Kolom template tidak lengkap atau format salah', 'error');
+                        return;
+                    }
+
+                    const judul_modul = columns[0];
+                    const kelas = columns[1];
+                    const nama_penyusun = columns[2];
+                    const alokasi_waktu = columns[3];
+                    const kompetensi_awal = columns[4].replace(/\\n/g, '\n');
+                    const profil_pancasila = columns[5].replace(/\\n/g, '\n');
+                    const sarpras = columns[6].replace(/\\n/g, '\n');
+                    const target_siswa = columns[7].replace(/\\n/g, '\n');
+                    const tujuan_belajar = columns[8].replace(/\\n/g, '\n');
+                    const pemahaman_bermakna = columns[9].replace(/\\n/g, '\n');
+                    const pemantik = columns[10].replace(/\\n/g, '\n');
+                    const kegiatan_pembelajaran_raw = columns[11];
+                    const rubrik_raw = columns[12];
+                    const remedial = columns[13].replace(/\\n/g, '\n');
+                    const lkpd = columns[14].replace(/\\n/g, '\n');
+                    const gambar_url = columns[15] || '';
+
+                    let isTable = false;
+                    let isi_kegiatan = kegiatan_pembelajaran_raw;
+                    if (kegiatan_pembelajaran_raw.startsWith('[') || kegiatan_pembelajaran_raw.startsWith('{')) {
+                        isTable = true;
+                    } else {
+                        isi_kegiatan = kegiatan_pembelajaran_raw.replace(/\\n/g, '\n');
+                    }
+
+                    let isRubric = false;
+                    let isi_rubrik = rubrik_raw;
+                    if (rubrik_raw.startsWith('[') || rubrik_raw.startsWith('{')) {
+                        isRubric = true;
+                    } else {
+                        isi_rubrik = rubrik_raw.replace(/\\n/g, '\n');
+                    }
+
+                    const details = [
+                        { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: kompetensi_awal, component_img: '' },
+                        { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: profil_pancasila, component_img: '' },
+                        { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: sarpras, component_img: '' },
+                        { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: target_siswa, component_img: '' },
+                        { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Model pembelajaran menggunakan Deep Learning yang menekankan pemahaman mendalam, bukan sekadar hafalan.', component_img: '' },
+                        { id: 6, nama_poin: 'Tujuan Pembelajaran', isi_poin: tujuan_belajar, component_img: '' },
+                        { id: 7, nama_poin: 'Pemahaman Bermakna', isi_poin: pemahaman_bermakna, component_img: '' },
+                        { id: 8, nama_poin: 'Pertanyaan Pemantik', isi_poin: pemantik, component_img: '' },
+                        { id: 9, nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', isTable: isTable, isi_poin: isi_kegiatan, component_img: '' },
+                        { id: 10, nama_poin: 'Rubrik Penilaian Pembelajaran', isRubric: isRubric, isi_poin: isi_rubrik, component_img: '' },
+                        { id: 11, nama_poin: 'Remedial & Pengayaan', isi_poin: remedial, component_img: '' },
+                        { id: 12, nama_poin: 'Lampiran LKPD', isi_poin: lkpd, component_img: '' }
+                    ];
+
+                    const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
+                    modul_ajar.push({
+                        id: newId,
+                        teacher_id: currentUser.id,
+                        judul_modul,
+                        kelas,
+                        alokasi_waktu,
+                        nama_penyusun,
+                        institusi: 'SDIT Gema Insan Mandiri',
+                        tahun: active_tahun_ajaran,
+                        jenjang: 'SD',
+                        ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser.nip },
+                        ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
+                        nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
+                        nip_kepsek: 'NIY.005.039.023',
+                        gambar_url: gambar_url,
+                        details
+                    });
+
+                    showToast(`Berhasil mengimpor Modul Ajar '${judul_modul}' dari CSV!`, 'success');
+                    renderGuruDashboard();
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+    </script>
+</body>
+</html>
