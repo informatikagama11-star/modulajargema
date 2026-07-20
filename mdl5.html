@@ -47,8 +47,8 @@
             <div class="flex items-center justify-between h-16">
                 <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
-                    <div class="bg-white text-indigo-900 p-2 rounded-lg font-bold text-xl shadow">
-                        <i class="fa-solid fa-graduation-cap"></i> MAD
+                    <div class="bg-white text-indigo-900 p-2 rounded-lg font-bold text-xl shadow flex items-center justify-center">
+                        <img src="https://www.sditgamaschool.sch.id/frontend/sditgamma/img/logo-ikon-sditgama.jpg" alt="Logo SDIT GAMA" class="h-8 w-8 object-contain rounded" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%231e3a8a\'><path d=\'M12 3L1 9l11 6 9-4.91V17h2V9L12 3z\'/></svg>'">
                     </div>
                     <div>
                         <span class="font-bold text-lg tracking-wide block leading-none">Modul Ajar Digital</span>
@@ -85,12 +85,12 @@
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username / NIP</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                             <i class="fa-solid fa-user"></i>
                         </span>
-                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username/NIP">
+                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username">
                     </div>
                 </div>
 
@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-qrcode"></i> Kelola TTD & QR Barcode
                 </button>
                 <button onclick="switchAdminTab('profil')" id="tab-admin-profil" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-gears"></i> Pengaturan Sistem
+                    <i class="fa-solid fa-gears"></i> Pengaturan & Admin
                 </button>
             </div>
 
@@ -172,7 +172,7 @@
                             <i class="fa-solid fa-plus"></i> Tambah Guru Manual
                         </button>
                         <button onclick="exportDataGuru()" class="flex-grow md:flex-none bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-file-excel"></i> Ekspor Data
+                            <i class="fa-solid fa-file-excel"></i> Ekspor Data Guru (CSV)
                         </button>
                         <label class="flex-grow md:flex-none cursor-pointer bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-file-import"></i> Impor Data (CSV)
@@ -256,46 +256,79 @@
             </div>
 
             <!-- Sub-Page: Pengaturan Sistem -->
-            <div id="sub-admin-profil" class="hidden max-w-xl bg-white p-8 rounded-2xl shadow-sm border border-slate-100 space-y-8">
-                <!-- BAGIAN 1: PENGATURAN TAHUN AJARAN (UNTUK JANGKA PANJANG) -->
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
-                        <i class="fa-regular fa-calendar-days text-indigo-600"></i> Pengaturan Tahun Ajaran Aktif
-                    </h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Tahun Ajaran Sistem Saat Ini</label>
-                            <input type="text" id="admin-tahun-ajaran" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: 2025/2026">
-                            <p class="text-[11px] text-slate-400 mt-1.5">Tahun ajaran ini akan menjadi nilai bawaan otomatis saat guru membuat rencana modul baru.</p>
+            <div id="sub-admin-profil" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Sisi Kiri: Pengaturan Umum & Akun Saya -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
+                            <i class="fa-regular fa-calendar-days text-indigo-600"></i> Pengaturan Tahun Ajaran Aktif
+                        </h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Tahun Ajaran Sistem Saat Ini</label>
+                                <input type="text" id="admin-tahun-ajaran" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: 2025/2026">
+                                <p class="text-[11px] text-slate-400 mt-1.5">Tahun ajaran ini akan menjadi nilai bawaan otomatis saat guru membuat rencana modul baru.</p>
+                            </div>
+                            <button type="button" onclick="saveTahunAjaran()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
+                                Simpan Tahun Ajaran Baru
+                            </button>
                         </div>
-                        <button type="button" onclick="saveTahunAjaran()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
-                            Simpan Tahun Ajaran Baru
-                        </button>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
+                            <i class="fa-solid fa-lock-open text-indigo-600"></i> Keamanan & Akun Admin Saya
+                        </h3>
+                        <form onsubmit="handleUpdateProfilAdmin(event)">
+                            <div class="mb-4">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Username Baru</label>
+                                <input type="text" id="admin-new-username" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Password Baru</label>
+                                <input type="password" id="admin-new-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan password baru">
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
+                                <input type="password" id="admin-confirm-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Ulangi password baru">
+                            </div>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition text-xs">
+                                Simpan Perubahan Akun
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- BAGIAN 2: KEAMANAN ADMIN -->
-                <div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
-                        <i class="fa-solid fa-lock-open text-indigo-600"></i> Keamanan & Akun Admin
+                <!-- Sisi Kanan: Kelola Akun Admin Lain (Hanya Master Admin) -->
+                <div id="section-master-admin-only" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 space-y-4">
+                    <h3 class="text-lg font-bold text-slate-900 pb-2 border-b flex items-center gap-2">
+                        <i class="fa-solid fa-user-shield text-emerald-600"></i> Manajemen Admin (Khusus Master)
                     </h3>
-                    <form onsubmit="handleUpdateProfilAdmin(event)">
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Username Admin Baru</label>
-                            <input type="text" id="admin-new-username" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                    <p class="text-xs text-slate-500">Sebagai Master Admin, Anda dapat menambahkan Sub-Admin untuk membantu manajemen data tanpa memberikan akses ke password admin Anda atau password para guru.</p>
+                    
+                    <!-- Form Tambah Admin -->
+                    <form onsubmit="handleAddSubAdmin(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                        <h4 class="font-bold text-xs text-slate-700">Daftarkan Admin Baru</h4>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Username Admin Baru</label>
+                            <input type="text" id="subadmin-username" required class="w-full px-3 py-1.5 text-xs border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:outline-none bg-white">
                         </div>
-                        <div class="mb-4">
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Password Baru</label>
-                            <input type="password" id="admin-new-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan password baru">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Password Admin Baru</label>
+                            <input type="password" id="subadmin-password" required class="w-full px-3 py-1.5 text-xs border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:outline-none bg-white">
                         </div>
-                        <div class="mb-6">
-                            <label class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
-                            <input type="password" id="admin-confirm-password" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Ulangi password baru">
-                        </div>
-                        <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition text-xs">
-                            Simpan Perubahan Akun
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-xs font-bold transition">
+                            Tambah Admin Baru
                         </button>
                     </form>
+
+                    <!-- Daftar Admin Aktif -->
+                    <div class="space-y-2">
+                        <h4 class="font-bold text-xs text-slate-700">Daftar Admin Terdaftar</h4>
+                        <div id="admin-list-container" class="space-y-2 max-h-52 overflow-y-auto pr-1">
+                            <!-- Terisi dinamis -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -310,24 +343,31 @@
                         <i class="fa-solid fa-book-open"></i> Mata Pelajaran Diampu: <span id="guru-welcome-mapel" class="font-bold underline">-</span>
                     </p>
                 </div>
-                <div class="flex gap-2 w-full md:w-auto">
+                <div class="flex flex-wrap gap-2 w-full md:w-auto">
                     <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow animate-pulse">
                         <i class="fa-solid fa-plus-circle"></i> Buat Modul Baru
                     </button>
-                    <label class="flex-grow md:flex-none cursor-pointer bg-emerald-800 text-white hover:bg-emerald-900 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-file-import"></i> Impor Berkas (.json / .csv)
-                        <input type="file" id="import-modul-file" accept=".json,.csv" onchange="importDataModul(event)" class="hidden">
-                    </label>
+                    
+                    <!-- MENU IMPOR MULTI FORMAT -->
+                    <div class="relative flex-grow md:flex-none">
+                        <label class="cursor-pointer bg-emerald-800 text-white hover:bg-emerald-900 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-file-import"></i> Impor Modul (.json/.csv/.txt/.doc/.xls)
+                            <input type="file" id="import-modul-file" accept=".json,.csv,.txt,.html,.doc,.xls,.xlsx" onchange="importDataModul(event)" class="hidden">
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- Daftar Modul Ajar -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                <div class="flex justify-between items-center mb-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
                     <h3 class="text-lg font-bold text-slate-900">Arsip Rencana Pelaksanaan Pembelajaran (Modul Ajar)</h3>
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
                         <button onclick="downloadJSONTemplate()" class="text-xs text-emerald-600 hover:text-emerald-800 border border-emerald-200 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1 font-bold">
-                            <i class="fa-solid fa-file-code"></i> Unduh Template (.json)
+                            <i class="fa-solid fa-file-code"></i> Template JSON
+                        </button>
+                        <button onclick="downloadExcelTemplate()" class="text-xs text-indigo-600 hover:text-indigo-800 border border-indigo-200 bg-indigo-50 px-3 py-1.5 rounded-lg flex items-center gap-1 font-bold">
+                            <i class="fa-solid fa-file-excel"></i> Template Excel (.csv)
                         </button>
                     </div>
                 </div>
@@ -339,7 +379,7 @@
                 <div id="empty-state-modul" class="hidden text-center py-12">
                     <div class="text-5xl text-slate-300 mb-3"><i class="fa-regular fa-folder-open"></i></div>
                     <p class="text-slate-500 text-sm">Belum ada modul ajar yang dibuat.</p>
-                    <p class="text-slate-400 text-xs mt-1">Klik tombol "Buat Modul Baru" untuk memulai.</p>
+                    <p class="text-slate-400 text-xs mt-1">Klik tombol "Buat Modul Baru" atau gunakan file impor untuk memulai.</p>
                 </div>
             </div>
         </div>
@@ -416,13 +456,13 @@
                                     </label>
                                 </div>
                                 <div id="form-cover-preview-container" class="mt-2 hidden border border-slate-100 rounded-lg p-1.5 bg-slate-50 inline-block">
-                                    <img id="form-cover-preview-img" src="" class="max-h-32 object-contain rounded" alt="Pratinjau Cover">
+                                    <img id="form-cover-preview-img" src="" class="max-h-32 object-contain rounded" alt="Pratinjau Cover" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'><rect width=\'24\' height=\'24\' fill=\'%23f1f5f9\'/><path d=\'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0-2-.9-2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z\' fill=\'%2394a3b8\'/></svg>'">
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- BAGIAN 2: POIN DINAMIS MODUL AJAR (Kustomisasi Poin Penting) -->
+                    <!-- BAGIAN 2: POIN DINAMIS MODUL AJAR -->
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                         <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
                             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
@@ -433,10 +473,10 @@
                                 <i class="fa-solid fa-plus-circle"></i> Tambah Poin Kustom
                             </button>
                         </div>
-                        <p class="text-xs text-slate-400 mb-4 font-medium text-amber-700">Tips: Gunakan tombol "Unggah File" di samping input URL gambar ilustrasi untuk memasukkan gambar langsung dari HP/Laptop Anda tanpa ribet menggunakan link luar!</p>
+                        <p class="text-xs text-slate-400 mb-4 font-medium text-amber-700">Tips: Gunakan tombol "Unggah File" di samping input URL gambar ilustrasi untuk memasukkan gambar langsung tanpa ribet menggunakan link luar!</p>
                         
                         <div id="dynamic-points-container" class="space-y-4">
-                            <!-- Terisi komponen default yang bisa diedit/ditambah secara dinamis -->
+                            <!-- Terisi komponen default -->
                         </div>
                     </div>
 
@@ -450,9 +490,16 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Pihak 1: Guru Pengampu -->
                             <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                <h4 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-1">
-                                    <i class="fa-solid fa-user-tie text-indigo-600"></i> Guru Kelas / Mata Pelajaran
-                                </h4>
+                                <div class="flex justify-between items-center mb-3">
+                                    <h4 class="font-bold text-sm text-slate-800 flex items-center gap-1">
+                                        <i class="fa-solid fa-user-tie text-indigo-600"></i> Penandatangan Guru
+                                    </h4>
+                                    <!-- TOGGLE JABATAN GURU -->
+                                    <select id="ttd-jabatan-guru" class="px-2 py-1 border rounded text-xs bg-white text-slate-700 font-semibold focus:ring-1 focus:ring-indigo-500" onchange="updatePreviewRoleLabels()">
+                                        <option value="Guru Mata Pelajaran">Guru Mata Pelajaran</option>
+                                        <option value="Guru Kelas">Guru Kelas</option>
+                                    </select>
+                                </div>
                                 <div class="space-y-3 mb-4">
                                     <div>
                                         <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nama Lengkap & Gelar*</label>
@@ -523,11 +570,18 @@
         <!-- 5. HALAMAN PREVIEW FINAL / CETAK (Bisa cetak langsung) -->
         <div id="page-print-preview" class="hidden space-y-6">
             <!-- Navigasi preview di atas dokumen (hanya nampak di web, tersembunyi saat cetak) -->
-            <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+            <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
                 <button onclick="closePrintPreview()" class="text-slate-600 hover:text-slate-800 font-semibold text-sm flex items-center gap-1">
                     <i class="fa-solid fa-arrow-left"></i> Kembali ke Form Penyuntingan
                 </button>
-                <div class="flex gap-2">
+                <div class="flex flex-wrap gap-2 justify-end w-full md:w-auto">
+                    <!-- EKSPOR EXCEL & WORD -->
+                    <button onclick="exportModulToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
+                        <i class="fa-solid fa-file-excel"></i> Ekspor ke Excel (.xls)
+                    </button>
+                    <button onclick="exportModulToWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
+                        <i class="fa-solid fa-file-word"></i> Ekspor ke Word (.doc)
+                    </button>
                     <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
                         <i class="fa-solid fa-print"></i> Cetak Dokumen (PDF)
                     </button>
@@ -537,11 +591,18 @@
             <!-- HALAMAN KERTAS UTAMA MODUL (Bentuk Cetak Dokumen) -->
             <div class="print-area max-w-4xl mx-auto bg-white shadow-2xl p-8 sm:p-12 md:p-16 border border-slate-300 rounded-lg text-slate-900 leading-relaxed text-sm">
                 
-                <!-- Kop Surat / Header Dokumen -->
-                <div class="border-b-4 border-double border-slate-900 pb-4 text-center">
-                    <h1 class="text-lg font-bold uppercase tracking-wider">MODUL AJAR DIGITAL - KURIKULUM MERDEKA</h1>
-                    <p class="text-xs text-slate-600 mt-1 uppercase" id="print-header-sekolah">-</p>
-                    <p class="text-xs text-slate-400">Tahun Pelajaran: <span id="print-header-tahun">-</span></p>
+                <!-- Kop Surat / Header Dokumen dengan Logo -->
+                <div class="border-b-4 border-double border-slate-900 pb-4 flex items-center justify-between gap-4">
+                    <div class="w-20 h-20 flex-shrink-0">
+                        <img src="https://www.sditgamaschool.sch.id/frontend/sditgamma/img/logo-ikon-sditgama.jpg" alt="Logo SDIT GAMA" class="w-full h-full object-contain" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%231e3a8a\'><path d=\'M12 3L1 9l11 6 9-4.91V17h2V9L12 3z\'/></svg>'">
+                    </div>
+                    <div class="text-center flex-grow">
+                        <h1 class="text-base sm:text-lg font-bold uppercase tracking-wider">YAYASAN AL-MUHAJIRIN INSAN JAKARTA</h1>
+                        <h2 class="text-lg sm:text-xl font-bold uppercase tracking-wide text-indigo-900" id="print-header-sekolah">SDIT GEMA INSAN MANDIRI</h2>
+                        <p class="text-xs text-slate-500">Alamat: Jl. Samudra No.6&8 Rt.004 Rw.006, Rawabadak Selatan, Kec. Koja, Kota Jakarta Utara</p>
+                        <p class="text-[10px] text-slate-400">Tahun Pelajaran: <span id="print-header-tahun">-</span></p>
+                    </div>
+                    <div class="w-20 h-20 invisible"></div> <!-- Spacer penyeimbang -->
                 </div>
 
                 <!-- Judul Utama Modul -->
@@ -551,30 +612,32 @@
                     <p class="text-slate-500 text-[11px] mt-1" id="print-verification-status">Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-badge-check"></i> Barcode QR Terverifikasi Sistem</span></p>
                 </div>
 
-                <!-- Bagian 1: Informasi Umum -->
+                <!-- Bagian 1: Informasi Umum / Identitas Modul -->
                 <div class="mb-8">
                     <h3 class="text-sm font-bold text-indigo-900 border-b-2 border-indigo-900 pb-1 mb-3 uppercase tracking-wide">
-                        A. INFORMASI UMUM
+                        I. IDENTITAS MODUL
                     </h3>
-                    <div class="grid grid-cols-2 border border-slate-300 rounded-sm divide-x divide-slate-300">
+                    <div class="grid grid-cols-1 md:grid-cols-2 border border-slate-300 rounded-sm divide-y md:divide-y-0 md:divide-x divide-slate-300">
+                        <!-- Sisi Kiri -->
                         <div class="p-3 space-y-2.5">
-                            <div class="flex text-xs">
-                                <span class="w-1/3 font-bold text-slate-700">Institusi Sekolah</span>
-                                <span class="w-2/3" id="print-guru-sekolah">: -</span>
+                            <div class="flex text-xs items-baseline">
+                                <span class="w-[145px] font-bold text-slate-700 shrink-0">Institusi Sekolah</span>
+                                <span class="flex-grow text-slate-800" id="print-guru-sekolah">: -</span>
                             </div>
-                            <div class="flex text-xs">
-                                <span class="w-1/3 font-bold text-slate-700">Kelas / Semester / Fase</span>
-                                <span class="w-2/3" id="print-guru-kelas">: -</span>
+                            <div class="flex text-xs items-baseline">
+                                <span class="w-[145px] font-bold text-slate-700 shrink-0">Kelas / Semester / Fase</span>
+                                <span class="flex-grow text-slate-800" id="print-guru-kelas">: -</span>
                             </div>
                         </div>
+                        <!-- Sisi Kanan -->
                         <div class="p-3 space-y-2.5">
-                            <div class="flex text-xs">
-                                <span class="w-1/3 font-bold text-slate-700">Nama Penyusun</span>
-                                <span class="w-2/3" id="print-guru-name">: -</span>
+                            <div class="flex text-xs items-baseline">
+                                <span class="w-[145px] font-bold text-slate-700 shrink-0">Nama Penyusun</span>
+                                <span class="flex-grow text-slate-800" id="print-guru-name">: -</span>
                             </div>
-                            <div class="flex text-xs">
-                                <span class="w-1/3 font-bold text-slate-700">Alokasi Waktu</span>
-                                <span class="w-2/3" id="print-guru-alokasi">: -</span>
+                            <div class="flex text-xs items-baseline">
+                                <span class="w-[145px] font-bold text-slate-700 shrink-0">Alokasi Waktu</span>
+                                <span class="flex-grow text-slate-800" id="print-guru-alokasi">: -</span>
                             </div>
                         </div>
                     </div>
@@ -583,14 +646,14 @@
                 <!-- Area Otomatis Menampilkan Gambar Ilustrasi Utama jika ada -->
                 <div id="print-image-container" class="hidden mb-8 text-center break-inside-avoid">
                     <div class="border border-slate-200 rounded-lg p-2 inline-block bg-slate-50">
-                        <img id="print-modul-img" src="" class="max-h-64 object-contain mx-auto rounded" alt="Gambar Ilustrasi Modul Ajar">
+                        <img id="print-modul-img" src="" class="max-h-64 object-contain mx-auto rounded" alt="Gambar Ilustrasi Modul Ajar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'><rect width=\'24\' height=\'24\' fill=\'%23f1f5f9\'/><path d=\'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0-2-.9-2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z\' fill=\'%2394a3b8\'/></svg>'">
                         <p class="text-[10px] text-slate-400 mt-1 italic">Gambar Pendukung Utama Pembelajaran</p>
                     </div>
                 </div>
 
                 <!-- Bagian 2: Konten Dinamis yang diinput guru -->
                 <div id="print-dynamic-sections" class="space-y-6">
-                    <!-- Terisi dinamis sesuai poin input -->
+                    <!-- Terisi dinamis -->
                 </div>
 
                 <!-- Bagian 3: Section Tanda Tangan Ganda Terintegrasi QR Code / Manual -->
@@ -620,13 +683,14 @@
                         <div class="flex flex-col items-center justify-between h-52">
                             <div>
                                 <p class="text-slate-500 text-[11px]" id="print-date-today">Jakarta, -</p>
-                                <p class="font-bold">Guru Mata Pelajaran</p>
+                                <!-- MANUAL KLIK JABATAN GURU PADA CETAK -->
+                                <p class="font-bold cursor-pointer hover:bg-slate-100 p-1 rounded border border-transparent hover:border-slate-300" id="print-peran-guru" onclick="togglePrintRoleLabel()" title="Klik untuk mengubah Jabatan">Guru Mata Pelajaran</p>
                             </div>
 
                             <!-- Area QR Barcode Verifikasi / Manual TTD -->
                             <div class="my-3 h-24 flex flex-col items-center justify-center">
                                 <div id="print-ttd-area-guru" class="flex flex-col items-center">
-                                    <!-- Terisi dinamis QR atau Tanda Tangan Manual -->
+                                    <!-- Terisi dinamis -->
                                 </div>
                             </div>
 
@@ -651,7 +715,7 @@
 
     <!-- FOOTER UTAMA (no-print) -->
     <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 no-print">
-        <p>© 2026 Modul Ajar Digital. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p>© 2026 Modul Ajar Digital. Suci Safina hak cipta dilindungi undang-undang.</p>
         <p class="mt-1">Dibuat untuk Efisiensi Administrasi Guru & Supervisi Sekolah Mandiri.</p>
     </footer>
 
@@ -704,19 +768,17 @@
 
     <!-- LOGIK SISTEM DAN STATE MANAGEMENT -->
     <script>
-        // STATE INITIALIZATION DARI DATA PDF YANG DIUNGGAH
+        // INISIALISASI STATE (LOKAL STORAGE & FALLBACK DEFAULTS)
         let admins = [
-            { id: 1, username: 'admin', password: 'admin123', role: 'admin' }
+            { id: 1, username: 'admin', password: 'admin123', role: 'admin', isMaster: true }
         ];
 
         let teachers = [
             { id: 1, nip: 'NIY.005.054.024', nama_guru: 'Suci Safina Suliasanu, S.Kom.', username: 'suci', password: 'suci123', mata_pelajaran: 'Koding dan Kecerdasan Artifial', role: 'guru', verified: true }
         ];
 
-        // VARIABEL STATE TAHUN AJARAN AKTIF SISTEM (DAPAT DIATUR ADMIN SECARA DINAMIS)
-        let active_tahun_ajaran = '2025/2026';
+        let active_tahun_ajaran = '2026/2027';
 
-        // SINKRONISASI DATA DARI MODUL AJAR GEMA INSAN MANDIRI DENGAN FORMAT TABEL YANG RAPI
         let modul_ajar = [
             {
                 id: 101,
@@ -724,33 +786,33 @@
                 judul_modul: 'Jaringan Komputer dan Internet',
                 kelas: 'VI/II / Fase C',
                 alokasi_waktu: '2 JP X 35 Menit',
-                nama_penyusun: 'Suci Safina Suliasanu, S.Kom.',
+                nama_penyusun: 'Suci Safina Suhasana, S.Kom.',
                 institusi: 'SDIT Gema Insan Mandiri',
-                tahun: '2025/2026',
+                tahun: '2026/2027',
                 jenjang: 'SD',
-                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: 'NIY.005.054.024' },
+                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: 'NIY.005.054.024', jabatan: 'Guru Mata Pelajaran' },
                 ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
                 nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
                 nip_kepsek: 'NIY.005.039.023',
-                gambar_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop', // default illustration image
+                gambar_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop',
                 details: [
                     { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: 'Jaringan komputer, internet, modem Wi-Fi, keamanan online, keamanan jaringan.', component_img: 'https://images.unsplash.com/photo-1551703599-6b3dbb3f6a23?w=500&auto=format&fit=crop' },
-                    { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa: Senantiasa melaksanakan kewajiban yang diperintahkan Allah Swt.\nb. Berpikir Kritis: Tidak tertarik untuk melakukan kegiatan-kegiatan yang tidak bermanfaat.\nc. Bergotong Royong: Selalu menjaga kebersamaan dan saling menolong dalam kebaikan.\nd. Kreatif: Mempersiapkan diri untuk menjadi dewasa serta mampu melaksanakan semua kewajiban sesuai kemampuan.', component_img: '' },
+                    { id: 2, nama_poin: 'Dimensi Profil Lulusan', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa: Senantiasa melaksanakan kewajiban yang diperintahkan Allah Swt.\nb. Berpikir Kritis: Tidak tertarik untuk melakukan kegiatan-kegiatan yang tidak bermanfaat.\nc. Bergotong Royong: Selalu menjaga kebersamaan dan saling menolong dalam kebaikan.\nd. Kreatif: Mempersiapkan diri untuk menjadi dewasa serta mampu melaksanakan semua kewajiban sesuai kemampuan.', component_img: '' },
                     { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board\ne. Buku Pelajaran Koding dan Kecerdasan Artifisial kelas 6', component_img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop' },
-                    { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: 'a. Perangkat ini digunakan untuk mengajar peserta didik reguler.\nb. Jumlah peserta didik per kelas maksimum 30 orang.', component_img: '' },
+                    { id: 4, nama_poin: 'Target Murid', isi_poin: 'a. Perangkat ini digunakan untuk mengajar murid reguler.\nb. Jumlah murid per kelas maksimum 30 orang.', component_img: '' },
                     { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Model pembelajaran menggunakan Deep Learning yang menekankan pemahaman mendalam, bukan sekadar hafalan. Siswa diajak aktif bertanya, berdiskusi, dan berpikir kritis, sementara guru berperan sebagai pendamping dan fasilitator.', component_img: '' },
-                    { id: 6, nama_poin: 'Capaian Pembelajaran', isi_poin: 'Peserta didik mampu memahami konsep dasar, manfaat, and dampak teknologi digital, memahami sistem komputer tingkat pradasar, menerapkan pengamanan informasi pribadi dalam komunikasi daring, memanfaatkan internet dan memproduksi serta mendiseminasi konten digital dalam bentuk teks dan gambar.', component_img: '' },
-                    { id: 7, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'With studying this lesson, students are expected to:\na. Mengenal jaringan komputer.\nb. Mengenal perangkat jaringan.\nc. Menggunakan internet secara bertanggung jawab.\nd. Mengetahui aspek keamanan dalam penggunaan internet.', component_img: '' },
-                    { id: 8, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Peserta didik akan mempelajari cara berhubungan ke situs lewat internet, merawat modem wi-fi, menggunakan fasilitas internet secara bertanggung jawab, menjaga privasi data saat online.', component_img: '' },
+                    { id: 6, nama_poin: 'Capaian Pembelajaran', isi_poin: 'Murid mampu memahami konsep dasar, manfaat, and dampak teknologi digital, memahami sistem komputer tingkat pradasar, menerapkan pengamanan informasi pribadi dalam komunikasi daring, memanfaatkan internet dan memproduksi serta mendiseminasi konten digital dalam bentuk teks dan gambar.', component_img: '' },
+                    { id: 7, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'With studying this material, murid are expected to be able to:\na. Mengenal jaringan komputer.\nb. Mengenal perangkat jaringan.\nc. Menggunakan internet secara bertanggung jawab.\nd. Mengetahui aspek keamanan dalam penggunaan internet.', component_img: '' },
+                    { id: 8, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Murid akan mempelajari cara berhubungan ke situs lewat internet, merawat modem wi-fi, menggunakan fasilitas internet secara bertanggung jawab, menjaga privasi data saat online.', component_img: '' },
                     { id: 9, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah perangkat jaringan seperti modem wi-fi perlu perawatan?\n2. Apakah internet sebuah tempat yang aman?\n3. Bagaimana praktik yang baik saat berkomunikasi lewat internet?', component_img: '' },
                     { 
                         id: 10, 
                         nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', 
                         isTable: true,
                         isi_poin: JSON.stringify([
-                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'a. Guru memasuki ruang kelas dengan ramah, kemudian mengucapkan salam kepada seluruh peserta didik.\nb. Guru menanyakan kabar peserta didik dan memastikan kesiapan mereka mengikuti pembelajaran.\nc. Guru memimpin doa, atau menunjuk salah satu peserta didik untuk memimpin doa sebelum belajar.\nd. Guru melakukan pengecekan kehadiran dengan memanggil nama peserta didik satu per satu.\ne. Guru mengajak peserta didik berdiri untuk menyanyikan salah satu lagu wajib nasional sebagai bentuk pembiasaan sikap cinta tanah air.\nf. Guru menjelaskan tujuan pembelajaran yang ingin dicapai pada pertemuan tersebut.\ng. Guru melakukan permainan singkat untuk meningkatkan antusiasme belajar.' },
-                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'a. Guru menayangkan video atau slide PPT yang berisi materi inti.\nb. Setelah video atau ppt selesai, guru memberikan beberapa pertanyaan untuk mengukur pemahaman awal peserta didik.\nc. Guru memberikan penjelasan tambahan, meluruskan konsep yang belum tepat, dan memperkaya pemahaman peserta didik.\nd. Peserta didik dibagi menjadi beberapa kelompok kecil untuk berdiskusi.\ne. Guru membagikan LKPD yang berisi tugas.\nf. Setiap kelompok mempresentasikan hasil diskusi di depan kelas.\ng. Ice breaking.' },
-                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Penyimpulan:\na. Guru memberikan beberapa soal atau pertanyaan untuk mengukur pemahaman peserta didik.\nb. Guru mengajak peserta didik merefleksikan apa yang sudah dipelajari.\nc. Guru bersama peserta didik menyimpulkan materi.\nd. Guru memberikan apresiasi dan koreksi atas partisipasi serta pemahaman peserta didik.\ne. Guru memimpin peserta didik untuk menutup pembelajaran dengan berdoa.\nf. Guru mengucapkan salam.' }
+                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'a. Guru memasuki ruang kelas dengan ramah, kemudian mengucapkan salam kepada seluruh murid.\nb. Guru menanyakan kabar murid dan memastikan kesiapan mereka mengikuti pembelajaran.\nc. Guru memimpin doa, atau menunjuk salah satu murid untuk memimpin doa sebelum belajar.\nd. Guru melakukan kehadiran dengan memanggil nama murid satu per satu.\ne. Guru mengajak murid berdiri untuk menyanyikan salah satu lagu wajib nasional.\nf. Guru menjelaskan tujuan pembelajaran.\ng. Guru melakukan permainan singkat.' },
+                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'a. Guru menayangkan video atau slide PPT.\nb. Guru memberikan pertanyaan untuk mengukur pemahaman awal murid.\nc. Guru memberikan penjelasan tambahan.\nd. Murid dibagi menjadi beberapa kelompok kecil untuk berdiskusi.\ne. Guru membagikan LKPD.\nf. Setiap kelompok mempresentasikan hasil diskusi.\ng. Ice breaking.' },
+                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Penyimpulan:\na. Guru memberikan beberapa soal atau pertanyaan.\nb. Guru mengajak murid merefleksikan apa yang sudah dipelajari.\nc. Guru bersama murid menyimpulkan materi.\nd. Guru memberikan apresiasi dan koreksi.\ne. Guru memimpin murid untuk berdoa.\nf. Guru mengucapkan salam.' }
                         ]),
                         component_img: ''
                     },
@@ -761,13 +823,13 @@
                         isi_poin: JSON.stringify([
                             { kriteria: 'Pemahaman Materi', s4: 'Menunjukkan pemahaman sangat jelas tentang materi jaringan komputer dan internet.', s3: 'Memahami materi dengan cukup jelas.', s2: 'Memahami sebagian materi.', s1: 'Tidak memahami materi.' },
                             { kriteria: 'Kerjasama Kelompok', s4: 'Sangat aktif berkontribusi, menghargai pendapat teman, bekerja sama dengan harmonis.', s3: 'Berkontribusi baik, sesekali kurang aktif.', s2: 'Terlibat namun pasif, hanya bekerja jika diminta.', s1: 'Tidak bekerja sama, mengganggu atau tidak ikut kontribusi.' },
-                            { kriteria: 'Kerapihan & Ketepatan LKPD', s4: 'LKPD lengkap, rapi, bersih, jawaban tepat sesuai instruksi.', s3: 'Cukup rapi dan bersih, ada sedikit kesalahan kecil.', s2: 'Kurang rapi, beberapa jawaban tidak lengkap.', s1: 'Sangat tidak rapi, banyak jawaban kosong atau tidak sesuai instruksi.' },
-                            { kriteria: 'Presentasi atau Komunikasi', s4: 'Menjelaskan dengan lancar, percaya diri, informasi akurat dan mudah dipahami.', s3: 'Menjelaskan dengan cukup baik, beberapa bagian kurang jelas.', s2: 'Menjelaskan dengan terbata-bata, informasi tidak lengkap.', s1: 'Tidak mampu menjelaskan, hanya membaca atau diam.' }
+                            { kriteria: 'Kerapihan & Ketepatan LKPD', s4: 'LKPD lengkap, rapi, bersih, jawaban tepat sesuai instruksi.', s3: 'Cukup rapi dan bersih, ada sedikit kesalahan kecil.', s2: 'Kurang rapi, beberapa jawaban tidak lengkap.', s1: 'Sangat tidak rapi, banyak jawaban kosong.' },
+                            { kriteria: 'Presentasi atau Komunikasi', s4: 'Menjelaskan dengan lancar, percaya diri, informasi akurat.', s3: 'Menjelaskan dengan cukup baik.', s2: 'Menjelaskan dengan terbata-bata.', s1: 'Tidak mampu menjelaskan.' }
                         ]),
                         component_img: ''
                     },
-                    { id: 12, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan: Siswa diberikan soal analisis evaluasi tambahan dan kuis interaktif.\nRemedial: Guru membimbing kembali siswa yang memiliki skor pemahaman di bawah skala 2.4.', component_img: '' },
-                    { id: 13, nama_poin: 'Lampiran LKPD', isi_poin: 'a. Bagaimana cara menghubungkan komputer kita ke situs web melalui internet?\nb. Apa yang kamu ketahui tentang ISP? Sebutkan tiga operator seluler yang memberikan layanan internet!\nc. Sebutkan lima langkah praktik baik dalam merawat modem wi-fi!\nd. Menurutmu mengapa mengakses jaringan wi-fi orang lain tanpa izin merupakan tindakan yang tidak baik?\ne. Sebutkan lima langkah panduan yang baik saat menggunakan email!', component_img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&auto=format&fit=crop' }
+                    { id: 12, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan: Murid diberikan soal analisis evaluasi tambahan.\nRemedial: Guru membimbing kembali murid yang memiliki skor di bawah standar.', component_img: '' },
+                    { id: 13, nama_poin: 'Lampiran LKPD', isi_poin: 'a. Bagaimana cara menghubungkan komputer kita ke internet?\nb. Apa yang kamu ketahui tentang ISP?\nc. Sebutkan lima langkah dalam merawat modem wi-fi!\nd. Mengapa mengakses wi-fi orang lain tanpa izin tidak baik?\ne. Sebutkan panduan menggunakan email dengan baik!', component_img: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=500&auto=format&fit=crop' }
                 ]
             }
         ];
@@ -775,13 +837,14 @@
         let currentUser = null;
         let selectedModulId = null;
         let activeAdminTab = 'guru';
+        let currentPage = 'page-login';
 
         // COMPONENT DEFAULT UNTUK MODUL AJAR BARU
         const DEFAULT_COMPONENTS = [
             { nama_poin: 'Kompetensi Awal', isi_poin: '', component_img: '' },
-            { nama_poin: 'Profil Pelajar Pancasila', isi_poin: '', component_img: '' },
+            { nama_poin: 'Dimensi Profil Lulusan', isi_poin: '', component_img: '' },
             { nama_poin: 'Sarana dan Prasarana', isi_poin: '', component_img: '' },
-            { nama_poin: 'Target Peserta Didik', isi_poin: '', component_img: '' },
+            { nama_poin: 'Target Murid', isi_poin: '', component_img: '' },
             { nama_poin: 'Tujuan Pembelajaran', isi_poin: '', component_img: '' },
             { nama_poin: 'Pemahaman Bermakna', isi_poin: '', component_img: '' },
             { nama_poin: 'Pertanyaan Pemantik', isi_poin: '', component_img: '' },
@@ -798,6 +861,96 @@
             { nama_poin: 'Lampiran LKPD', isi_poin: '', component_img: '' }
         ];
 
+        // SINKRONISASI KE LOCAL STORAGE & PERTAHANAN SESI (30 MENIT)
+        function loadDataFromStorage() {
+            if (localStorage.getItem('mad_admins')) {
+                admins = JSON.parse(localStorage.getItem('mad_admins'));
+            } else {
+                localStorage.setItem('mad_admins', JSON.stringify(admins));
+            }
+
+            if (localStorage.getItem('mad_teachers')) {
+                teachers = JSON.parse(localStorage.getItem('mad_teachers'));
+            } else {
+                localStorage.setItem('mad_teachers', JSON.stringify(teachers));
+            }
+
+            if (localStorage.getItem('mad_modul_ajar')) {
+                modul_ajar = JSON.parse(localStorage.getItem('mad_modul_ajar'));
+            } else {
+                localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
+            }
+
+            if (localStorage.getItem('mad_tahun_ajaran')) {
+                active_tahun_ajaran = localStorage.getItem('mad_tahun_ajaran');
+            } else {
+                localStorage.setItem('mad_tahun_ajaran', active_tahun_ajaran);
+            }
+        }
+
+        function saveDataToStorage() {
+            localStorage.setItem('mad_admins', JSON.stringify(admins));
+            localStorage.setItem('mad_teachers', JSON.stringify(teachers));
+            localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
+            localStorage.setItem('mad_tahun_ajaran', active_tahun_ajaran);
+        }
+
+        // PERTAHANAN Halaman & Sesi aktif
+        function checkAndRestoreSession() {
+            const lastActive = localStorage.getItem('mad_last_active');
+            const savedUser = localStorage.getItem('mad_current_user');
+            const savedPage = localStorage.getItem('mad_current_page');
+            const savedModulId = localStorage.getItem('mad_selected_modul_id');
+            const now = Date.now();
+
+            // Sesi kedaluwarsa jika lewat dari 30 menit (1800000 ms)
+            if (lastActive && (now - parseInt(lastActive) < 1800000)) {
+                if (savedUser) {
+                    currentUser = JSON.parse(savedUser);
+                    currentPage = savedPage || 'page-login';
+                    selectedModulId = savedModulId ? parseInt(savedModulId) : null;
+                    
+                    // Update detak waktu terakhir
+                    localStorage.setItem('mad_last_active', now.toString());
+                    navigate(currentPage);
+                    
+                    if (currentPage === 'page-admin-dashboard') {
+                        switchAdminTab('guru');
+                    } else if (currentPage === 'page-guru-dashboard') {
+                        renderGuruDashboard();
+                    } else if (currentPage === 'page-print-preview' && selectedModulId) {
+                        previewFinalModul();
+                    } else if (currentPage === 'page-modul-creator' && selectedModulId) {
+                        editExistingModul(selectedModulId);
+                    }
+                    showToast('Sesi Anda otomatis dipulihkan.', 'success');
+                    return;
+                }
+            }
+            
+            // Jika kedaluwarsa atau belum ada sesi
+            logoutSilently();
+        }
+
+        function updateActivity() {
+            localStorage.setItem('mad_last_active', Date.now().toString());
+        }
+
+        // Daftarkan listener aktivitas user
+        window.addEventListener('click', updateActivity);
+        window.addEventListener('keypress', updateActivity);
+
+        function logoutSilently() {
+            currentUser = null;
+            selectedModulId = null;
+            currentPage = 'page-login';
+            localStorage.removeItem('mad_current_user');
+            localStorage.removeItem('mad_current_page');
+            localStorage.removeItem('mad_selected_modul_id');
+            localStorage.removeItem('mad_last_active');
+            navigate('page-login');
+        }
+
         // MOCK QR CODE GENERATION HELPER (SVG)
         function generateQRCodeSVG(text) {
             let hash = 0;
@@ -808,18 +961,12 @@
             let matrixSize = 21;
             let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${matrixSize} ${matrixSize}" class="w-20 h-20">`;
             svg += `<rect width="${matrixSize}" height="${matrixSize}" fill="white"/>`;
-            
-            // Kiri Atas
             svg += `<rect x="0" y="0" width="7" height="7" fill="black"/>`;
             svg += `<rect x="1" y="1" width="5" height="5" fill="white"/>`;
             svg += `<rect x="2" y="2" width="3" height="3" fill="black"/>`;
-            
-            // Kanan Atas
             svg += `<rect x="${matrixSize-7}" y="0" width="7" height="7" fill="black"/>`;
             svg += `<rect x="${matrixSize-6}" y="1" width="5" height="5" fill="white"/>`;
             svg += `<rect x="${matrixSize-5}" y="2" width="3" height="3" fill="black"/>`;
-            
-            // Kiri Bawah
             svg += `<rect x="0" y="${matrixSize-7}" width="7" height="7" fill="black"/>`;
             svg += `<rect x="1" y="${matrixSize-6}" width="5" height="5" fill="white"/>`;
             svg += `<rect x="2" y="${matrixSize-5}" width="3" height="3" fill="black"/>`;
@@ -841,12 +988,16 @@
 
         // ON LOAD INITIALIZATION
         window.onload = function() {
-            navigate('page-login');
+            loadDataFromStorage();
+            checkAndRestoreSession();
             updateStatistics();
         };
 
         // NAVIGASI ANTAR HALAMAN
         function navigate(pageId) {
+            currentPage = pageId;
+            localStorage.setItem('mad_current_page', pageId);
+
             document.getElementById('page-login').classList.add('hidden');
             document.getElementById('page-admin-dashboard').classList.add('hidden');
             document.getElementById('page-guru-dashboard').classList.add('hidden');
@@ -862,7 +1013,7 @@
                 navUserInfo.classList.remove('hidden');
                 btnLogout.classList.remove('hidden');
                 document.getElementById('nav-user-name').innerText = currentUser.nama_guru || currentUser.username;
-                document.getElementById('nav-user-role').innerText = currentUser.role.toUpperCase() + (currentUser.mata_pelajaran ? ` - ${currentUser.mata_pelajaran}` : '');
+                document.getElementById('nav-user-role').innerText = currentUser.role.toUpperCase() + (currentUser.isMaster ? ' (MASTER)' : '') + (currentUser.mata_pelajaran ? ` - ${currentUser.mata_pelajaran}` : '');
             } else {
                 navUserInfo.classList.add('hidden');
                 btnLogout.classList.add('hidden');
@@ -893,6 +1044,9 @@
             const adminAcc = admins.find(a => a.username === userInp && a.password === passInp);
             if (adminAcc) {
                 currentUser = adminAcc;
+                localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
+                localStorage.setItem('mad_last_active', Date.now().toString());
+                
                 showToast('Login Berhasil sebagai Administrator', 'success');
                 navigate('page-admin-dashboard');
                 switchAdminTab('guru');
@@ -904,6 +1058,9 @@
             const teacherAcc = teachers.find(t => (t.username === userInp || t.nip === userInp) && t.password === passInp);
             if (teacherAcc) {
                 currentUser = teacherAcc;
+                localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
+                localStorage.setItem('mad_last_active', Date.now().toString());
+
                 showToast(`Login Berhasil. Pengampu: ${teacherAcc.nama_guru}`, 'success');
                 navigate('page-guru-dashboard');
                 renderGuruDashboard();
@@ -918,6 +1075,12 @@
             selectedModulId = null;
             document.getElementById('login-username').value = '';
             document.getElementById('login-password').value = '';
+            
+            localStorage.removeItem('mad_current_user');
+            localStorage.removeItem('mad_current_page');
+            localStorage.removeItem('mad_selected_modul_id');
+            localStorage.removeItem('mad_last_active');
+
             showToast('Anda telah logout dengan aman', 'info');
             navigate('page-login');
         }
@@ -979,8 +1142,21 @@
             } else {
                 tabProfil.className = "px-6 py-3 font-semibold text-sm border-b-2 border-indigo-600 text-indigo-600 flex items-center gap-2";
                 subProfil.classList.remove('hidden');
+                
+                // Set form values
                 document.getElementById('admin-new-username').value = currentUser.username;
+                document.getElementById('admin-new-password').value = '';
+                document.getElementById('admin-confirm-password').value = '';
                 document.getElementById('admin-tahun-ajaran').value = active_tahun_ajaran;
+                
+                // Tampilkan menu Master Admin hanya jika user aktif adalah Master Admin
+                const masterSection = document.getElementById('section-master-admin-only');
+                if (currentUser.isMaster) {
+                    masterSection.classList.remove('hidden');
+                    renderAdminList();
+                } else {
+                    masterSection.classList.add('hidden');
+                }
             }
         }
 
@@ -992,7 +1168,77 @@
                 return;
             }
             active_tahun_ajaran = val;
+            saveDataToStorage();
             showToast(`Tahun Ajaran aktif berhasil diperbarui menjadi: ${val}`, 'success');
+        }
+
+        // --- MANAJEMEN SUB-ADMIN (FITUR MASTER ADMIN) ---
+        function renderAdminList() {
+            const container = document.getElementById('admin-list-container');
+            container.innerHTML = '';
+            
+            admins.forEach(adm => {
+                const div = document.createElement('div');
+                div.className = "p-2 bg-white rounded-lg flex items-center justify-between border border-slate-200 text-xs";
+                div.innerHTML = `
+                    <div>
+                        <span class="font-bold text-slate-800">${adm.username}</span>
+                        <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded ${adm.isMaster ? 'bg-indigo-150 text-indigo-800 font-bold bg-indigo-50' : 'bg-slate-100 text-slate-600'}">
+                            ${adm.isMaster ? 'Master' : 'Sub-Admin'}
+                        </span>
+                    </div>
+                    ${!adm.isMaster ? `
+                        <button onclick="deleteSubAdmin(${adm.id})" class="text-red-500 hover:text-red-700 p-1" title="Hapus Sub-Admin">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    ` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function handleAddSubAdmin(event) {
+            event.preventDefault();
+            const usernameVal = document.getElementById('subadmin-username').value.trim();
+            const passwordVal = document.getElementById('subadmin-password').value.trim();
+
+            if (!usernameVal || !passwordVal) {
+                showToast('Lengkapi data admin baru', 'error');
+                return;
+            }
+
+            // Cek duplikasi
+            const existAdm = admins.find(a => a.username === usernameVal);
+            const existGuru = teachers.find(t => t.username === usernameVal);
+            if (existAdm || existGuru) {
+                showToast('Username telah digunakan di sistem', 'error');
+                return;
+            }
+
+            const newId = admins.length > 0 ? Math.max(...admins.map(a => a.id)) + 1 : 1;
+            admins.push({
+                id: newId,
+                username: usernameVal,
+                password: passwordVal,
+                role: 'admin',
+                isMaster: false
+            });
+
+            saveDataToStorage();
+            renderAdminList();
+            
+            document.getElementById('subadmin-username').value = '';
+            document.getElementById('subadmin-password').value = '';
+            showToast('Sub-Admin berhasil ditambahkan', 'success');
+        }
+
+        function deleteSubAdmin(id) {
+            if (confirm("Hapus akun Sub-Admin ini?")) {
+                admins = admins.filter(a => a.id !== id);
+                saveDataToStorage();
+                renderAdminList();
+                showToast('Sub-Admin berhasil dihapus', 'info');
+            }
         }
 
         function renderAdminTtdGuruList() {
@@ -1021,16 +1267,19 @@
             const idx = teachers.findIndex(t => t.id === id);
             if (idx !== -1) {
                 teachers[idx].verified = !teachers[idx].verified;
+                saveDataToStorage();
                 showToast(`Otorisasi status verifikasi QR ${teachers[idx].nama_guru} diperbarui`, 'success');
                 renderAdminTtdGuruList();
             }
         }
 
+        // UPDATE STATISTIK
         function updateStatistics() {
             document.getElementById('stat-total-guru').innerText = teachers.length;
             document.getElementById('stat-total-modul').innerText = modul_ajar.length;
         }
 
+        // RENDERING TABEL MASTER GURU
         function renderTableGuru() {
             const body = document.getElementById('table-guru-body');
             const query = document.getElementById('search-guru').value.toLowerCase().trim();
@@ -1050,19 +1299,22 @@
             }
 
             filtered.forEach(guru => {
+                // Keamanan Maksimal: Jika Sub-Admin, password guru disembunyikan
+                const passwordToDisplay = currentUser.isMaster ? guru.password : '••••••';
+
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="p-4 font-mono font-semibold text-xs">${guru.nip}</td>
                     <td class="p-4 font-semibold text-slate-800">${guru.nama_guru}</td>
                     <td class="p-4"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium border border-indigo-100">${guru.mata_pelajaran}</span></td>
                     <td class="p-4 font-mono text-xs">${guru.username}</td>
-                    <td class="p-4 font-mono text-xs">${guru.password}</td>
+                    <td class="p-4 font-mono text-xs text-slate-500">${passwordToDisplay}</td>
                     <td class="p-4 text-center">
                         <div class="flex justify-center gap-1.5">
-                            <button onclick="editGuru(${guru.id})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition">
+                            <button onclick="editGuru(${guru.id})" class="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Edit Guru">
                                 <i class="fa-solid fa-edit"></i>
                             </button>
-                            <button onclick="deleteGuru(${guru.id})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition">
+                            <button onclick="deleteGuru(${guru.id})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Guru">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
                         </div>
@@ -1113,6 +1365,7 @@
                 showToast('Guru baru terdaftar', 'success');
             }
 
+            saveDataToStorage();
             closeModalGuru();
             renderTableGuru();
             updateStatistics();
@@ -1136,29 +1389,41 @@
         function deleteGuru(id) {
             if (confirm("Apakah Anda yakin ingin menghapus data guru ini?")) {
                 teachers = teachers.filter(t => t.id !== id);
+                saveDataToStorage();
                 showToast('Data guru telah dihapus', 'info');
                 renderTableGuru();
                 updateStatistics();
             }
         }
 
+        // UPDATE PROFILE ADMIN (DI TABEL ADMINS & USER AKTIF)
         function handleUpdateProfilAdmin(event) {
             event.preventDefault();
             const usernameInp = document.getElementById('admin-new-username').value.trim();
             const newPass = document.getElementById('admin-new-password').value.trim();
             const confirmPass = document.getElementById('admin-confirm-password').value.trim();
 
-            if (newPass !== confirmPass) {
-                showToast('Password baru tidak cocok', 'error');
+            if (!usernameInp) {
+                showToast('Username tidak boleh kosong', 'error');
                 return;
             }
 
             const idx = admins.findIndex(a => a.id === currentUser.id);
             if (idx !== -1) {
                 admins[idx].username = usernameInp;
-                admins[idx].password = newPass;
+                
+                if (newPass) {
+                    if (newPass !== confirmPass) {
+                        showToast('Password baru tidak cocok', 'error');
+                        return;
+                    }
+                    admins[idx].password = newPass;
+                }
+
                 currentUser = admins[idx];
-                showToast('Kredensial Admin berhasil diubah', 'success');
+                localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
+                saveDataToStorage();
+                showToast('Profil keamanan admin berhasil diubah', 'success');
                 switchAdminTab('guru');
             }
         }
@@ -1208,6 +1473,7 @@
                     }
                 }
 
+                saveDataToStorage();
                 showToast(`Impor berhasil. ${importedCount} guru ditambahkan`, 'success');
                 renderTableGuru();
                 updateStatistics();
@@ -1216,7 +1482,7 @@
             event.target.value = '';
         }
 
-        // --- SISTEM GURU: DASHBOARD & PEMBUATAN MODUL ---
+        // --- GURU PORTAL LOGIC ---
         function renderGuruDashboard() {
             document.getElementById('guru-welcome-name').innerText = `Selamat Datang, ${currentUser.nama_guru}`;
             document.getElementById('guru-welcome-mapel').innerText = currentUser.mata_pelajaran;
@@ -1237,42 +1503,45 @@
             emptyState.classList.add('hidden');
 
             myModul.forEach(m => {
-                const isAnyTtdChecked = m.ttd_guru?.isChecked || m.ttd_kepsek?.isChecked;
-                const badgeText = isAnyTtdChecked ? 'BARCODE AKTIF' : 'TTD MANUAL';
-                const badgeColorClass = isAnyTtdChecked 
-                    ? 'bg-emerald-50 text-emerald-700 border-emerald-100' 
-                    : 'bg-amber-50 text-amber-700 border-amber-100';
+                const badgeText = m.ttd_guru?.jabatan || 'Guru Mata Pelajaran';
+                const badgeColorClass = 'bg-indigo-50 text-indigo-700 border-indigo-100';
 
                 const card = document.createElement('div');
-                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition flex flex-col justify-between h-56";
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition flex flex-col justify-between h-68";
                 
                 card.innerHTML = `
                     <div class="space-y-2">
                         <div class="flex justify-between items-start gap-2">
                             <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">${m.kelas}</span>
-                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 ${badgeColorClass}">
-                                <i class="fa-solid ${isAnyTtdChecked ? 'fa-qrcode' : 'fa-signature'}"></i> ${badgeText}
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${badgeColorClass}">
+                                ${badgeText}
                             </span>
                         </div>
                         <h4 class="font-bold text-slate-900 line-clamp-2 leading-snug hover:text-indigo-600 transition cursor-pointer" onclick="editExistingModul(${m.id})">${m.judul_modul}</h4>
                         <p class="text-[11px] text-slate-400">Penyusun: ${m.nama_penyusun} | Alokasi: ${m.alokasi_waktu}</p>
                     </div>
 
-                    <div class="border-t border-slate-100 pt-3 flex justify-between items-center mt-3">
-                        <div class="flex gap-1.5">
-                            <button onclick="editExistingModul(${m.id})" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit
+                    <div class="border-t border-slate-100 pt-3 flex flex-col gap-2 mt-3">
+                        <div class="flex justify-between items-center">
+                            <button onclick="duplicateModul(${m.id})" class="text-emerald-700 hover:bg-emerald-50 p-1.5 rounded text-xs font-bold flex items-center gap-1 transition" title="Duplikat Rencana Modul">
+                                <i class="fa-regular fa-copy"></i> Duplikat
                             </button>
-                            <button onclick="deleteModul(${m.id})" class="text-red-600 hover:bg-red-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
-                                <i class="fa-solid fa-trash"></i> Hapus
-                            </button>
+                            <div class="flex gap-1">
+                                <button onclick="editExistingModul(${m.id})" class="text-indigo-600 hover:bg-indigo-50 px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-pen-to-square"></i> Edit
+                                </button>
+                                <button onclick="deleteModul(${m.id})" class="text-red-600 hover:bg-red-50 px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 transition">
+                                    <i class="fa-solid fa-trash"></i> Hapus
+                                </button>
+                            </div>
                         </div>
-                        <div class="flex gap-1">
-                            <button onclick="downloadModulJSON(${m.id})" class="bg-indigo-50 text-indigo-700 hover:bg-indigo-100 p-2 rounded-lg text-xs font-bold transition" title="Unduh Backup Berkas (.json)">
-                                <i class="fa-solid fa-download"></i> Backup
+                        
+                        <div class="flex gap-1 w-full border-t border-slate-50 pt-2">
+                            <button onclick="downloadModulJSON(${m.id})" class="flex-1 bg-indigo-50 text-indigo-700 hover:bg-indigo-100 py-1.5 rounded text-[11px] font-bold transition flex items-center justify-center gap-1" title="Unduh Backup Berkas (.json)">
+                                <i class="fa-solid fa-download"></i> Backup JSON
                             </button>
-                            <button onclick="viewCetakModul(${m.id})" class="bg-slate-800 hover:bg-slate-950 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1">
-                                <i class="fa-solid fa-file-pdf"></i> Lihat Cetak
+                            <button onclick="viewCetakModul(${m.id})" class="flex-1 bg-slate-800 hover:bg-slate-950 text-white py-1.5 rounded text-[11px] font-bold transition flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-print"></i> Lihat Cetak
                             </button>
                         </div>
                     </div>
@@ -1281,8 +1550,24 @@
             });
         }
 
+        function duplicateModul(id) {
+            const original = modul_ajar.find(m => m.id === id);
+            if (!original) return;
+
+            const clone = JSON.parse(JSON.stringify(original));
+            clone.id = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
+            clone.judul_modul = clone.judul_modul + " (Salinan)";
+            
+            modul_ajar.push(clone);
+            saveDataToStorage();
+            showToast(`Modul '${original.judul_modul}' berhasil diduplikat!`, 'success');
+            renderGuruDashboard();
+            updateStatistics();
+        }
+
         function openFormModul() {
             selectedModulId = null;
+            localStorage.removeItem('mad_selected_modul_id');
             document.getElementById('creator-title').innerText = "Buat Modul Ajar Baru";
             
             document.getElementById('modul-judul').value = '';
@@ -1301,6 +1586,7 @@
 
             document.getElementById('ttd-check-guru').checked = true;
             document.getElementById('ttd-check-kepsek').checked = true;
+            document.getElementById('ttd-jabatan-guru').value = "Guru Mata Pelajaran";
 
             document.getElementById('form-cover-preview-container').classList.add('hidden');
 
@@ -1313,6 +1599,7 @@
             if (!m) return;
 
             selectedModulId = m.id;
+            localStorage.setItem('mad_selected_modul_id', id.toString());
             document.getElementById('creator-title').innerText = "Penyuntingan Rencana Modul";
 
             document.getElementById('modul-judul').value = m.judul_modul;
@@ -1331,11 +1618,39 @@
 
             document.getElementById('ttd-check-guru').checked = m.ttd_guru?.isChecked !== false;
             document.getElementById('ttd-check-kepsek').checked = m.ttd_kepsek?.isChecked !== false;
+            document.getElementById('ttd-jabatan-guru').value = m.ttd_guru?.jabatan || "Guru Mata Pelajaran";
 
             updateFormCoverPreview();
-
             renderDynamicPoints(m.details);
             navigate('page-modul-creator');
+        }
+
+        // UPDATE LABEL PREVIEW JABATAN GURU
+        function updatePreviewRoleLabels() {
+            const role = document.getElementById('ttd-jabatan-guru').value;
+            const printPeranGuru = document.getElementById('print-peran-guru');
+            if (printPeranGuru) {
+                printPeranGuru.innerText = role;
+            }
+        }
+
+        // TOGGLE PERAN GURU DIRECTLY BY CLICKING IT IN PRINT PREVIEW
+        function togglePrintRoleLabel() {
+            const printPeranGuru = document.getElementById('print-peran-guru');
+            if (!printPeranGuru) return;
+            const current = printPeranGuru.innerText.trim();
+            const nextRole = (current === "Guru Mata Pelajaran") ? "Guru Kelas" : "Guru Mata Pelajaran";
+            printPeranGuru.innerText = nextRole;
+            document.getElementById('ttd-jabatan-guru').value = nextRole;
+            
+            if (selectedModulId) {
+                const idx = modul_ajar.findIndex(mod => mod.id === selectedModulId);
+                if (idx !== -1) {
+                    modul_ajar[idx].ttd_guru.jabatan = nextRole;
+                    saveDataToStorage();
+                }
+            }
+            showToast(`Peran penandatangan diubah ke: ${nextRole}`, 'success');
         }
 
         // PRATINJAU GAMBAR COVER UTAMA DI FORM
@@ -1352,7 +1667,6 @@
             }
         }
 
-        // UNGGAL FILE GAMBAR UTAMA (BASE64)
         function uploadMainImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1366,7 +1680,6 @@
             reader.readAsDataURL(file);
         }
 
-        // UNGGUH FILE GAMBAR DI SETIAP KOMPONEN (BASE64)
         function uploadComponentImage(event, fileInput) {
             const file = event.target.files[0];
             if (!file) return;
@@ -1380,7 +1693,7 @@
             reader.readAsDataURL(file);
         }
 
-        // FUNGSI RENDER POINT-POINT KOMPONEN DENGAN DUKUNGAN TABEL KHUSUS & URL GAMBAR ILUSTRASI / UNGGAHAN LOKAL
+        // RENDERING POINT KOMPONEN
         function renderDynamicPoints(components) {
             const container = document.getElementById('dynamic-points-container');
             container.innerHTML = '';
@@ -1393,7 +1706,6 @@
                 const compImgValue = comp.component_img || '';
 
                 if (comp.isTable) {
-                    // Tipe tabel Kegiatan Pembelajaran
                     let data = [];
                     try {
                         data = JSON.parse(comp.isi_poin);
@@ -1440,7 +1752,6 @@
                         <input type="hidden" class="dynamic-content-type" value="table">
                     `;
                 } else if (comp.isRubric) {
-                    // Tipe tabel Rubrik Penilaian
                     let data = [];
                     try {
                         data = JSON.parse(comp.isi_poin);
@@ -1497,7 +1808,6 @@
                         <input type="hidden" class="dynamic-content-type" value="rubric">
                     `;
                 } else {
-                    // Tipe standard teks biasa
                     inputArea = `
                         <textarea class="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-28 dynamic-content-text" placeholder="Tulis rincian isi materi poin ini...">${comp.isi_poin}</textarea>
                         <input type="hidden" class="dynamic-content-type" value="text">
@@ -1513,7 +1823,6 @@
                     </div>
                     ${inputArea}
                     
-                    <!-- INPUT GAMBAR ILUSTRASI SETIAP KOMPONEN (PILIHAN LINK ATAU UPLOAD LANGSUNG) -->
                     <div class="mt-3 pt-2.5 border-t border-slate-200">
                         <label class="block text-[10px] font-semibold text-slate-500 mb-1 flex items-center gap-1">
                             <i class="fa-regular fa-image text-indigo-600 text-xs"></i> Gambar Ilustrasi Komponen (Opsional)
@@ -1545,7 +1854,6 @@
                 <textarea class="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 h-28 dynamic-content-text" placeholder="Ketik rincian di sini..."></textarea>
                 <input type="hidden" class="dynamic-content-type" value="text">
 
-                <!-- INPUT GAMBAR ILUSTRASI SETIAP KOMPONEN -->
                 <div class="mt-3 pt-2.5 border-t border-slate-200">
                     <label class="block text-[10px] font-semibold text-slate-500 mb-1 flex items-center gap-1">
                         <i class="fa-regular fa-image text-indigo-600 text-xs"></i> Gambar Ilustrasi Komponen (Opsional)
@@ -1609,7 +1917,6 @@
                 return;
             }
 
-            // Memproses penyimpanan dinamis baik teks murni maupun tabel
             const details = [];
             document.querySelectorAll('.dynamic-point-row').forEach((row, i) => {
                 const nama_poin = row.querySelector('.dynamic-title').value.trim();
@@ -1657,7 +1964,8 @@
                 hasImage: false,
                 isChecked: document.getElementById('ttd-check-guru').checked,
                 imageBase64: '',
-                nip: document.getElementById('ttd-nip-guru').value.trim()
+                nip: document.getElementById('ttd-nip-guru').value.trim(),
+                jabatan: document.getElementById('ttd-jabatan-guru').value
             };
 
             const ttd_kepsek = {
@@ -1712,12 +2020,14 @@
                 showToast('Modul baru sukses ditambahkan', 'success');
             }
 
+            saveDataToStorage();
             backToGuruDashboard();
         }
 
         function deleteModul(id) {
             if (confirm("Hapus modul ajar ini?")) {
                 modul_ajar = modul_ajar.filter(m => m.id !== id);
+                saveDataToStorage();
                 showToast('Modul dihapus', 'info');
                 renderGuruDashboard();
             }
@@ -1725,6 +2035,7 @@
 
         function backToGuruDashboard() {
             selectedModulId = null;
+            localStorage.removeItem('mad_selected_modul_id');
             navigate('page-guru-dashboard');
             renderGuruDashboard();
         }
@@ -1732,6 +2043,7 @@
         // --- PREVIEW CETAK DOKUMEN ---
         function viewCetakModul(id) {
             selectedModulId = id;
+            localStorage.setItem('mad_selected_modul_id', id.toString());
             previewFinalModul();
         }
 
@@ -1746,16 +2058,16 @@
             // Header Kop
             document.getElementById('print-header-sekolah').innerText = m.institusi;
             document.getElementById('print-header-tahun').innerText = m.tahun;
-            document.getElementById('print-badge-mapel').innerText = currentUser ? currentUser.mata_pelajaran : 'Koding dan Kecerdasan Artifial';
+            document.getElementById('print-badge-mapel').innerText = currentUser ? (currentUser.mata_pelajaran || 'Koding dan Kecerdasan Artifial') : 'Koding dan Kecerdasan Artifial';
             document.getElementById('print-judul').innerText = m.judul_modul;
 
-            // Metadata Informasi Umum
+            // Metadata Informasi Umum (Aman Sejajar Tanpa Turun Baris)
             document.getElementById('print-guru-sekolah').innerText = `: ${m.institusi}`;
             document.getElementById('print-guru-kelas').innerText = `: ${m.kelas}`;
             document.getElementById('print-guru-name').innerText = `: ${m.nama_penyusun}`;
             document.getElementById('print-guru-alokasi').innerText = `: ${m.alokasi_waktu}`;
 
-            // Status TTD di Header Print
+            // Status TTD
             const isAnyBarcodeActive = m.ttd_guru?.isChecked || m.ttd_kepsek?.isChecked;
             const printVerificationStatus = document.getElementById('print-verification-status');
             if (isAnyBarcodeActive) {
@@ -1787,7 +2099,6 @@
                 let contentHtml = '';
 
                 if (det.isTable) {
-                    // Tampilkan sebagai TABEL KEGIATAN PEMBELAJARAN
                     let rowsData = [];
                     try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
 
@@ -1820,7 +2131,6 @@
                         </div>
                     `;
                 } else if (det.isRubric) {
-                    // Tampilkan sebagai TABEL RUBRIK PENILAIAN
                     let rowsData = [];
                     try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
 
@@ -1860,13 +2170,12 @@
                     contentHtml = `<p class="text-slate-800 text-xs whitespace-pre-wrap leading-relaxed pl-2">${formattedText || '<span class="text-slate-300 italic">Belum diisi</span>'}</p>`;
                 }
 
-                // TAMBAHAN RENDERING GAMBAR ILUSTRASI KHUSUS DI TIAP SEKSI/KOMPONEN
                 let compImgHtml = '';
                 if (det.component_img && det.component_img.trim() !== '') {
                     compImgHtml = `
                         <div class="mt-3 text-center break-inside-avoid">
                             <div class="border border-slate-150 rounded p-1.5 inline-block bg-slate-50">
-                                <img src="${det.component_img}" class="max-h-48 object-contain rounded" alt="Ilustrasi ${det.nama_poin}">
+                                <img src="${det.component_img}" class="max-h-48 object-contain rounded" alt="Ilustrasi ${det.nama_poin}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23cbd5e1\'><rect width=\'24\' height=\'24\' fill=\'%23f1f5f9\'/><path d=\'M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0-2-.9-2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z\' fill=\'%2394a3b8\'/></svg>'">
                                 <p class="text-[9px] text-slate-400 mt-1 italic">Ilustrasi: ${det.nama_poin}</p>
                             </div>
                         </div>
@@ -1888,6 +2197,11 @@
             document.getElementById('print-nip-kepsek').innerText = m.nip_kepsek;
             document.getElementById('print-nama-guru').innerText = m.nama_penyusun.toUpperCase();
             document.getElementById('print-nip-guru').innerText = m.ttd_guru?.nip || '-';
+            
+            const printPeranGuru = document.getElementById('print-peran-guru');
+            if (printPeranGuru) {
+                printPeranGuru.innerText = m.ttd_guru?.jabatan || "Guru Mata Pelajaran";
+            }
 
             // 1. Render Area Kepala Sekolah
             const ttdAreaKepsek = document.getElementById('print-ttd-area-kepsek');
@@ -1903,7 +2217,7 @@
             } else {
                 ttdAreaKepsek.innerHTML = `
                     <div class="h-16 flex items-end justify-center">
-                        <span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span>
+                        <span class="text-slate-300 italic text-[10px] select-none"> </span>
                     </div>
                     <div class="w-40 border-b border-slate-400 mt-2"></div>
                 `;
@@ -1923,13 +2237,12 @@
             } else {
                 ttdAreaGuru.innerHTML = `
                     <div class="h-16 flex items-end justify-center">
-                        <span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span>
+                        <span class="text-slate-300 italic text-[10px] select-none"></span>
                     </div>
                     <div class="w-40 border-b border-slate-400 mt-2"></div>
                 `;
             }
 
-            // Setting tanggal hari ini
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             const today = new Date().toLocaleDateString('id-ID', options);
             document.getElementById('print-date-today').innerText = `Jakarta, ${today}`;
@@ -1948,9 +2261,329 @@
             }
         }
 
-        // --- SISTEM IMPOR / EKSPOR FULL BARU (.JSON) ---
+        // --- SISTEM EKSPOR KE WORD (.DOC) ---
+        function exportModulToWord() {
+            let m = null;
+            if (selectedModulId) {
+                m = modul_ajar.find(mod => mod.id === selectedModulId);
+            }
+            if (!m) {
+                showToast("Modul tidak ditemukan", "error");
+                return;
+            }
 
-        // 1. Download Backup Modul Satuan (.json)
+            const mapel = currentUser ? (currentUser.mata_pelajaran || 'Koding dan Kecerdasan Artifial') : 'Koding dan Kecerdasan Artifial';
+            const ROMANS = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
+            
+            let dynamicSecsHtml = '';
+            m.details.forEach((det, index) => {
+                let innerContent = '';
+                
+                if (det.isTable) {
+                    let rowsData = [];
+                    try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
+                    let trs = '';
+                    rowsData.forEach(row => {
+                        trs += `
+                            <tr style="border-bottom: 1px solid #cccccc;">
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-weight: bold; font-size: 10pt; width: 25%; background-color: #fafafa;">${row.fase}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 10pt; text-align: center; width: 15%; font-weight: bold;">${row.waktu}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 10pt; line-height: 1.4;">${row.detail.replace(/\n/g, '<br>')}</td>
+                            </tr>
+                        `;
+                    });
+
+                    innerContent = `
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; border: 1px solid #333333;">
+                            <thead>
+                                <tr style="background-color: #1e3a8a; color: #ffffff;">
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; text-align: left;">Kegiatan Pembelajaran</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; text-align: center;">Alokasi</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; text-align: left;">Langkah Pembelajaran</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${trs}
+                            </tbody>
+                        </table>
+                    `;
+                } else if (det.isRubric) {
+                    let rowsData = [];
+                    try { rowsData = JSON.parse(det.isi_poin); } catch(e){}
+                    let trs = '';
+                    rowsData.forEach(row => {
+                        trs += `
+                            <tr style="border-bottom: 1px solid #cccccc;">
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-weight: bold; font-size: 10pt; background-color: #fafafa;">${row.kriteria}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 9pt; line-height: 1.3;">${row.s4.replace(/\n/g, '<br>')}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 9pt; line-height: 1.3;">${row.s3.replace(/\n/g, '<br>')}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 9pt; line-height: 1.3;">${row.s2.replace(/\n/g, '<br>')}</td>
+                                <td style="padding: 8px; border: 1px solid #cccccc; font-size: 9pt; line-height: 1.3;">${row.s1.replace(/\n/g, '<br>')}</td>
+                            </tr>
+                        `;
+                    });
+
+                    innerContent = `
+                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 15px; border: 1px solid #333333;">
+                            <thead>
+                                <tr style="background-color: #1e3a8a; color: #ffffff;">
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; text-align: left;">Kriteria Penilaian</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; width: 18%;">Sangat Baik (4)</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; width: 18%;">Baik (3)</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; width: 18%;">Cukup (2)</th>
+                                    <th style="padding: 8px; border: 1px solid #333333; font-size: 10pt; width: 18%;">Kurang (1)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${trs}
+                            </tbody>
+                        </table>
+                    `;
+                } else {
+                    innerContent = `<p style="font-size: 10pt; line-height: 1.5; margin: 5px 0 15px 0; white-space: pre-wrap;">${det.isi_poin.replace(/\n/g, '<br>')}</p>`;
+                }
+
+                dynamicSecsHtml += `
+                    <h3 style="font-size: 11pt; font-weight: bold; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 3px; margin-top: 20px; text-transform: uppercase;">
+                        ${ROMANS[index + 1] || 'X'}. ${det.nama_poin}
+                    </h3>
+                    ${innerContent}
+                `;
+            });
+
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const todayStr = new Date().toLocaleDateString('id-ID', options);
+            const jabatanGuru = m.ttd_guru?.jabatan || "Guru Mata Pelajaran";
+
+            const wordTemplate = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+            <head>
+                <meta charset="utf-8">
+                <title>${m.judul_modul}</title>
+                <style>
+                    body { font-family: 'Arial', sans-serif; color: #333333; line-height: 1.5; font-size: 11pt; }
+                    .kop-container { width: 100%; border-collapse: collapse; border-bottom: 4px double #333333; margin-bottom: 24px; padding-bottom: 12px; }
+                    .logo-td { width: 80px; text-align: left; vertical-align: middle; }
+                    .logo-img { width: 70px; height: 70px; }
+                    .kop-title-td { text-align: center; vertical-align: middle; }
+                    .kop-title { font-size: 13pt; font-weight: bold; text-transform: uppercase; margin: 0; }
+                    .kop-subtitle { font-size: 14pt; color: #1e3a8a; margin: 4px 0 0 0; font-weight: bold; text-transform: uppercase; }
+                    .kop-tahun { font-size: 10pt; color: #777777; margin: 2px 0 0 0; }
+                    .badge-container { text-align: center; margin-top: 15px; margin-bottom: 10px; }
+                    .badge-mapel { background-color: #f3f4f6; padding: 4px 12px; border: 1px solid #d1d5db; border-radius: 9999px; font-size: 9pt; font-weight: bold; text-transform: uppercase; }
+                    .judul-modul { text-align: center; font-size: 14pt; font-weight: bold; color: #111827; margin: 15px 0 20px 0; text-transform: uppercase; }
+                    .section-header { font-size: 11pt; font-weight: bold; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 4px; margin-top: 25px; margin-bottom: 10px; text-transform: uppercase; }
+                    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    .info-table td { padding: 8px; border: 1px solid #d1d5db; font-size: 10pt; }
+                    .info-label { font-weight: bold; color: #374151; width: 25%; }
+                    .footer-text { font-size: 8pt; color: #9ca3af; text-align: center; margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+                </style>
+            </head>
+            <body>
+                <table class="kop-container">
+                    <tr>
+                        <td class="logo-td">
+                            <img class="logo-img" src="https://www.sditgamaschool.sch.id/frontend/sditgamma/img/logo-ikon-sditgama.jpg" alt="Logo SDIT GAMA">
+                        </td>
+                        <td class="kop-title-td">
+                            <div class="kop-title">YAYASAN GEMA INSAN MANDIRI</div>
+                            <div class="kop-subtitle">${m.institusi}</div>
+                            <div class="kop-tahun">Tahun Pelajaran: ${m.tahun}</div>
+                        </td>
+                        <td style="width: 80px;"></td>
+                    </tr>
+                </table>
+
+                <div class="badge-container">
+                    <span class="badge-mapel">${mapel}</span>
+                </div>
+
+                <div class="judul-modul">${m.judul_modul}</div>
+
+                <div class="section-header">I. IDENTITAS MODUL</div>
+                <table class="info-table">
+                    <tr>
+                        <td class="info-label">Institusi Sekolah</td>
+                        <td>${m.institusi}</td>
+                        <td class="info-label">Nama Penyusun</td>
+                        <td>${m.nama_penyusun}</td>
+                    </tr>
+                    <tr>
+                        <td class="info-label">Kelas / Semester / Fase</td>
+                        <td>${m.kelas}</td>
+                        <td class="info-label">Alokasi Waktu</td>
+                        <td>${m.alokasi_waktu}</td>
+                    </tr>
+                </table>
+
+                ${dynamicSecsHtml}
+
+                <br><br>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 40px;">
+                    <tr>
+                        <td style="width: 50%; text-align: center; font-size: 10pt; vertical-align: top;">
+                            <p style="color: #6b7280; font-size: 9pt; margin: 0;">Mengetahui,</p>
+                            <p style="font-weight: bold; margin: 5px 0 0 0;">Kepala Sekolah</p>
+                            <br><br><br><br>
+                            <p style="font-weight: bold; text-decoration: underline; margin: 0;">${m.nama_kepsek.toUpperCase()}</p>
+                            <p style="font-size: 9pt; color: #4b5563; margin: 2px 0 0 0;">NIY: ${m.nip_kepsek}</p>
+                        </td>
+                        <td style="width: 50%; text-align: center; font-size: 10pt; vertical-align: top;">
+                            <p style="color: #6b7280; font-size: 9pt; margin: 0;">Jakarta, ${todayStr}</p>
+                            <p style="font-weight: bold; margin: 5px 0 0 0;">${jabatanGuru}</p>
+                            <br><br><br><br>
+                            <p style="font-weight: bold; text-decoration: underline; margin: 0;">${m.nama_penyusun.toUpperCase()}</p>
+                            <p style="font-size: 9pt; color: #4b5563; margin: 2px 0 0 0;">NIY/NIP: ${m.ttd_guru?.nip || '-'}</p>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="footer-text">
+                    Aplikasi Modul Ajar Digital (MAD) SDIT Gema Insan Mandiri - Format Word Resmi Ekspor
+                </div>
+            </body>
+            </html>
+            `;
+
+            const blob = new Blob(['\ufeff' + wordTemplate], {
+                type: 'application/msword'
+            });
+
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `MAD_Word_${m.judul_modul.replace(/\s+/g, '_')}.doc`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Berkas ekspor Word (.doc) berhasil diunduh!", "success");
+        }
+
+        // --- SISTEM EKSPOR KE EXCEL (.XLS) ---
+        function exportModulToExcel() {
+            let m = null;
+            if (selectedModulId) {
+                m = modul_ajar.find(mod => mod.id === selectedModulId);
+            }
+            if (!m) {
+                showToast("Modul tidak ditemukan", "error");
+                return;
+            }
+
+            let rowsHtml = '';
+            
+            rowsHtml += `
+                <tr><td colspan="3" style="font-size: 14pt; font-weight: bold; text-align: center;">MODUL AJAR DIGITAL (EXCEL EXPORT)</td></tr>
+                <tr><td colspan="3" style="font-size: 12pt; font-weight: bold; text-align: center; color: #1e3a8a;">${m.institusi.toUpperCase()}</td></tr>
+                <tr><td colspan="3"></td></tr>
+                <tr style="background-color: #f3f4f6; font-weight: bold;">
+                    <td colspan="2" style="border: 1px solid #000000; padding: 6px;">I. IDENTITAS MODUL</td>
+                    <td style="border: 1px solid #000000; padding: 6px;">NILAI / DETAIL</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Materi Pokok / Judul Modul</td>
+                    <td style="border: 1px solid #d1d5db; font-weight: bold;">${m.judul_modul}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Nama Penyusun</td>
+                    <td style="border: 1px solid #d1d5db;">${m.nama_penyusun}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Institusi Sekolah</td>
+                    <td style="border: 1px solid #d1d5db;">${m.institusi}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Kelas / Semester / Fase</td>
+                    <td style="border: 1px solid #d1d5db;">${m.kelas}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Tahun Ajaran</td>
+                    <td style="border: 1px solid #d1d5db;">${m.tahun}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 1px solid #d1d5db;">Alokasi Waktu</td>
+                    <td style="border: 1px solid #d1d5db;">${m.alokasi_waktu}</td>
+                </tr>
+                <tr><td colspan="3"></td></tr>
+                <tr style="background-color: #1e3a8a; color: #ffffff; font-weight: bold; text-align: center;">
+                    <td style="border: 1px solid #000000; padding: 8px; width: 50px;">NO</td>
+                    <td style="border: 1px solid #000000; padding: 8px; width: 250px;">KOMPONEN BELAJAR</td>
+                    <td style="border: 1px solid #000000; padding: 8px; width: 500px;">ISI MATERI / RINCIAN KEGIATAN</td>
+                </tr>
+            `;
+
+            m.details.forEach((det, idx) => {
+                let displayContent = '';
+                
+                if (det.isTable) {
+                    let tableData = [];
+                    try { tableData = JSON.parse(det.isi_poin); } catch(e){}
+                    tableData.forEach(row => {
+                        displayContent += `[${row.fase} - ${row.waktu}]: ${row.detail}\n`;
+                    });
+                } else if (det.isRubric) {
+                    let rubricData = [];
+                    try { rubricData = JSON.parse(det.isi_poin); } catch(e){}
+                    rubricData.forEach(row => {
+                        displayContent += `[Kriteria: ${row.kriteria}]: S4: ${row.s4} | S3: ${row.s3} | S2: ${row.s2} | S1: ${row.s1}\n`;
+                    });
+                } else {
+                    displayContent = det.isi_poin;
+                }
+
+                rowsHtml += `
+                    <tr>
+                        <td style="border: 1px solid #d1d5db; text-align: center; vertical-align: top; padding: 6px;">${idx + 1}</td>
+                        <td style="border: 1px solid #d1d5db; font-weight: bold; vertical-align: top; padding: 6px; background-color: #f9fafb;">${det.nama_poin}</td>
+                        <td style="border: 1px solid #d1d5db; vertical-align: top; padding: 6px; white-space: pre-wrap;">${displayContent}</td>
+                    </tr>
+                `;
+            });
+
+            const excelTemplate = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:excel" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+                <head>
+                    <meta charset="utf-8">
+                </head>
+                <body>
+                    <table style="border-collapse: collapse; font-family: Arial, sans-serif; font-size: 10pt;">
+                        ${rowsHtml}
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob(['\ufeff' + excelTemplate], {
+                type: 'application/vnd.ms-excel'
+            });
+
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `MAD_Excel_${m.judul_modul.replace(/\s+/g, '_')}.xls`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("Berkas Ekspor Excel (.xls) berhasil diunduh!", "success");
+        }
+
+        // --- TEMPLATE EXCEL (CSV) KOSONG ---
+        function downloadExcelTemplate() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Judul Modul,Kelas,Nama Penyusun,Alokasi Waktu,Kompetensi Awal,Dimensi Profil Lulusan,Sarana Prasarana,Target Murid,Tujuan Belajar,Pemahaman Bermakna,Pertanyaan Pemantik,Kegiatan Pembelajaran Raw,Rubrik Penilaian Raw,Remedial Pengayaan,Lampiran LKPD,Gambar Cover URL\n";
+            csvContent += `"Contoh Materi Pokok","VI/II / Fase C","Nama Guru","2 JP X 35 Menit","Tulis Kompetensi Awal di sini...","a. Berpikir Kritis\\nb. Kreatif","Laptop, Proyektor, Buku Paket","Murid Reguler Maksimum 30 orang","Tujuan Pembelajaran di sini...","Pemahaman bermakna di sini...","Pertanyaan pemantik di sini...","[{\""fase\"":\""Pendahuluan\"",\""waktu\"":\""10 Menit\"",\""detail\"":\""Doa dan Absensi\""}]","[{\""kriteria\"":\""Pemahaman\"",\""s4\"":\""Sangat Baik\"",\""s3\"":\""Baik\"",\""s2\"":\""Cukup\"",\""s1\"":\""Kurang\""}]","Rincian Remedial & Pengayaan","1. Sebutkan langkah-langkah wifi!",""`;
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Template_Excel_Modul_SDIT_GMI.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Template Excel (.csv) berhasil diunduh!', 'success');
+        }
+
+        // --- SISTEM IMPOR / EKSPOR FULL MULTIFORMAT ---
         function downloadModulJSON(id) {
             const m = modul_ajar.find(mod => mod.id === id);
             if (!m) return;
@@ -1964,7 +2597,6 @@
             showToast('Berkas cadangan Modul (.json) berhasil diunduh!', 'success');
         }
 
-        // 2. Download Template Kosong yang Bersih dan Terstruktur (.json)
         function downloadJSONTemplate() {
             const template = {
                 judul_modul: "Jaringan Komputer dan Internet",
@@ -1988,17 +2620,17 @@
             showToast('Template Modul (.json) berhasil diunduh! Edit dengan nyaman.', 'success');
         }
 
-        // 3. Parser Multi-Format (Mendukung .json maupun .csv warisan)
         function importDataModul(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
             reader.onload = function(e) {
                 const text = e.target.result;
                 
-                // JIKA FILE ADALAH FORMAT JSON TERSTURKTUR
-                if (file.name.endsWith('.json')) {
+                if (fileExtension === 'json') {
                     try {
                         const imported = JSON.parse(text);
                         const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
@@ -2013,7 +2645,7 @@
                             institusi: imported.institusi || 'SDIT Gema Insan Mandiri',
                             tahun: imported.tahun || active_tahun_ajaran,
                             jenjang: imported.jenjang || 'SD',
-                            ttd_guru: imported.ttd_guru || { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser ? currentUser.nip : '' },
+                            ttd_guru: imported.ttd_guru || { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser ? currentUser.nip : '', jabatan: 'Guru Mata Pelajaran' },
                             ttd_kepsek: imported.ttd_kepsek || { hasImage: false, isChecked: true, imageBase64: '' },
                             nama_kepsek: imported.nama_kepsek || 'Muhamad Fadlillah, S.Kom.',
                             nip_kepsek: imported.nip_kepsek || 'NIY.005.039.023',
@@ -2022,6 +2654,7 @@
                         };
 
                         modul_ajar.push(newModul);
+                        saveDataToStorage();
                         showToast(`Sukses Impor Modul: '${newModul.judul_modul}' dari berkas JSON!`, 'success');
                         renderGuruDashboard();
                     } catch (err) {
@@ -2029,7 +2662,9 @@
                         console.error(err);
                     }
                 } 
-                // JIKA FILE ADALAH FORMAT CSV WARISAN
+                else if (fileExtension === 'txt' || fileExtension === 'html' || fileExtension === 'doc') {
+                    parseSmartTextOrHtmlModul(text, file.name);
+                }
                 else {
                     const lines = text.split('\n');
                     if (lines.length < 2) {
@@ -2039,14 +2674,14 @@
 
                     const dataLine = lines[1].trim();
                     if (!dataLine) {
-                        showToast('Tidak ada baris data di dalam template Excel', 'error');
+                        showToast('Tidak ada baris data di dalam template Excel/CSV', 'error');
                         return;
                     }
 
                     const columns = dataLine.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(col => col.replace(/^"|"$/g, '').trim());
 
                     if (columns.length < 15) {
-                        showToast('Kolom template tidak lengkap atau format salah', 'error');
+                        showToast('Kolom template kurang lengkap atau format salah', 'error');
                         return;
                     }
 
@@ -2085,9 +2720,9 @@
 
                     const details = [
                         { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: kompetensi_awal, component_img: '' },
-                        { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: profil_pancasila, component_img: '' },
+                        { id: 2, nama_poin: 'Dimensi Profil Lulusan', isi_poin: profil_pancasila, component_img: '' },
                         { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: sarpras, component_img: '' },
-                        { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: target_siswa, component_img: '' },
+                        { id: 4, nama_poin: 'Target Murid', isi_poin: target_siswa, component_img: '' },
                         { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Model pembelajaran menggunakan Deep Learning yang menekankan pemahaman mendalam, bukan sekadar hafalan.', component_img: '' },
                         { id: 6, nama_poin: 'Tujuan Pembelajaran', isi_poin: tujuan_belajar, component_img: '' },
                         { id: 7, nama_poin: 'Pemahaman Bermakna', isi_poin: pemahaman_bermakna, component_img: '' },
@@ -2109,7 +2744,7 @@
                         institusi: 'SDIT Gema Insan Mandiri',
                         tahun: active_tahun_ajaran,
                         jenjang: 'SD',
-                        ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser.nip },
+                        ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser.nip, jabatan: 'Guru Mata Pelajaran' },
                         ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
                         nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
                         nip_kepsek: 'NIY.005.039.023',
@@ -2117,12 +2752,142 @@
                         details
                     });
 
+                    saveDataToStorage();
                     showToast(`Berhasil mengimpor Modul Ajar '${judul_modul}' dari CSV!`, 'success');
                     renderGuruDashboard();
                 }
             };
             reader.readAsText(file);
             event.target.value = '';
+        }
+
+        // SMART PARSER
+        function parseSmartTextOrHtmlModul(rawText, fileName) {
+            let cleanText = rawText.replace(/<[^>]*>/g, '\n').replace(/&nbsp;/g, ' ').replace(/\r\n/g, '\n');
+            
+            const keywords = {
+                judul: ["MODUL AJAR", "Materi Pokok", "Judul Modul"],
+                kompetensi: ["Kompetensi Awal", "Prasyarat"],
+                profil: ["Dimensi Profil", "Profil Lulusan", "Pancasila"],
+                sarpras: ["Sarana", "Prasarana", "Alat dan Bahan"],
+                target: ["Target Murid", "Target Siswa"],
+                tujuan: ["Tujuan Pembelajaran", "Tujuan Utama"],
+                bermakna: ["Pemahaman Bermakna"],
+                pemantik: ["Pertanyaan Pemantik"],
+                kegiatan: ["Kegiatan Pembelajaran", "Langkah Pembelajaran"],
+                penilaian: ["Rubrik Penilaian", "Asesmen"],
+                remedial: ["Remedial", "Pengayaan"],
+                lkpd: ["Lampiran", "LKPD"]
+            };
+
+            let lines = cleanText.split('\n');
+            let parsedData = {
+                judul_modul: "Modul Impor Word (" + fileName.split('.')[0] + ")",
+                kelas: "VI/II / Fase C",
+                alokasi_waktu: "2 JP X 35 Menit",
+                kompetensi_awal: "",
+                profil_lulusan: "",
+                sarpras: "",
+                target_murid: "",
+                tujuan_pembelajaran: "",
+                pemahaman_bermakna: "",
+                pertanyaan_pemantik: "",
+                kegiatan_pembelajaran: "",
+                rubrik_penilaian: "",
+                remedial: "",
+                lkpd: ""
+            };
+
+            let currentKey = null;
+
+            lines.forEach(line => {
+                let trimmed = line.trim();
+                if (!trimmed) return;
+
+                let foundHeader = false;
+                for (let key in keywords) {
+                    for (let word of keywords[key]) {
+                        if (trimmed.toLowerCase().includes(word.toLowerCase()) && trimmed.length < 60) {
+                            currentKey = key;
+                            foundHeader = true;
+                            break;
+                        }
+                    }
+                    if (foundHeader) break;
+                }
+
+                if (foundHeader) return;
+
+                if (currentKey) {
+                    if (currentKey === 'judul' && trimmed.length < 100) {
+                        parsedData.judul_modul = trimmed;
+                    } else if (currentKey === 'kompetensi') {
+                        parsedData.kompetensi_awal += trimmed + '\n';
+                    } else if (currentKey === 'profil') {
+                        parsedData.profil_lulusan += trimmed + '\n';
+                    } else if (currentKey === 'sarpras') {
+                        parsedData.sarpras += trimmed + '\n';
+                    } else if (currentKey === 'target') {
+                        parsedData.target_murid += trimmed + '\n';
+                    } else if (currentKey === 'tujuan') {
+                        parsedData.tujuan_pembelajaran += trimmed + '\n';
+                    } else if (currentKey === 'bermakna') {
+                        parsedData.pemahaman_bermakna += trimmed + '\n';
+                    } else if (currentKey === 'pemantik') {
+                        parsedData.pertanyaan_pemantik += trimmed + '\n';
+                    } else if (currentKey === 'kegiatan') {
+                        parsedData.kegiatan_pembelajaran += trimmed + '\n';
+                    } else if (currentKey === 'penilaian') {
+                        parsedData.rubrik_penilaian += trimmed + '\n';
+                    } else if (currentKey === 'remedial') {
+                        parsedData.remedial += trimmed + '\n';
+                    } else if (currentKey === 'lkpd') {
+                        parsedData.lkpd += trimmed + '\n';
+                    }
+                }
+            });
+
+            const details = [
+                { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: parsedData.kompetensi_awal.trim() || 'Sudah diimpor otomatis dari Word', component_img: '' },
+                { id: 2, nama_poin: 'Dimensi Profil Lulusan', isi_poin: parsedData.profil_lulusan.trim() || 'Dimensi Profil terlampir', component_img: '' },
+                { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: parsedData.sarpras.trim() || 'Sarana dan prasarana terlampir', component_img: '' },
+                { id: 4, nama_poin: 'Target Murid', isi_poin: parsedData.target_murid.trim() || 'Murid reguler kelas 6', component_img: '' },
+                { id: 5, nama_poin: 'Tujuan Pembelajaran', isi_poin: parsedData.tujuan_pembelajaran.trim() || 'Mampu mengidentifikasi perangkat keras.', component_img: '' },
+                { id: 6, nama_poin: 'Pemahaman Bermakna', isi_poin: parsedData.pemahaman_bermakna.trim() || 'Pemahaman bermakna terlampir', component_img: '' },
+                { id: 7, nama_poin: 'Pertanyaan Pemantik', isi_poin: parsedData.pertanyaan_pemantik.trim() || 'Pertanyaan pemantik terlampir', component_img: '' },
+                { id: 8, nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', isTable: true, isi_poin: JSON.stringify([
+                    { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: parsedData.kegiatan_pembelajaran.split('\n').slice(0,3).join(' ') || 'Persiapan doa, salam dan absensi kelas.' },
+                    { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: parsedData.kegiatan_pembelajaran.split('\n').slice(3).join(' ') || 'Diskusi materi pembelajaran.' }
+                ]), component_img: '' },
+                { id: 9, nama_poin: 'Rubrik Penilaian Pembelajaran', isRubric: true, isi_poin: JSON.stringify([
+                    { kriteria: 'Keaktifan', s4: 'Sangat aktif bertanya.', s3: 'Aktif merespon.', s2: 'Kurang aktif.', s1: 'Pasif.' }
+                ]), component_img: '' },
+                { id: 10, nama_poin: 'Remedial & Pengayaan', isi_poin: parsedData.remedial.trim() || 'Terlampir sesuai analisis skor', component_img: '' },
+                { id: 11, nama_poin: 'Lampiran LKPD', isi_poin: parsedData.lkpd.trim() || '1. Sebutkan kelebihan jaringan komputer!', component_img: '' }
+            ];
+
+            const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
+            modul_ajar.push({
+                id: newId,
+                teacher_id: currentUser ? currentUser.id : 1,
+                judul_modul: parsedData.judul_modul,
+                kelas: parsedData.kelas,
+                alokasi_waktu: parsedData.alokasi_waktu,
+                nama_penyusun: currentUser ? currentUser.nama_guru : 'Nama Guru',
+                institusi: 'SDIT Gema Insan Mandiri',
+                tahun: active_tahun_ajaran,
+                jenjang: 'SD',
+                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: currentUser ? currentUser.nip : '', jabatan: 'Guru Mata Pelajaran' },
+                ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
+                nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
+                nip_kepsek: 'NIY.005.039.023',
+                gambar_url: '',
+                details
+            });
+
+            saveDataToStorage();
+            showToast(`Mesin Cerdas mendeteksi modul: '${parsedData.judul_modul}' dari berkas teks!`, 'success');
+            renderGuruDashboard();
         }
     </script>
 </body>
