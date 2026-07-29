@@ -80,17 +80,17 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Guru</h2>
-                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun simulasi Anda</p>
+                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun Anda</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username / NIP</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                             <i class="fa-solid fa-user"></i>
                         </span>
-                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username Anda">
+                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username atau NIP Anda">
                     </div>
                 </div>
 
@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-qrcode"></i> Kelola TTD & QR Barcode
                 </button>
                 <button onclick="switchAdminTab('profil')" id="tab-admin-profil" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-gears"></i> Pengaturan & Admin
+                    <i class="fa-solid fa-gears"></i> Pengaturan Sistem & Akun
                 </button>
             </div>
 
@@ -192,7 +192,7 @@
                                     <th class="p-4">Nama Lengkap</th>
                                     <th class="p-4">Mata Pelajaran</th>
                                     <th class="p-4">Username Akun</th>
-                                    <th class="p-4">Password Awal</th>
+                                    <th class="p-4">Password</th>
                                     <th class="p-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -237,7 +237,7 @@
                                 </div>
                             </div>
                             <div class="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-xs flex gap-2 items-center">
-                                <i class="fa-solid fa-badge-check text-base"></i>
+                                <i class="fa-solid fa-circle-check text-base"></i>
                                 <span>QR Barcode Kepala Sekolah aktif dan terintegrasi pada modul cetak.</span>
                             </div>
                         </div>
@@ -245,7 +245,7 @@
                 </div>
             </div>
 
-            <!-- Sub-Page: Pengaturan Sistem -->
+            <!-- Sub-Page: Pengaturan Sistem & Ubah Password -->
             <div id="sub-admin-profil" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -262,6 +262,29 @@
                             </button>
                         </div>
                     </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
+                            <i class="fa-solid fa-key text-indigo-600"></i> Ubah Password Admin
+                        </h3>
+                        <form onsubmit="handleUpdatePasswordUser(event)">
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Username Admin Saat Ini</label>
+                                <input type="text" id="change-pass-username" readonly class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-100">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Password Baru</label>
+                                <input type="password" id="change-pass-new" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Masukkan password baru">
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Konfirmasi Password Baru</label>
+                                <input type="password" id="change-pass-confirm" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Ulangi password baru">
+                            </div>
+                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
+                                Update Password Sekarang
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -276,8 +299,11 @@
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow animate-pulse">
+                    <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow">
                         <i class="fa-solid fa-plus-circle"></i> Buat Modul Baru
+                    </button>
+                    <button onclick="openModalUbahPassGuru()" class="flex-grow md:flex-none bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow">
+                        <i class="fa-solid fa-key"></i> Ubah Password
                     </button>
                 </div>
             </div>
@@ -499,7 +525,7 @@
                 <div class="my-8 text-center">
                     <span class="text-xs bg-slate-100 text-slate-800 px-3 py-1 rounded-full uppercase font-bold tracking-widest border border-slate-200" id="print-badge-mapel">-</span>
                     <h2 class="text-xl font-bold uppercase text-slate-900 mt-3" id="print-judul">-</h2>
-                    <p class="text-slate-500 text-[11px] mt-1" id="print-verification-status">Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-badge-check"></i> Barcode QR Terverifikasi Sistem</span></p>
+                    <p class="text-slate-500 text-[11px] mt-1" id="print-verification-status">Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-circle-check"></i> Barcode QR Terverifikasi Sistem</span></p>
                 </div>
 
                 <!-- Identitas Modul -->
@@ -593,7 +619,7 @@
         <p>© 2026 Modul Ajar Digital SDIT Gema Insan Mandiri. Integrated with Firebase modulajargama.</p>
     </footer>
 
-    <!-- MODAL POPUP TAMBAH GURU -->
+    <!-- MODAL POPUP TAMBAH / EDIT GURU -->
     <div id="modal-guru" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl border border-slate-100 mx-4">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
@@ -623,7 +649,7 @@
                     <input type="text" id="guru-username" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="suci">
                 </div>
                 <div class="mb-6">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Awal Akun</label>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Akun</label>
                     <div class="relative">
                         <input type="text" id="guru-password" required class="w-full px-3 py-2 pr-10 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Password login">
                     </div>
@@ -632,6 +658,38 @@
                 <div class="flex gap-2">
                     <button type="button" onclick="closeModalGuru()" class="w-1/2 border border-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition">Batal</button>
                     <button type="submit" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan Data</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP UBAH PASSWORD GURU -->
+    <div id="modal-pass-guru" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
+        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl border border-slate-100 mx-4">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+                <h3 class="text-lg font-bold text-slate-900">Ubah Password Akun Guru</h3>
+                <button onclick="closeModalUbahPassGuru()" class="text-slate-400 hover:text-slate-600 text-lg">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            
+            <form onsubmit="handleUpdatePasswordUser(event)">
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Username Anda</label>
+                    <input type="text" id="guru-pass-username" readonly class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-100">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Baru</label>
+                    <input type="password" id="guru-pass-new" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500" placeholder="Password baru">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Konfirmasi Password Baru</label>
+                    <input type="password" id="guru-pass-confirm" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500" placeholder="Ulangi password baru">
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeModalUbahPassGuru()" class="w-1/2 border border-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition">Batal</button>
+                    <button type="submit" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan Password</button>
                 </div>
             </form>
         </div>
@@ -663,10 +721,10 @@
         try {
             getAnalytics(app);
         } catch (e) {
-            console.log("Analytics initialized/skipped");
+            console.log("Analytics skipped/initialized");
         }
 
-        // Ekspor ke window
+        // Ekspor variabel Firebase ke window
         window.firebaseDb = db;
         window.firebaseAuth = auth;
         window.firebaseAppId = appId;
@@ -683,15 +741,15 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.warn("Autentikasi Firebase Fallback digunakan:", err);
+                console.warn("Autentikasi Firebase Fallback:", err);
+                if (window.showToast) {
+                    window.showToast("Cek Firebase Console: Pastikan Anonymous Auth diaktifkan", "error");
+                }
             }
 
             onAuthStateChanged(auth, (user) => {
                 if (!user) return;
                 window.isFirebaseAuthed = true;
-
-                // Sync data awal
-                window.saveDataToStorage(true);
 
                 // 1. Listener Real-time Data Guru
                 const guruCol = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
@@ -702,12 +760,17 @@
                     });
                     if (updatedTeachers.length > 0) {
                         window.teachers = updatedTeachers;
-                        window.saveDataToStorage(false);
+                        localStorage.setItem('mad_teachers', JSON.stringify(updatedTeachers));
                         if (window.currentPage === 'page-admin-dashboard') {
                             window.renderTableGuru();
                             window.renderAdminTtdGuruList();
                         }
                         window.updateStatistics();
+                    } else if (window.teachers && window.teachers.length > 0) {
+                        // Inisialisasi dokumen pertama jika koleksi cloud masih kosong
+                        window.teachers.forEach(t => {
+                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
+                        });
                     }
                 }, (error) => console.error("Error listener guru:", error));
 
@@ -720,11 +783,15 @@
                     });
                     if (updatedModul.length > 0) {
                         window.modul_ajar = updatedModul;
-                        window.saveDataToStorage(false);
+                        localStorage.setItem('mad_modul_ajar', JSON.stringify(updatedModul));
                         if (window.currentPage === 'page-guru-dashboard') {
                             window.renderGuruDashboard();
                         }
                         window.updateStatistics();
+                    } else if (window.modul_ajar && window.modul_ajar.length > 0) {
+                        window.modul_ajar.forEach(m => {
+                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
+                        });
                     }
                 }, (error) => console.error("Error listener modul:", error));
 
@@ -736,9 +803,11 @@
                             const data = docSnap.data();
                             if (data.active_tahun_ajaran) {
                                 window.active_tahun_ajaran = data.active_tahun_ajaran;
+                                localStorage.setItem('mad_tahun_ajaran', data.active_tahun_ajaran);
                             }
                             if (data.admins) {
                                 window.admins = data.admins;
+                                localStorage.setItem('mad_admins', JSON.stringify(data.admins));
                             }
                         }
                     });
@@ -867,37 +936,6 @@
             if (localStorage.getItem('mad_modul_ajar')) modul_ajar = JSON.parse(localStorage.getItem('mad_modul_ajar'));
             if (localStorage.getItem('mad_tahun_ajaran')) active_tahun_ajaran = localStorage.getItem('mad_tahun_ajaran');
         }
-
-        function saveDataToStorage(syncCloud = true) {
-            localStorage.setItem('mad_admins', JSON.stringify(admins));
-            localStorage.setItem('mad_teachers', JSON.stringify(teachers));
-            localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
-            localStorage.setItem('mad_tahun_ajaran', active_tahun_ajaran);
-
-            if (syncCloud && window.firebaseDb && window.firebaseAuth?.currentUser) {
-                try {
-                    const db = window.firebaseDb;
-                    const appId = window.firebaseAppId;
-
-                    teachers.forEach(t => {
-                        window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
-                    });
-
-                    modul_ajar.forEach(m => {
-                        window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
-                    });
-
-                    window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'general'), {
-                        active_tahun_ajaran,
-                        admins
-                    });
-                } catch(err) {
-                    console.error("Gagal menyimpan ke cloud:", err);
-                }
-            }
-        }
-
-        window.saveDataToStorage = saveDataToStorage;
 
         function checkAndRestoreSession() {
             const savedUser = localStorage.getItem('mad_current_user');
@@ -1050,6 +1088,7 @@
             } else {
                 subProfil.classList.remove('hidden');
                 document.getElementById('admin-tahun-ajaran').value = active_tahun_ajaran;
+                document.getElementById('change-pass-username').value = currentUser?.username || 'admin';
             }
         }
 
@@ -1057,8 +1096,79 @@
             const val = document.getElementById('admin-tahun-ajaran').value.trim();
             if (!val) return showToast('Tahun Ajaran tidak boleh kosong', 'error');
             active_tahun_ajaran = val;
-            saveDataToStorage(true);
+            
+            if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
+                    active_tahun_ajaran,
+                    admins
+                }, { merge: true });
+            }
             showToast(`Tahun Ajaran aktif diperbarui menjadi: ${val}`, 'success');
+        }
+
+        function handleUpdatePasswordUser(event) {
+            event.preventDefault();
+            let newPass = '';
+            let confirmPass = '';
+
+            if (currentUser.role === 'admin') {
+                newPass = document.getElementById('change-pass-new').value.trim();
+                confirmPass = document.getElementById('change-pass-confirm').value.trim();
+            } else {
+                newPass = document.getElementById('guru-pass-new').value.trim();
+                confirmPass = document.getElementById('guru-pass-confirm').value.trim();
+            }
+
+            if (newPass !== confirmPass) {
+                return showToast('Password baru dan konfirmasi password tidak cocok!', 'error');
+            }
+
+            if (newPass.length < 4) {
+                return showToast('Password minimal 4 karakter!', 'error');
+            }
+
+            if (currentUser.role === 'admin') {
+                const adminIdx = admins.findIndex(a => a.id === currentUser.id);
+                if (adminIdx !== -1) {
+                    admins[adminIdx].password = newPass;
+                    currentUser.password = newPass;
+                    localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
+                    localStorage.setItem('mad_admins', JSON.stringify(admins));
+
+                    if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
+                            active_tahun_ajaran,
+                            admins
+                        }, { merge: true });
+                    }
+                }
+            } else {
+                const guruIdx = teachers.findIndex(t => t.id === currentUser.id);
+                if (guruIdx !== -1) {
+                    teachers[guruIdx].password = newPass;
+                    currentUser.password = newPass;
+                    localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
+                    localStorage.setItem('mad_teachers', JSON.stringify(teachers));
+
+                    if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', currentUser.id.toString()), teachers[guruIdx]);
+                    }
+                }
+                closeModalUbahPassGuru();
+            }
+
+            showToast('Password berhasil diperbarui dan disinkronkan ke Cloud!', 'success');
+        }
+
+        function openModalUbahPassGuru() {
+            document.getElementById('guru-pass-username').value = currentUser?.username || '';
+            document.getElementById('guru-pass-new').value = '';
+            document.getElementById('guru-pass-confirm').value = '';
+            document.getElementById('modal-pass-guru').classList.remove('hidden');
+        }
+
+        function closeModalUbahPassGuru() {
+            document.getElementById('modal-pass-guru').classList.add('hidden');
         }
 
         function renderAdminTtdGuruList() {
@@ -1074,7 +1184,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="inline-flex items-center gap-1 text-[10px] font-bold ${t.verified ? 'text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200' : 'text-slate-500 bg-slate-100 px-2 py-0.5 rounded'}">
-                            <i class="fa-solid ${t.verified ? 'fa-shield-check' : 'fa-clock'}"></i> QR-Barcode
+                            <i class="fa-solid ${t.verified ? 'fa-circle-check' : 'fa-clock'}"></i> QR-Barcode
                         </span>
                     </div>
                 `;
@@ -1113,7 +1223,10 @@
                     <td class="p-4"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium border border-indigo-100">${guru.mata_pelajaran}</span></td>
                     <td class="p-4 font-mono text-xs">${guru.username}</td>
                     <td class="p-4 font-mono text-xs text-slate-500">${guru.password}</td>
-                    <td class="p-4 text-center">
+                    <td class="p-4 text-center flex justify-center gap-2">
+                        <button onclick="editGuruModal(${guru.id})" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Edit Data Guru">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
                         <button onclick="deleteGuru(${guru.id})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Guru">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
@@ -1127,6 +1240,27 @@
         window.renderAdminTtdGuruList = renderAdminTtdGuruList;
 
         function openModalGuru() {
+            document.getElementById('guru-id').value = '';
+            document.getElementById('modal-guru-title').innerText = "Tambah Guru Baru";
+            document.getElementById('guru-nip').value = '';
+            document.getElementById('guru-nama').value = '';
+            document.getElementById('guru-mapel').value = '';
+            document.getElementById('guru-username').value = '';
+            document.getElementById('guru-password').value = '';
+            document.getElementById('modal-guru').classList.remove('hidden');
+        }
+
+        function editGuruModal(id) {
+            const guru = teachers.find(t => t.id === id);
+            if (!guru) return;
+
+            document.getElementById('guru-id').value = guru.id;
+            document.getElementById('modal-guru-title').innerText = "Edit Data Guru";
+            document.getElementById('guru-nip').value = guru.nip;
+            document.getElementById('guru-nama').value = guru.nama_guru;
+            document.getElementById('guru-mapel').value = guru.mata_pelajaran;
+            document.getElementById('guru-username').value = guru.username;
+            document.getElementById('guru-password').value = guru.password;
             document.getElementById('modal-guru').classList.remove('hidden');
         }
 
@@ -1136,29 +1270,48 @@
 
         function saveGuru(event) {
             event.preventDefault();
+            const idVal = document.getElementById('guru-id').value;
             const nip = document.getElementById('guru-nip').value.trim();
             const nama = document.getElementById('guru-nama').value.trim();
             const mapel = document.getElementById('guru-mapel').value.trim();
             const username = document.getElementById('guru-username').value.trim();
             const password = document.getElementById('guru-password').value.trim();
 
-            const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
-            teachers.push({ id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true });
+            let targetGuruObj = null;
+
+            if (idVal) {
+                const targetId = parseInt(idVal);
+                const idx = teachers.findIndex(t => t.id === targetId);
+                if (idx !== -1) {
+                    teachers[idx] = { ...teachers[idx], nip, nama_guru: nama, username, password, mata_pelajaran: mapel };
+                    targetGuruObj = teachers[idx];
+                }
+            } else {
+                const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+                targetGuruObj = { id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true };
+                teachers.push(targetGuruObj);
+            }
             
-            saveDataToStorage(true);
+            localStorage.setItem('mad_teachers', JSON.stringify(teachers));
+
+            if (window.firebaseDb && window.firebaseAuth?.currentUser && targetGuruObj) {
+                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', targetGuruObj.id.toString()), targetGuruObj);
+            }
+
             closeModalGuru();
             renderTableGuru();
             updateStatistics();
-            showToast('Guru baru berhasil ditambahkan', 'success');
+            showToast(idVal ? 'Data guru diperbarui' : 'Guru baru berhasil ditambahkan', 'success');
         }
 
         function deleteGuru(id) {
             if (confirm("Yakin ingin menghapus data guru ini?")) {
                 teachers = teachers.filter(t => t.id !== id);
+                localStorage.setItem('mad_teachers', JSON.stringify(teachers));
+
                 if (window.firebaseDb && window.firebaseAuth?.currentUser) {
                     window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString()));
                 }
-                saveDataToStorage(true);
                 renderTableGuru();
                 updateStatistics();
                 showToast('Data guru telah dihapus', 'info');
@@ -1375,6 +1528,8 @@
             const nama_kepsek = document.getElementById('ttd-nama-kepsek').value.trim();
             const nip_kepsek = document.getElementById('ttd-nip-kepsek').value.trim();
 
+            let targetModulObj = null;
+
             if (selectedModulId) {
                 const idx = modul_ajar.findIndex(m => m.id === selectedModulId);
                 if (idx !== -1) {
@@ -1393,10 +1548,11 @@
                         nip_kepsek,
                         details
                     };
+                    targetModulObj = modul_ajar[idx];
                 }
             } else {
                 const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
-                modul_ajar.push({
+                targetModulObj = {
                     id: newId,
                     teacher_id: currentUser.id,
                     judul_modul: judul,
@@ -1411,10 +1567,16 @@
                     nama_kepsek,
                     nip_kepsek,
                     details
-                });
+                };
+                modul_ajar.push(targetModulObj);
             }
 
-            saveDataToStorage(true);
+            localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
+
+            if (window.firebaseDb && window.firebaseAuth?.currentUser && targetModulObj) {
+                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', targetModulObj.id.toString()), targetModulObj);
+            }
+
             backToGuruDashboard();
             showToast('Modul berhasil disimpan ke Firebase!', 'success');
         }
@@ -1422,10 +1584,11 @@
         function deleteModul(id) {
             if (confirm("Ingin menghapus modul ajar ini?")) {
                 modul_ajar = modul_ajar.filter(m => m.id !== id);
+                localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
+
                 if (window.firebaseDb && window.firebaseAuth?.currentUser) {
                     window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString()));
                 }
-                saveDataToStorage(true);
                 renderGuruDashboard();
                 showToast('Modul dihapus', 'info');
             }
@@ -1574,6 +1737,7 @@
         window.formatNIP = formatNIP;
         window.addCustomPoin = addCustomPoin;
         window.openModalGuru = openModalGuru;
+        window.editGuruModal = editGuruModal;
         window.closeModalGuru = closeModalGuru;
         window.saveGuru = saveGuru;
         window.deleteGuru = deleteGuru;
@@ -1587,6 +1751,9 @@
         window.exportModulToExcel = exportModulToExcel;
         window.switchAdminTab = switchAdminTab;
         window.saveTahunAjaran = saveTahunAjaran;
+        window.handleUpdatePasswordUser = handleUpdatePasswordUser;
+        window.openModalUbahPassGuru = openModalUbahPassGuru;
+        window.closeModalUbahPassGuru = closeModalUbahPassGuru;
         window.handleLogin = handleLogin;
         window.logout = logout;
     </script>
