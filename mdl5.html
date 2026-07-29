@@ -85,12 +85,12 @@
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username / NIP</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                             <i class="fa-solid fa-user"></i>
                         </span>
-                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username atau NIP Anda">
+                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username Anda">
                     </div>
                 </div>
 
@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-qrcode"></i> Kelola TTD & QR Barcode
                 </button>
                 <button onclick="switchAdminTab('profil')" id="tab-admin-profil" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-gears"></i> Pengaturan Sistem & Akun
+                    <i class="fa-solid fa-gears"></i> Pengaturan & Admin
                 </button>
             </div>
 
@@ -164,7 +164,7 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-slate-900">Database Master Guru</h3>
-                        <p class="text-xs text-slate-400">Kelola data master guru pendidik SDIT Gema Insan Mandiri</p>
+                        <p class="text-xs text-slate-400">Kelola data master guru pendidik (Tersimpan ke Cloud)</p>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full md:w-auto">
                         <button onclick="openModalGuru()" class="flex-grow md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
@@ -192,7 +192,7 @@
                                     <th class="p-4">Nama Lengkap</th>
                                     <th class="p-4">Mata Pelajaran</th>
                                     <th class="p-4">Username Akun</th>
-                                    <th class="p-4">Password</th>
+                                    <th class="p-4">Password Awal</th>
                                     <th class="p-4 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -245,7 +245,7 @@
                 </div>
             </div>
 
-            <!-- Sub-Page: Pengaturan Sistem & Ubah Password -->
+            <!-- Sub-Page: Pengaturan Sistem -->
             <div id="sub-admin-profil" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
@@ -261,39 +261,6 @@
                                 Simpan Tahun Ajaran Baru
                             </button>
                         </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
-                            <i class="fa-solid fa-key text-indigo-600"></i> Ubah Password Admin
-                        </h3>
-                        <form onsubmit="handleUpdatePasswordUser(event)">
-                            <div class="mb-4">
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Username Admin Saat Ini</label>
-                                <input type="text" id="change-pass-username" readonly class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-100">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Password Baru</label>
-                                <input type="password" id="change-pass-new" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Masukkan password baru">
-                            </div>
-                            <div class="mb-4">
-                                <label class="block text-xs font-semibold text-slate-700 mb-1">Konfirmasi Password Baru</label>
-                                <input type="password" id="change-pass-confirm" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Ulangi password baru">
-                            </div>
-                            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
-                                Update Password Sekarang
-                            </button>
-                        </form>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
-                        <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-vial text-amber-500"></i> Pengujian Koneksi Firebase
-                        </h3>
-                        <p class="text-xs text-slate-500 mb-4">Uji coba kirim dokumen langsung ke koleksi Firestore proyek modulajargama.</p>
-                        <button type="button" onclick="tesKirimData()" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition">
-                            Uji Kirim Data Firestore
-                        </button>
                     </div>
                 </div>
             </div>
@@ -312,15 +279,12 @@
                     <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow">
                         <i class="fa-solid fa-plus-circle"></i> Buat Modul Baru
                     </button>
-                    <button onclick="openModalUbahPassGuru()" class="flex-grow md:flex-none bg-emerald-800 hover:bg-emerald-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow">
-                        <i class="fa-solid fa-key"></i> Ubah Password
-                    </button>
                 </div>
             </div>
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <h3 class="text-lg font-bold text-slate-900">Arsip Modul Ajar (Sinkronisasi Cloud Firebase modulajargama)</h3>
+                    <h3 class="text-lg font-bold text-slate-900">Arsip Modul Ajar (Firebase Cloud Real-Time)</h3>
                 </div>
                 
                 <div id="grid-modul" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -345,7 +309,7 @@
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
                     <button onclick="saveModul()" class="flex-grow sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 shadow-md">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Modul (Sync Realtime)
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan ke Firestore Cloud
                     </button>
                 </div>
             </div>
@@ -403,11 +367,8 @@
                         <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
                             <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
                                 <span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-full flex items-center justify-center text-xs">2</span>
-                                Komponen & Poin Inti Pembelajaran (Dinamis)
+                                Komponen & Poin Inti Pembelajaran
                             </h3>
-                            <button onclick="addCustomPoin()" class="text-xs text-indigo-600 hover:text-indigo-800 bg-indigo-50 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1">
-                                <i class="fa-solid fa-plus-circle"></i> Tambah Poin Kustom
-                            </button>
                         </div>
                         <div id="dynamic-points-container" class="space-y-4">
                             <!-- Terisi dinamis -->
@@ -486,7 +447,7 @@
                         <div class="border border-slate-100 rounded-xl p-4 bg-slate-50 text-center">
                             <i class="fa-solid fa-file-pdf text-4xl text-red-500 mb-2"></i>
                             <p class="text-xs font-bold text-slate-800">Cetak Modul format PDF Resmi</p>
-                            <button onclick="previewFinalModul()" class="mt-4 w-full bg-slate-800 hover:bg-slate-950 text-white text-xs font-semibold py-2 rounded-lg transition font-sans">
+                            <button onclick="previewFinalModul()" class="mt-4 w-full bg-slate-800 hover:bg-slate-950 text-white text-xs font-semibold py-2 rounded-lg transition">
                                 <i class="fa-solid fa-print"></i> Lihat Hasil Cetak
                             </button>
                         </div>
@@ -502,13 +463,7 @@
                     <i class="fa-solid fa-arrow-left"></i> Kembali ke Form Penyuntingan
                 </button>
                 <div class="flex flex-wrap gap-2 justify-end w-full md:w-auto">
-                    <button onclick="exportModulToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
-                        <i class="fa-solid fa-file-excel"></i> Ekspor ke Excel (.xls)
-                    </button>
-                    <button onclick="exportModulToWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
-                        <i class="fa-solid fa-file-word"></i> Ekspor ke Word (.doc)
-                    </button>
-                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
+                    <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow">
                         <i class="fa-solid fa-print"></i> Cetak Dokumen (PDF)
                     </button>
                 </div>
@@ -626,10 +581,10 @@
     </main>
 
     <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-400 no-print">
-        <p>© 2026 Modul Ajar Digital SDIT Gema Insan Mandiri. Integrated with Firebase modulajargama.</p>
+        <p>© 2026 Modul Ajar Digital SDIT Gema Insan Mandiri. Real-Time Cloud Sync Integrated.</p>
     </footer>
 
-    <!-- MODAL POPUP TAMBAH / EDIT GURU -->
+    <!-- MODAL POPUP TAMBAH GURU -->
     <div id="modal-guru" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
         <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl border border-slate-100 mx-4">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
@@ -659,10 +614,8 @@
                     <input type="text" id="guru-username" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="suci">
                 </div>
                 <div class="mb-6">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Akun</label>
-                    <div class="relative">
-                        <input type="text" id="guru-password" required class="w-full px-3 py-2 pr-10 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Password login">
-                    </div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Awal Akun</label>
+                    <input type="text" id="guru-password" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Password login">
                 </div>
 
                 <div class="flex gap-2">
@@ -673,44 +626,13 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP UBAH PASSWORD GURU -->
-    <div id="modal-pass-guru" class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 hidden no-print">
-        <div class="bg-white w-full max-w-md p-6 rounded-2xl shadow-xl border border-slate-100 mx-4">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
-                <h3 class="text-lg font-bold text-slate-900">Ubah Password Akun Guru</h3>
-                <button onclick="closeModalUbahPassGuru()" class="text-slate-400 hover:text-slate-600 text-lg">
-                    <i class="fa-solid fa-times"></i>
-                </button>
-            </div>
-            
-            <form onsubmit="handleUpdatePasswordUser(event)">
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Username Anda</label>
-                    <input type="text" id="guru-pass-username" readonly class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm bg-slate-100">
-                </div>
-                <div class="mb-4">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Password Baru</label>
-                    <input type="password" id="guru-pass-new" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500" placeholder="Password baru">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">Konfirmasi Password Baru</label>
-                    <input type="password" id="guru-pass-confirm" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-emerald-500" placeholder="Ulangi password baru">
-                </div>
-
-                <div class="flex gap-2">
-                    <button type="button" onclick="closeModalUbahPassGuru()" class="w-1/2 border border-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition">Batal</button>
-                    <button type="submit" class="w-1/2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan Password</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- FIREBASE INTEGRATION MODULAJARGAMA -->
+    <!-- FIREBASE & LOGIKA SINKRONISASI REAL-TIME CLOUD -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase Proyek modulajargama
+        // Konfigurasi Firebase Projek 'modulajargama'
         const firebaseConfig = {
             apiKey: "AIzaSyAvrIJhitGnNxhH1M5g7TMJvT0CRzohYZU",
             authDomain: "modulajargama.firebaseapp.com",
@@ -720,109 +642,98 @@
             appId: "1:586561142348:web:ae38a027a204396056fee9",
             measurementId: "G-G9T86LLD0J"
         };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'modulajargama-app';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'modul-ajar-gmi-app';
 
-        // Inisialisasi Firebase & Firestore
+        // Inisialisasi Layanan Firebase
         const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Global Ekspor
-        window.app = app;
-        window.db = db;
+        // Ekspor fungsi & Objek Firebase ke Window agar bisa dipanggil fungsi global
         window.firebaseDb = db;
+        window.firebaseAuth = auth;
         window.firebaseAppId = appId;
         window.doc = doc;
         window.setDoc = setDoc;
-        window.addDoc = addDoc;
         window.deleteDoc = deleteDoc;
 
-        console.log("Firebase & Firestore berhasil terhubung!");
+        // Path Baku Koleksi Firestore
+        window.getTeachersCol = () => collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
+        window.getModulCol = () => collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
+        window.getSettingsDoc = () => doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'general');
 
-        // Fungsi Uji Kirim Data
-        window.tesKirimData = async function() {
+        // Autentikasi dan Listener Real-Time
+        async function initRealtimeSync() {
             try {
-                await addDoc(collection(db, "tes_koleksi"), {
-                    pesan: "Halo Firebase! Data pertama berhasil masuk!",
-                    waktu: new Date().toLocaleString("id-ID")
-                });
-                alert("BERHASIL! Coba cek halaman Firebase Console Anda sekarang.");
-            } catch (error) {
-                alert("Gagal mengirim: " + error.message);
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Autentikasi Firebase Fallback:", err);
             }
-        };
 
-        // Real-time Sync Listeners
-        function setupFirestoreSync() {
-            // 1. Sync Guru
-            const guruCol = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
-            onSnapshot(guruCol, (snapshot) => {
-                let updatedTeachers = [];
-                snapshot.forEach(docSnap => {
-                    updatedTeachers.push(docSnap.data());
-                });
-                if (updatedTeachers.length > 0) {
-                    window.teachers = updatedTeachers;
-                    localStorage.setItem('mad_teachers', JSON.stringify(updatedTeachers));
+            onAuthStateChanged(auth, (user) => {
+                if (!user) return;
+                window.isFirebaseAuthed = true;
+
+                // 1. Real-time Listener Guru
+                onSnapshot(window.getTeachersCol(), (snapshot) => {
+                    let updatedTeachers = [];
+                    snapshot.forEach(docSnap => {
+                        updatedTeachers.push(docSnap.data());
+                    });
+                    if (updatedTeachers.length > 0) {
+                        window.teachers = updatedTeachers;
+                        localStorage.setItem('mad_teachers', JSON.stringify(updatedTeachers));
+                    }
                     if (window.currentPage === 'page-admin-dashboard') {
                         window.renderTableGuru();
                         window.renderAdminTtdGuruList();
                     }
                     window.updateStatistics();
-                } else if (window.teachers && window.teachers.length > 0) {
-                    window.teachers.forEach(t => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
-                    });
-                }
-            }, (error) => console.log("Info Firestore guru:", error));
+                }, (error) => console.error("Error listener guru:", error));
 
-            // 2. Sync Modul Ajar
-            const modulCol = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
-            onSnapshot(modulCol, (snapshot) => {
-                let updatedModul = [];
-                snapshot.forEach(docSnap => {
-                    updatedModul.push(docSnap.data());
-                });
-                if (updatedModul.length > 0) {
+                // 2. Real-time Listener Modul Ajar
+                onSnapshot(window.getModulCol(), (snapshot) => {
+                    let updatedModul = [];
+                    snapshot.forEach(docSnap => {
+                        updatedModul.push(docSnap.data());
+                    });
                     window.modul_ajar = updatedModul;
                     localStorage.setItem('mad_modul_ajar', JSON.stringify(updatedModul));
                     if (window.currentPage === 'page-guru-dashboard') {
                         window.renderGuruDashboard();
                     }
                     window.updateStatistics();
-                } else if (window.modul_ajar && window.modul_ajar.length > 0) {
-                    window.modul_ajar.forEach(m => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
-                    });
-                }
-            }, (error) => console.log("Info Firestore modul:", error));
+                }, (error) => console.error("Error listener modul:", error));
 
-            // 3. Sync Settings
-            const settingsCol = collection(db, 'artifacts', appId, 'public', 'data', 'settings');
-            onSnapshot(settingsCol, (snapshot) => {
-                snapshot.forEach(docSnap => {
-                    if (docSnap.id === 'general') {
-                        const data = docSnap.data();
-                        if (data.active_tahun_ajaran) {
-                            window.active_tahun_ajaran = data.active_tahun_ajaran;
-                            localStorage.setItem('mad_tahun_ajaran', data.active_tahun_ajaran);
+                // 3. Real-time Listener Settings
+                onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'settings'), (snapshot) => {
+                    snapshot.forEach(docSnap => {
+                        if (docSnap.id === 'general') {
+                            const data = docSnap.data();
+                            if (data.active_tahun_ajaran) {
+                                window.active_tahun_ajaran = data.active_tahun_ajaran;
+                                localStorage.setItem('mad_tahun_ajaran', data.active_tahun_ajaran);
+                            }
                         }
-                        if (data.admins) {
-                            window.admins = data.admins;
-                            localStorage.setItem('mad_admins', JSON.stringify(data.admins));
-                        }
-                    }
-                });
-            }, (error) => console.log("Info Firestore settings:", error));
+                    });
+                }, (error) => console.error("Error listener settings:", error));
+            });
         }
 
-        window.initRealtimeSync = setupFirestoreSync;
+        window.initRealtimeSync = initRealtimeSync;
     </script>
 
     <!-- LOGIKA APLIKASI DIGITAL -->
     <script>
+        // HELPER FORMAT NIP/NIY
         function formatNIP(rawVal, defaultPrefix = 'NIY') {
             if (!rawVal) return `${defaultPrefix}: -`;
             let clean = rawVal.toString().trim();
+            
             let match = clean.match(/^(NIY|NIP)[\.\:\s]*(.*)/i);
             if (match) {
                 let prefix = match[1].toUpperCase();
@@ -832,6 +743,7 @@
             return `${defaultPrefix}: ${clean}`;
         }
 
+        // STATE AWAL APLIKASI
         let admins = [
             { id: 1, username: 'admin', password: 'admin123', role: 'admin', isMaster: true }
         ];
@@ -842,42 +754,7 @@
 
         let active_tahun_ajaran = '2026/2027';
 
-        let modul_ajar = [
-            {
-                id: 101,
-                teacher_id: 1,
-                judul_modul: 'Jaringan Komputer dan Internet',
-                kelas: 'VI/II / Fase C',
-                alokasi_waktu: '2 JP X 35 Menit',
-                nama_penyusun: 'Suci Safina Suliasanu, S.Kom.',
-                institusi: 'SDIT Gema Insan Mandiri',
-                tahun: '2026/2027',
-                jenjang: 'SD',
-                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: '005.054.024', jabatan: 'Guru Mata Pelajaran' },
-                ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
-                nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
-                nip_kepsek: '005.039.023',
-                details: [
-                    { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: 'Jaringan komputer, internet, modem Wi-Fi, keamanan online, keamanan jaringan.' },
-                    { id: 2, nama_poin: 'Dimensi Profil Lulusan', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa\nb. Berpikir Kritis\nc. Bergotong Royong\nd. Kreatif' },
-                    { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board' },
-                    { id: 4, nama_poin: 'Target Murid', isi_poin: 'Perangkat ini digunakan untuk mengajar murid reguler maksimum 30 orang.' },
-                    { id: 5, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'Mengenal jaringan komputer dan menggunakan internet secara bertanggung jawab.' },
-                    { id: 6, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Murid akan mempelajari cara terhubung ke jaringan internet.' },
-                    { id: 7, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah modem Wi-Fi butuh perawatan?\n2. Bagaimana cara menjaga privasi secara online?' },
-                    { 
-                        id: 8, 
-                        nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', 
-                        isTable: true,
-                        isi_poin: JSON.stringify([
-                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'Salam, doa, dan absensi murid.' },
-                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'Penjelasan materi jaringan dan diskusi kelompok.' },
-                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Refleksi dan kuis singkat.' }
-                        ])
-                    }
-                ]
-            }
-        ];
+        let modul_ajar = [];
 
         let currentUser = null;
         let selectedModulId = null;
@@ -896,9 +773,12 @@
                 { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: '' },
                 { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: '' },
                 { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: '' }
-            ]) }
+            ]) },
+            { nama_poin: 'Remedial & Pengayaan', isi_poin: '' },
+            { nama_poin: 'Lampiran LKPD', isi_poin: '' }
         ];
 
+        // MOCK QR CODE GENERATION HELPER
         function generateQRCodeSVG(text) {
             let hash = 0;
             for (let i = 0; i < text.length; i++) {
@@ -930,6 +810,7 @@
             return svg;
         }
 
+        // LOAD LOCAL STORAGE AS INITIAL BACKUP
         function loadDataFromStorage() {
             if (localStorage.getItem('mad_admins')) admins = JSON.parse(localStorage.getItem('mad_admins'));
             if (localStorage.getItem('mad_teachers')) teachers = JSON.parse(localStorage.getItem('mad_teachers'));
@@ -1088,87 +969,27 @@
             } else {
                 subProfil.classList.remove('hidden');
                 document.getElementById('admin-tahun-ajaran').value = active_tahun_ajaran;
-                document.getElementById('change-pass-username').value = currentUser?.username || 'admin';
             }
         }
 
-        function saveTahunAjaran() {
+        async function saveTahunAjaran() {
             const val = document.getElementById('admin-tahun-ajaran').value.trim();
             if (!val) return showToast('Tahun Ajaran tidak boleh kosong', 'error');
+            
             active_tahun_ajaran = val;
             
+            // Simpan langsung ke Firestore Document
             if (window.firebaseDb) {
-                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
-                    active_tahun_ajaran,
-                    admins
-                }, { merge: true }).catch(err => console.error(err));
-            }
-            showToast(`Tahun Ajaran aktif diperbarui menjadi: ${val}`, 'success');
-        }
-
-        function handleUpdatePasswordUser(event) {
-            event.preventDefault();
-            let newPass = '';
-            let confirmPass = '';
-
-            if (currentUser.role === 'admin') {
-                newPass = document.getElementById('change-pass-new').value.trim();
-                confirmPass = document.getElementById('change-pass-confirm').value.trim();
-            } else {
-                newPass = document.getElementById('guru-pass-new').value.trim();
-                confirmPass = document.getElementById('guru-pass-confirm').value.trim();
-            }
-
-            if (newPass !== confirmPass) {
-                return showToast('Password baru dan konfirmasi password tidak cocok!', 'error');
-            }
-
-            if (newPass.length < 4) {
-                return showToast('Password minimal 4 karakter!', 'error');
-            }
-
-            if (currentUser.role === 'admin') {
-                const adminIdx = admins.findIndex(a => a.id === currentUser.id);
-                if (adminIdx !== -1) {
-                    admins[adminIdx].password = newPass;
-                    currentUser.password = newPass;
-                    localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
-                    localStorage.setItem('mad_admins', JSON.stringify(admins));
-
-                    if (window.firebaseDb) {
-                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
-                            active_tahun_ajaran,
-                            admins
-                        }, { merge: true }).catch(err => console.error(err));
-                    }
+                try {
+                    await window.setDoc(window.getSettingsDoc(), {
+                        active_tahun_ajaran: val,
+                        admins: admins
+                    });
+                } catch(err) {
+                    console.error("Error simpan tahun ajaran ke Firebase:", err);
                 }
-            } else {
-                const guruIdx = teachers.findIndex(t => t.id === currentUser.id);
-                if (guruIdx !== -1) {
-                    teachers[guruIdx].password = newPass;
-                    currentUser.password = newPass;
-                    localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
-                    localStorage.setItem('mad_teachers', JSON.stringify(teachers));
-
-                    if (window.firebaseDb) {
-                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', currentUser.id.toString()), teachers[guruIdx]).catch(err => console.error(err));
-                    }
-                }
-                closeModalUbahPassGuru();
             }
-
-            showToast('Password berhasil diperbarui dan disinkronkan ke Cloud!', 'success');
-        }
-
-        function openModalUbahPassGuru() {
-            document.getElementById('guru-pass-username').value = currentUser?.username || '';
-            document.getElementById('guru-pass-new').value = '';
-            document.getElementById('guru-pass-confirm').value = '';
-            document.getElementById('modal-pass-guru').classList.remove('hidden');
-        }
-
-        function closeModalUbahPassGuru() {
-            document.getElementById('modal-pass-guru').classList.add('hidden');
+            showToast(`Tahun Ajaran aktif diperbarui ke Cloud: ${val}`, 'success');
         }
 
         function renderAdminTtdGuruList() {
@@ -1184,7 +1005,7 @@
                     </div>
                     <div class="flex items-center gap-2">
                         <span class="inline-flex items-center gap-1 text-[10px] font-bold ${t.verified ? 'text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200' : 'text-slate-500 bg-slate-100 px-2 py-0.5 rounded'}">
-                            <i class="fa-solid ${t.verified ? 'fa-circle-check' : 'fa-clock'}"></i> QR-Barcode
+                            <i class="fa-solid ${t.verified ? 'fa-shield-check' : 'fa-clock'}"></i> QR-Barcode
                         </span>
                     </div>
                 `;
@@ -1223,10 +1044,7 @@
                     <td class="p-4"><span class="px-2.5 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium border border-indigo-100">${guru.mata_pelajaran}</span></td>
                     <td class="p-4 font-mono text-xs">${guru.username}</td>
                     <td class="p-4 font-mono text-xs text-slate-500">${guru.password}</td>
-                    <td class="p-4 text-center flex justify-center gap-2">
-                        <button onclick="editGuruModal(${guru.id})" class="p-1.5 text-indigo-600 hover:bg-indigo-50 rounded-lg transition" title="Edit Data Guru">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
+                    <td class="p-4 text-center">
                         <button onclick="deleteGuru(${guru.id})" class="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition" title="Hapus Guru">
                             <i class="fa-solid fa-trash-can"></i>
                         </button>
@@ -1240,27 +1058,6 @@
         window.renderAdminTtdGuruList = renderAdminTtdGuruList;
 
         function openModalGuru() {
-            document.getElementById('guru-id').value = '';
-            document.getElementById('modal-guru-title').innerText = "Tambah Guru Baru";
-            document.getElementById('guru-nip').value = '';
-            document.getElementById('guru-nama').value = '';
-            document.getElementById('guru-mapel').value = '';
-            document.getElementById('guru-username').value = '';
-            document.getElementById('guru-password').value = '';
-            document.getElementById('modal-guru').classList.remove('hidden');
-        }
-
-        function editGuruModal(id) {
-            const guru = teachers.find(t => t.id === id);
-            if (!guru) return;
-
-            document.getElementById('guru-id').value = guru.id;
-            document.getElementById('modal-guru-title').innerText = "Edit Data Guru";
-            document.getElementById('guru-nip').value = guru.nip;
-            document.getElementById('guru-nama').value = guru.nama_guru;
-            document.getElementById('guru-mapel').value = guru.mata_pelajaran;
-            document.getElementById('guru-username').value = guru.username;
-            document.getElementById('guru-password').value = guru.password;
             document.getElementById('modal-guru').classList.remove('hidden');
         }
 
@@ -1268,53 +1065,40 @@
             document.getElementById('modal-guru').classList.add('hidden');
         }
 
-        function saveGuru(event) {
+        async function saveGuru(event) {
             event.preventDefault();
-            const idVal = document.getElementById('guru-id').value;
             const nip = document.getElementById('guru-nip').value.trim();
             const nama = document.getElementById('guru-nama').value.trim();
             const mapel = document.getElementById('guru-mapel').value.trim();
             const username = document.getElementById('guru-username').value.trim();
             const password = document.getElementById('guru-password').value.trim();
 
-            let targetGuruObj = null;
-
-            if (idVal) {
-                const targetId = parseInt(idVal);
-                const idx = teachers.findIndex(t => t.id === targetId);
-                if (idx !== -1) {
-                    teachers[idx] = { ...teachers[idx], nip, nama_guru: nama, username, password, mata_pelajaran: mapel };
-                    targetGuruObj = teachers[idx];
-                }
-            } else {
-                const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
-                targetGuruObj = { id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true };
-                teachers.push(targetGuruObj);
-            }
+            const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
+            const newTeacherData = { id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true };
             
-            localStorage.setItem('mad_teachers', JSON.stringify(teachers));
-
-            if (window.firebaseDb && targetGuruObj) {
-                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', targetGuruObj.id.toString()), targetGuruObj).catch(err => console.error(err));
+            // Simpan langsung ke Firestore
+            if (window.firebaseDb) {
+                try {
+                    await window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', newId.toString()), newTeacherData);
+                } catch(err) {
+                    console.error("Gagal simpan guru ke Firebase:", err);
+                }
             }
 
             closeModalGuru();
-            renderTableGuru();
-            updateStatistics();
-            showToast(idVal ? 'Data guru diperbarui' : 'Guru baru berhasil ditambahkan', 'success');
+            showToast('Guru baru tersimpan ke Cloud Firebase!', 'success');
         }
 
-        function deleteGuru(id) {
+        async function deleteGuru(id) {
             if (confirm("Yakin ingin menghapus data guru ini?")) {
-                teachers = teachers.filter(t => t.id !== id);
-                localStorage.setItem('mad_teachers', JSON.stringify(teachers));
-
                 if (window.firebaseDb) {
-                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString())).catch(err => console.error(err));
+                    try {
+                        await window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString()));
+                    } catch(err) {
+                        console.error("Gagal hapus guru dari Firebase:", err);
+                    }
                 }
-                renderTableGuru();
-                updateStatistics();
-                showToast('Data guru telah dihapus', 'info');
+                showToast('Data guru dihapus dari Cloud Firebase', 'info');
             }
         }
 
@@ -1460,22 +1244,7 @@
             });
         }
 
-        function addCustomPoin() {
-            const container = document.getElementById('dynamic-points-container');
-            const item = document.createElement('div');
-            item.className = "p-5 bg-slate-50 rounded-xl border border-slate-200 relative group dynamic-point-row";
-            item.innerHTML = `
-                <div class="mb-2 flex justify-between items-center">
-                    <input type="text" class="bg-transparent font-bold text-slate-800 text-sm border-b border-indigo-400 focus:outline-none w-full py-0.5 dynamic-title" placeholder="Nama Poin Baru (misal: Lampiran LKPD)">
-                    <button onclick="this.closest('.dynamic-point-row').remove()" class="text-red-500 hover:text-red-700 text-xs ml-2">Hapus</button>
-                </div>
-                <textarea class="w-full p-2.5 rounded-lg border border-slate-200 text-xs focus:outline-none h-28 dynamic-content-text" placeholder="Isi poin..."></textarea>
-                <input type="hidden" class="dynamic-content-type" value="text">
-            `;
-            container.appendChild(item);
-        }
-
-        function saveModul() {
+        async function saveModul() {
             const judul = document.getElementById('modul-judul').value.trim();
             const penyusun = document.getElementById('modul-penyusun').value.trim();
             const institusi = document.getElementById('modul-institusi').value.trim();
@@ -1528,69 +1297,48 @@
             const nama_kepsek = document.getElementById('ttd-nama-kepsek').value.trim();
             const nip_kepsek = document.getElementById('ttd-nip-kepsek').value.trim();
 
-            let targetModulObj = null;
+            const targetId = selectedModulId || (modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101);
 
-            if (selectedModulId) {
-                const idx = modul_ajar.findIndex(m => m.id === selectedModulId);
-                if (idx !== -1) {
-                    modul_ajar[idx] = {
-                        ...modul_ajar[idx],
-                        judul_modul: judul,
-                        kelas,
-                        alokasi_waktu: alokasi,
-                        nama_penyusun: penyusun,
-                        institusi,
-                        tahun,
-                        jenjang,
-                        ttd_guru,
-                        ttd_kepsek,
-                        nama_kepsek,
-                        nip_kepsek,
-                        details
-                    };
-                    targetModulObj = modul_ajar[idx];
+            const modulData = {
+                id: targetId,
+                teacher_id: currentUser.id,
+                judul_modul: judul,
+                kelas,
+                alokasi_waktu: alokasi,
+                nama_penyusun: penyusun,
+                institusi,
+                tahun,
+                jenjang,
+                ttd_guru,
+                ttd_kepsek,
+                nama_kepsek,
+                nip_kepsek,
+                details
+            };
+
+            // Simpan langsung ke Firestore Dokument
+            if (window.firebaseDb) {
+                try {
+                    await window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', targetId.toString()), modulData);
+                } catch(err) {
+                    console.error("Gagal menyimpan modul ke Firebase:", err);
                 }
-            } else {
-                const newId = modul_ajar.length > 0 ? Math.max(...modul_ajar.map(m => m.id)) + 1 : 101;
-                targetModulObj = {
-                    id: newId,
-                    teacher_id: currentUser.id,
-                    judul_modul: judul,
-                    kelas,
-                    alokasi_waktu: alokasi,
-                    nama_penyusun: penyusun,
-                    institusi,
-                    tahun,
-                    jenjang,
-                    ttd_guru,
-                    ttd_kepsek,
-                    nama_kepsek,
-                    nip_kepsek,
-                    details
-                };
-                modul_ajar.push(targetModulObj);
-            }
-
-            localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
-
-            if (window.firebaseDb && targetModulObj) {
-                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', targetModulObj.id.toString()), targetModulObj).catch(err => console.error(err));
             }
 
             backToGuruDashboard();
-            showToast('Modul berhasil disimpan ke Firebase!', 'success');
+            showToast('Modul berhasil tersimpan ke Cloud Firestore & Sinkron!', 'success');
         }
 
-        function deleteModul(id) {
-            if (confirm("Ingin menghapus modul ajar ini?")) {
-                modul_ajar = modul_ajar.filter(m => m.id !== id);
-                localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
-
+        async function deleteModul(id) {
+            if (confirm("Ingin menghapus modul ajar ini dari Cloud Firebase?")) {
                 if (window.firebaseDb) {
-                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString())).catch(err => console.error(err));
+                    try {
+                        await window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString()));
+                    } catch(err) {
+                        console.error("Gagal menghapus modul dari Firebase:", err);
+                    }
                 }
-                renderGuruDashboard();
-                showToast('Modul dihapus', 'info');
+                showToast('Modul dihapus dari Cloud Firebase', 'info');
             }
         }
 
@@ -1686,58 +1434,8 @@
             navigate('page-guru-dashboard');
         }
 
-        function exportModulToWord() {
-            let m = modul_ajar.find(mod => mod.id === selectedModulId);
-            if (!m) return;
-
-            const wordTemplate = `
-            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
-            <head><meta charset="utf-8"></head>
-            <body>
-                <h2>${m.judul_modul}</h2>
-                <p>Institusi: ${m.institusi}</p>
-                <p>Penyusun: ${m.nama_penyusun}</p>
-                <p>Kepala Sekolah: ${m.nama_kepsek} (${formatNIP(m.nip_kepsek, 'NIY')})</p>
-                <p>Guru: ${m.nama_penyusun} (${formatNIP(m.ttd_guru?.nip, 'NIY/NIP')})</p>
-            </body>
-            </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + wordTemplate], { type: 'application/msword' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `MAD_Word_${m.judul_modul}.doc`;
-            link.click();
-        }
-
-        function exportModulToExcel() {
-            let m = modul_ajar.find(mod => mod.id === selectedModulId);
-            if (!m) return;
-
-            const excelTemplate = `
-                <html xmlns:o="urn:schemas-microsoft-com:office:excel" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-                <head><meta charset="utf-8"></head>
-                <body>
-                    <table>
-                        <tr><td>Judul Modul</td><td>${m.judul_modul}</td></tr>
-                        <tr><td>Penyusun</td><td>${m.nama_penyusun} (${formatNIP(m.ttd_guru?.nip, 'NIY/NIP')})</td></tr>
-                        <tr><td>Kepala Sekolah</td><td>${m.nama_kepsek} (${formatNIP(m.nip_kepsek, 'NIY')})</td></tr>
-                    </table>
-                </body>
-                </html>
-            `;
-
-            const blob = new Blob(['\ufeff' + excelTemplate], { type: 'application/vnd.ms-excel' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `MAD_Excel_${m.judul_modul}.xls`;
-            link.click();
-        }
-
         window.formatNIP = formatNIP;
-        window.addCustomPoin = addCustomPoin;
         window.openModalGuru = openModalGuru;
-        window.editGuruModal = editGuruModal;
         window.closeModalGuru = closeModalGuru;
         window.saveGuru = saveGuru;
         window.deleteGuru = deleteGuru;
@@ -1747,13 +1445,8 @@
         window.editExistingModul = editExistingModul;
         window.viewCetakModul = viewCetakModul;
         window.closePrintPreview = closePrintPreview;
-        window.exportModulToWord = exportModulToWord;
-        window.exportModulToExcel = exportModulToExcel;
         window.switchAdminTab = switchAdminTab;
         window.saveTahunAjaran = saveTahunAjaran;
-        window.handleUpdatePasswordUser = handleUpdatePasswordUser;
-        window.openModalUbahPassGuru = openModalUbahPassGuru;
-        window.closeModalUbahPassGuru = closeModalUbahPassGuru;
         window.handleLogin = handleLogin;
         window.logout = logout;
     </script>
