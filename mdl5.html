@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="jv">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modul Ajar Digital - SDIT Gema Insan Mandiri</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome kanggo Ikon -->
+    <!-- FontAwesome untuk Icon -->
     <link class="no-print" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap');
@@ -41,11 +41,11 @@
     <!-- NOTIFIKASI TOAST -->
     <div id="toast-container" class="fixed top-5 right-5 z-50 flex flex-col gap-2"></div>
 
-    <!-- HEADER / NAVIGASI (no-print) -->
+    <!-- HEADER / NAVIGATION (no-print) -->
     <nav class="bg-indigo-900 text-white shadow-md no-print">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
-                <!-- Logo lan Brand -->
+                <!-- Logo & Brand -->
                 <div class="flex items-center gap-3">
                     <div class="bg-white text-indigo-900 p-2 rounded-lg font-bold text-xl shadow flex items-center justify-center">
                         <img src="https://www.sditgamaschool.sch.id/frontend/sditgamma/img/logo-ikon-sditgama.jpg" alt="Logo SDIT GAMA" class="h-8 w-8 object-contain rounded" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%231e3a8a\'><path d=\'M12 3L1 9l11 6 9-4.91V17h2V9L12 3z\'/></svg>'">
@@ -56,14 +56,14 @@
                     </div>
                 </div>
 
-                <!-- Informasi Pangguna Aktif -->
+                <!-- Info User Aktif -->
                 <div class="flex items-center gap-4">
                     <div id="nav-user-info" class="hidden sm:flex flex-col text-right">
-                        <span id="nav-user-name" class="font-semibold text-sm">Jeneng Pangguna</span>
-                        <span id="nav-user-role" class="text-xs text-indigo-300">Peran</span>
+                        <span id="nav-user-name" class="font-semibold text-sm">Nama User</span>
+                        <span id="nav-user-role" class="text-xs text-indigo-300">Role</span>
                     </div>
                     <button id="btn-logout" onclick="logout()" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-150 flex items-center gap-2">
-                        <i class="fa-solid fa-sign-out-alt"></i> Metu (Logout)
+                        <i class="fa-solid fa-sign-out-alt"></i> Logout
                     </button>
                 </div>
             </div>
@@ -73,29 +73,29 @@
     <!-- AREA UTAMA -->
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
 
-        <!-- 1. KACA LOGIN -->
+        <!-- 1. HALAMAN LOGIN -->
         <div id="page-login" class="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-xl p-8 border border-slate-100">
             <div class="text-center mb-8">
                 <div class="inline-flex bg-indigo-100 text-indigo-800 p-4 rounded-full mb-3 text-3xl">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Guru</h2>
-                <p class="text-sm text-slate-500 mt-1">Sumpandawa mlebu nggunakake akun panjenengan</p>
+                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun simulasi Anda</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
                 <div class="mb-4">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Jeneng Pangguna (Username)</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Username</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                             <i class="fa-solid fa-user"></i>
                         </span>
-                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Isi username panjenengan">
+                        <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Masukkan username Anda">
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <label class="block text-sm font-semibold text-slate-700 mb-2">Tembung Sandhi (Password)</label>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
                     <div class="relative">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                             <i class="fa-solid fa-lock"></i>
@@ -108,7 +108,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-indigo-500/20 transition duration-150">
-                    Mlebu Saiki <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
+                    Masuk Sekarang <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
                 </button>
             </form>
         </div>
@@ -122,7 +122,7 @@
                         <i class="fa-solid fa-chalkboard-user"></i>
                     </div>
                     <div>
-                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Gunggung Guru</p>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Guru</p>
                         <p id="stat-total-guru" class="text-2xl font-bold text-slate-800">0</p>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                         <i class="fa-solid fa-file-invoice"></i>
                     </div>
                     <div>
-                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Gunggung Modul Ajar</p>
+                        <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Total Modul Ajar</p>
                         <p id="stat-total-modul" class="text-2xl font-bold text-slate-800">0</p>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                     <i class="fa-solid fa-qrcode"></i> Kelola TTD & QR Barcode
                 </button>
                 <button onclick="switchAdminTab('profil')" id="tab-admin-profil" class="px-6 py-3 font-semibold text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center gap-2">
-                    <i class="fa-solid fa-gears"></i> Setelan & Admin
+                    <i class="fa-solid fa-gears"></i> Pengaturan & Admin
                 </button>
             </div>
 
@@ -164,7 +164,7 @@
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-slate-900">Database Master Guru</h3>
-                        <p class="text-xs text-slate-400">Kelola lan impor/ekspor data master guru pendidik</p>
+                        <p class="text-xs text-slate-400">Kelola dan impor/ekspor data master guru pendidik</p>
                     </div>
                     <div class="flex flex-wrap gap-2 w-full md:w-auto">
                         <button onclick="openModalGuru()" class="flex-grow md:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition duration-150 flex items-center justify-center gap-2">
@@ -187,16 +187,16 @@
                             <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
                                 <i class="fa-solid fa-magnifying-glass text-xs"></i>
                             </span>
-                            <input type="text" id="search-guru" oninput="renderTableGuru()" class="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Luru Guru utawa Mapel...">
+                            <input type="text" id="search-guru" oninput="renderTableGuru()" class="w-full pl-8 pr-4 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Cari Guru atau Mapel...">
                         </div>
-                        <span class="text-xs text-slate-400" id="table-guru-info">Nampilake 0 Guru</span>
+                        <span class="text-xs text-slate-400" id="table-guru-info">Menampilkan 0 Guru</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-50 text-slate-400 uppercase text-[11px] font-bold tracking-wider border-b border-slate-100">
                                     <th class="p-4">NIP/NIY</th>
-                                    <th class="p-4">Nami Jangkep</th>
+                                    <th class="p-4">Nama Lengkap</th>
                                     <th class="p-4">Mata Pelajaran</th>
                                     <th class="p-4">Username Akun</th>
                                     <th class="p-4">Password Awal</th>
@@ -204,7 +204,7 @@
                                 </tr>
                             </thead>
                             <tbody id="table-guru-body" class="divide-y divide-slate-100 text-sm text-slate-600">
-                                <!-- Terisi kanthi dinamis -->
+                                <!-- Terisi dinamis -->
                             </tbody>
                         </table>
                     </div>
@@ -215,7 +215,7 @@
             <div id="sub-admin-ttd" class="hidden space-y-6">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <h3 class="text-lg font-bold text-slate-900 mb-2">Pemberian Otorisasi Tanda Tangan QR Barcode</h3>
-                    <p class="text-xs text-slate-500">Sistem memetakan NIP/NIY guru lan Kepala Sekolah kanggo otomatis digawe QR Code Verifikasi Dokumen.</p>
+                    <p class="text-xs text-slate-500">Sistem memetakan NIP/NIY guru dan Kepala Sekolah untuk otomatis dibuatkan QR Code Verifikasi Dokumen.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -235,7 +235,7 @@
                         <div class="space-y-4">
                             <div class="grid grid-cols-1 gap-3">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nami Kepala Sekolah Aktif</label>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Kepala Sekolah Aktif</label>
                                     <input type="text" id="admin-kepsek-name" value="Muhamad Fadlillah, S.Kom." class="w-full px-3 py-2 text-sm border rounded-lg focus:ring-1 focus:ring-indigo-500 focus:outline-none">
                                 </div>
                                 <div>
@@ -245,27 +245,27 @@
                             </div>
                             <div class="p-3 bg-emerald-50 text-emerald-800 rounded-lg text-xs flex gap-2 items-center">
                                 <i class="fa-solid fa-badge-check text-base"></i>
-                                <span>QR Barcode Kepala Sekolah aktif lan terintegrasi ing modul cetak.</span>
+                                <span>QR Barcode Kepala Sekolah aktif dan terintegrasi pada modul cetak.</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sub-Page: Setelan Sistem -->
+            <!-- Sub-Page: Pengaturan Sistem -->
             <div id="sub-admin-profil" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                         <h3 class="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2 pb-2 border-b">
-                            <i class="fa-regular fa-calendar-days text-indigo-600"></i> Setelan Tahun Ajaran Aktif
+                            <i class="fa-regular fa-calendar-days text-indigo-600"></i> Pengaturan Tahun Ajaran Aktif
                         </h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Tahun Ajaran Sistem Saiki</label>
-                                <input type="text" id="admin-tahun-ajaran" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Tuladha: 2026/2027">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Tahun Ajaran Sistem Saat Ini</label>
+                                <input type="text" id="admin-tahun-ajaran" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Contoh: 2026/2027">
                             </div>
                             <button type="button" onclick="saveTahunAjaran()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition text-xs">
-                                Simpan Tahun Ajaran Anyar
+                                Simpan Tahun Ajaran Baru
                             </button>
                         </div>
                     </div>
@@ -276,19 +276,19 @@
                         </h3>
                         <form onsubmit="handleUpdateProfilAdmin(event)">
                             <div class="mb-4">
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Username Anyar</label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Username Baru</label>
                                 <input type="text" id="admin-new-username" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
                             </div>
                             <div class="mb-4">
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Password Anyar</label>
-                                <input type="password" id="admin-new-password" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Isi password anyar">
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Password Baru</label>
+                                <input type="password" id="admin-new-password" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Isi password baru">
                             </div>
                             <div class="mb-6">
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
-                                <input type="password" id="admin-confirm-password" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Ulangi password anyar">
+                                <input type="password" id="admin-confirm-password" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition" placeholder="Ulangi password baru">
                             </div>
                             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl shadow-md transition text-xs">
-                                Simpan Owahan Akun
+                                Simpan Perubahan Akun
                             </button>
                         </form>
                     </div>
@@ -298,20 +298,20 @@
                     <h3 class="text-lg font-bold text-slate-900 pb-2 border-b flex items-center gap-2">
                         <i class="fa-solid fa-user-shield text-emerald-600"></i> Manajemen Admin (Master)
                     </h3>
-                    <p class="text-xs text-slate-500">Minangka Master Admin, panjenengan bisa nambahaken Sub-Admin kanggo mbantu manajemen data.</p>
+                    <p class="text-xs text-slate-500">Sebagai Master Admin, Anda dapat menambahkan Sub-Admin untuk membantu manajemen data.</p>
                     
                     <form onsubmit="handleAddSubAdmin(event)" class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
-                        <h4 class="font-bold text-xs text-slate-700">Daftar Admin Anyar</h4>
+                        <h4 class="font-bold text-xs text-slate-700">Daftarkan Admin Baru</h4>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Username Admin Anyar</label>
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Username Admin Baru</label>
                             <input type="text" id="subadmin-username" required class="w-full px-3 py-1.5 text-xs border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:outline-none bg-white">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Password Admin Anyar</label>
+                            <label class="block text-[10px] font-semibold text-slate-600 mb-1">Password Admin Baru</label>
                             <input type="password" id="subadmin-password" required class="w-full px-3 py-1.5 text-xs border rounded-lg focus:ring-1 focus:ring-emerald-500 focus:outline-none bg-white">
                         </div>
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-lg text-xs font-bold transition">
-                            Tambah Admin Anyar
+                            Tambah Admin Baru
                         </button>
                     </form>
 
@@ -329,14 +329,14 @@
         <div id="page-guru-dashboard" class="hidden no-print space-y-6">
             <div class="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold" id="guru-welcome-name">Sugeng Rawuh, Bapak/Ibu Guru</h2>
+                    <h2 class="text-2xl font-bold" id="guru-welcome-name">Selamat Datang, Bapak/Ibu Guru</h2>
                     <p class="text-sm text-emerald-100 flex items-center gap-2 mt-1">
                         <i class="fa-solid fa-book-open"></i> Mata Pelajaran: <span id="guru-welcome-mapel" class="font-bold underline">-</span>
                     </p>
                 </div>
                 <div class="flex flex-wrap gap-2 w-full md:w-auto">
                     <button onclick="openFormModul()" class="flex-grow md:flex-none bg-white text-emerald-700 hover:bg-emerald-50 px-5 py-2.5 rounded-xl text-sm font-semibold transition flex items-center justify-center gap-2 shadow animate-pulse">
-                        <i class="fa-solid fa-plus-circle"></i> Gawe Modul Anyar
+                        <i class="fa-solid fa-plus-circle"></i> Buat Modul Baru
                     </button>
                     
                     <div class="relative flex-grow md:flex-none">
@@ -350,7 +350,7 @@
 
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                    <h3 class="text-lg font-bold text-slate-900">Arsip Modul Ajar (Real-Time Sync)</h3>
+                    <h3 class="text-lg font-bold text-slate-900">Arsip Modul Ajar (Sinkronisasi Real-Time Cloud)</h3>
                     <div class="flex flex-wrap gap-2">
                         <button onclick="downloadJSONTemplate()" class="text-xs text-emerald-600 hover:text-emerald-800 border border-emerald-200 bg-emerald-50 px-3 py-1.5 rounded-lg flex items-center gap-1 font-bold">
                             <i class="fa-solid fa-file-code"></i> Template JSON
@@ -367,7 +367,7 @@
 
                 <div id="empty-state-modul" class="hidden text-center py-12">
                     <div class="text-5xl text-slate-300 mb-3"><i class="fa-regular fa-folder-open"></i></div>
-                    <p class="text-slate-500 text-sm">Durung ana modul ajar sing digawe.</p>
+                    <p class="text-slate-500 text-sm">Belum ada modul ajar yang dibuat.</p>
                 </div>
             </div>
         </div>
@@ -377,9 +377,9 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <button onclick="backToGuruDashboard()" class="text-slate-500 hover:text-slate-800 font-semibold text-sm flex items-center gap-2 mb-2">
-                        <i class="fa-solid fa-arrow-left-long"></i> Bali menyang Dashboard
+                        <i class="fa-solid fa-arrow-left-long"></i> Kembali ke Dashboard
                     </button>
-                    <h2 id="creator-title" class="text-2xl font-bold text-slate-900">Gawe Modul Ajar Anyar</h2>
+                    <h2 id="creator-title" class="text-2xl font-bold text-slate-900">Buat Modul Ajar Baru</h2>
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
                     <button onclick="saveModul()" class="flex-grow sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm transition flex items-center justify-center gap-2 shadow-md">
@@ -400,7 +400,7 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Materi Pokok / Judul Modul*</label>
-                                <input type="text" id="modul-judul" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Tuladha: Jaringan Komputer dan Internet">
+                                <input type="text" id="modul-judul" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Contoh: Jaringan Komputer dan Internet">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Penyusun (Guru)*</label>
@@ -436,7 +436,7 @@
                             <div class="sm:col-span-2">
                                 <label class="block text-xs font-semibold text-slate-600 mb-1">Gambar Cover Utama Modul (Opsional)</label>
                                 <div class="flex gap-2">
-                                    <input type="text" id="modul-gambar-url" oninput="updateFormCoverPreview()" class="flex-grow px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="URL Gambar utawa unggah file">
+                                    <input type="text" id="modul-gambar-url" oninput="updateFormCoverPreview()" class="flex-grow px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="URL Gambar atau unggah file">
                                     <label class="cursor-pointer bg-slate-200 hover:bg-slate-300 text-slate-700 px-4 py-2 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 shrink-0 transition font-sans">
                                         <i class="fa-solid fa-cloud-arrow-up"></i> Unggah File
                                         <input type="file" accept="image/*" onchange="uploadMainImage(event)" class="hidden">
@@ -490,8 +490,8 @@
                                         <input type="text" id="ttd-nama-guru" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Nama Guru">
                                     </div>
                                     <div>
-                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP / NIY* (Ketik nomore wae, ora usah ditambah NIY/NIP maneh)</label>
-                                        <input type="text" id="ttd-nip-guru" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Tuladha: 005.054.024">
+                                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP / NIY* (Ketik nomornya saja, tidak perlu ditambah NIY/NIP lagi)</label>
+                                        <input type="text" id="ttd-nip-guru" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Contoh: 005.054.024">
                                     </div>
                                 </div>
                                 <div class="border-t border-slate-200 pt-3">
@@ -514,7 +514,7 @@
                                     </div>
                                     <div>
                                         <label class="block text-[11px] font-semibold text-slate-600 mb-1">NIP / NIY*</label>
-                                        <input type="text" id="ttd-nip-kepsek" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Tuladha: 005.039.023">
+                                        <input type="text" id="ttd-nip-kepsek" class="w-full px-3 py-1.5 rounded-lg border border-slate-200 text-xs focus:outline-none focus:ring-1" placeholder="Contoh: 005.039.023">
                                     </div>
                                 </div>
                                 <div class="border-t border-slate-200 pt-3">
@@ -550,7 +550,7 @@
         <div id="page-print-preview" class="hidden space-y-6">
             <div class="no-print bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-center gap-3">
                 <button onclick="closePrintPreview()" class="text-slate-600 hover:text-slate-800 font-semibold text-sm flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-left"></i> Bali menyang Form Penyuntingan
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Form Penyuntingan
                 </button>
                 <div class="flex flex-wrap gap-2 justify-end w-full md:w-auto">
                     <button onclick="exportModulToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-1.5 shadow font-sans">
@@ -657,7 +657,7 @@
                         <div class="flex flex-col items-center justify-between h-52">
                             <div>
                                 <p class="text-slate-500 text-[11px]" id="print-date-today">Jakarta, -</p>
-                                <p class="font-bold cursor-pointer hover:bg-slate-100 p-1 rounded border border-transparent hover:border-slate-300" id="print-peran-guru" onclick="togglePrintRoleLabel()" title="Klik kanggo ngowahi Jabatan">Guru Mata Pelajaran</p>
+                                <p class="font-bold cursor-pointer hover:bg-slate-100 p-1 rounded border border-transparent hover:border-slate-300" id="print-peran-guru" onclick="togglePrintRoleLabel()" title="Klik untuk mengubah Jabatan">Guru Mata Pelajaran</p>
                             </div>
 
                             <div class="my-3 h-24 flex flex-col items-center justify-center">
@@ -702,8 +702,8 @@
                 <input type="hidden" id="guru-id">
                 
                 <div class="mb-4">
-                    <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NIY (Nomor tok)</label>
-                    <input type="text" id="guru-nip" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Tuladha: 005.054.024">
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">NIP / NIY (Nomornya saja)</label>
+                    <input type="text" id="guru-nip" required class="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Contoh: 005.054.024">
                 </div>
                 <div class="mb-4">
                     <label class="block text-xs font-semibold text-slate-700 mb-1">Nama Guru Lengkap beserta Gelar</label>
@@ -735,7 +735,7 @@
         </div>
     </div>
 
-    <!-- FIREBASE & LOGIKA SINKRONISASI REAL-TIME -->
+    <!-- FIREBASE & LOGIKA SINKRONISASI REAL-TIME CLOUD -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -757,12 +757,15 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Nyiapake variabel global supaya bisa diakses fungsi biasa
+        // Ekspor ke variabel window agar fungsi JS biasa dapat menggunakannya
         window.firebaseDb = db;
         window.firebaseAuth = auth;
         window.firebaseAppId = appId;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.deleteDoc = deleteDoc;
 
-        // Otentikasi Wajib Sebelum Operasi Firestore
+        // Autentikasi Wajib Sebelum Operasi Firestore
         async function initRealtimeSync() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -771,13 +774,17 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.warn("Autentikasi Firebase Anonymously digunakake:", err);
+                console.warn("Autentikasi Firebase Fallback digunakan:", err);
             }
 
             onAuthStateChanged(auth, (user) => {
                 if (!user) return;
-                
-                // 1. Real-time Listener Data Guru
+                window.isFirebaseAuthed = true;
+
+                // Sync data lokal awal ke Firestore jika belum ada
+                window.saveDataToStorage(true);
+
+                // 1. Listener Real-time Data Guru
                 const guruCol = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
                 onSnapshot(guruCol, (snapshot) => {
                     let updatedTeachers = [];
@@ -786,7 +793,7 @@
                     });
                     if (updatedTeachers.length > 0) {
                         window.teachers = updatedTeachers;
-                        window.saveDataToStorage(false); // Simpan lokal tanpa loop cloud
+                        window.saveDataToStorage(false); // Simpan lokal saja tanpa looping cloud
                         if (window.currentPage === 'page-admin-dashboard') {
                             window.renderTableGuru();
                             window.renderAdminTtdGuruList();
@@ -795,7 +802,7 @@
                     }
                 }, (error) => console.error("Error listener guru:", error));
 
-                // 2. Real-time Listener Data Modul Ajar
+                // 2. Listener Real-time Data Modul Ajar
                 const modulCol = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
                 onSnapshot(modulCol, (snapshot) => {
                     let updatedModul = [];
@@ -812,7 +819,7 @@
                     }
                 }, (error) => console.error("Error listener modul:", error));
 
-                // 3. Real-time Listener Settings System (Tahun Ajaran & Admins)
+                // 3. Listener Real-time Settings System (Tahun Ajaran & Admin)
                 const settingsCol = collection(db, 'artifacts', appId, 'public', 'data', 'settings');
                 onSnapshot(settingsCol, (snapshot) => {
                     snapshot.forEach(docSnap => {
@@ -835,12 +842,11 @@
 
     <!-- LOGIKA APLIKASI DIGITAL -->
     <script>
-        // FUNGSI UTAMA HELPER FORMAT NIP/NIY SUPAYA ORA DOBBEL PREFIX
+        // FUNGSI UTAMA HELPER FORMAT NIP/NIY SUPAYA TIDAK DUPLIKAT PREFIX
         function formatNIP(rawVal, defaultPrefix = 'NIY') {
             if (!rawVal) return `${defaultPrefix}: -`;
             let clean = rawVal.toString().trim();
             
-            // Luru manawa wis ana pola NIY utawa NIP ing ngarep
             let match = clean.match(/^(NIY|NIP)[\.\:\s]*(.*)/i);
             if (match) {
                 let prefix = match[1].toUpperCase();
@@ -883,18 +889,18 @@
                     { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board', component_img: '' },
                     { id: 4, nama_poin: 'Target Murid', isi_poin: 'Perangkat ini digunakan untuk mengajar murid reguler maksimum 30 orang.', component_img: '' },
                     { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Model pembelajaran menggunakan Deep Learning yang menekankan pemahaman mendalam.', component_img: '' },
-                    { id: 6, nama_poin: 'Capaian Pembelajaran', isi_poin: 'Murid mampu memahami konsep dasar, manfaat, and dampak teknologi digital.', component_img: '' },
-                    { id: 7, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'Mengenal jaringan komputer lan migunakake internet kanthi tanggung jawab.', component_img: '' },
-                    { id: 8, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Murid bakal nyinaoni carane sambung menyang jaringan internet.', component_img: '' },
-                    { id: 9, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apa modem Wi-Fi butuh perawatan?\n2. Kepriye carane njaga privasi online?', component_img: '' },
+                    { id: 6, nama_poin: 'Capaian Pembelajaran', isi_poin: 'Murid mampu memahami konsep dasar, manfaat, dan dampak teknologi digital.', component_img: '' },
+                    { id: 7, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'Mengenal jaringan komputer dan menggunakan internet secara bertanggung jawab.', component_img: '' },
+                    { id: 8, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Murid akan mempelajari cara terhubung ke jaringan internet.', component_img: '' },
+                    { id: 9, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah modem Wi-Fi butuh perawatan?\n2. Bagaimana cara menjaga privasi secara online?', component_img: '' },
                     { 
                         id: 10, 
                         nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', 
                         isTable: true,
                         isi_poin: JSON.stringify([
-                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'Salam, doa, lan absensi murid.' },
-                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'Penjelasan materi jaringan lan diskusi kelompok.' },
-                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Refleksi lan kuis singkat.' }
+                            { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'Salam, doa, dan absensi murid.' },
+                            { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'Penjelasan materi jaringan dan diskusi kelompok.' },
+                            { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Refleksi dan kuis singkat.' }
                         ]),
                         component_img: ''
                     },
@@ -907,7 +913,7 @@
                         ]),
                         component_img: ''
                     },
-                    { id: 12, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan kanggo murid kanthi nilai dhuwur, Remedial kanggo sing butuh bimbingan.', component_img: '' },
+                    { id: 12, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan untuk murid dengan nilai tinggi, Remedial untuk yang membutuhkan bimbingan.', component_img: '' },
                     { id: 13, nama_poin: 'Lampiran LKPD', isi_poin: 'Soal latihan pemahaman jaringan komputer.', component_img: '' }
                 ]
             }
@@ -984,29 +990,26 @@
             localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
             localStorage.setItem('mad_tahun_ajaran', active_tahun_ajaran);
 
-            // Nyimpen data menyang Cloud Firestore kanggo sinkronisasi multi-pangguna
-            if (syncCloud && window.firebaseDb) {
+            // Menyimpan data ke Firestore untuk sinkronisasi multi-user secara real-time
+            if (syncCloud && window.firebaseDb && window.firebaseAuth?.currentUser) {
                 try {
                     const db = window.firebaseDb;
                     const appId = window.firebaseAppId;
 
-                    // Sync data teachers
                     teachers.forEach(t => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
+                        window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
                     });
 
-                    // Sync data modul
                     modul_ajar.forEach(m => {
-                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
+                        window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
                     });
 
-                    // Sync data settings
-                    setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'general'), {
+                    window.setDoc(window.doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'general'), {
                         active_tahun_ajaran,
                         admins
                     });
                 } catch(err) {
-                    console.error("Gagal nyimpen ing cloud:", err);
+                    console.error("Gagal menyimpan ke cloud:", err);
                 }
             }
         }
@@ -1089,7 +1092,7 @@
             if (adminAcc) {
                 currentUser = adminAcc;
                 localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
-                showToast('Login Berhasil minangka Administrator', 'success');
+                showToast('Login Berhasil sebagai Administrator', 'success');
                 navigate('page-admin-dashboard');
                 switchAdminTab('guru');
                 renderTableGuru();
@@ -1107,7 +1110,7 @@
                 return;
             }
 
-            showToast('Username utawa password salah', 'error');
+            showToast('Username atau password salah', 'error');
         }
 
         function logout() {
@@ -1116,7 +1119,7 @@
             localStorage.removeItem('mad_current_user');
             localStorage.removeItem('mad_current_page');
             localStorage.removeItem('mad_selected_modul_id');
-            showToast('Panjenengan wis metu kanthi aman', 'info');
+            showToast('Anda telah logout dengan aman', 'info');
             navigate('page-login');
         }
 
@@ -1170,10 +1173,10 @@
 
         function saveTahunAjaran() {
             const val = document.getElementById('admin-tahun-ajaran').value.trim();
-            if (!val) return showToast('Tahun Ajaran ora kena kosong', 'error');
+            if (!val) return showToast('Tahun Ajaran tidak boleh kosong', 'error');
             active_tahun_ajaran = val;
-            saveDataToStorage();
-            showToast(`Tahun Ajaran aktif dianyari dadi: ${val}`, 'success');
+            saveDataToStorage(true);
+            showToast(`Tahun Ajaran aktif diperbarui menjadi: ${val}`, 'success');
         }
 
         function renderAdminTtdGuruList() {
@@ -1213,10 +1216,10 @@
                 t.nip.includes(query)
             );
 
-            document.getElementById('table-guru-info').innerText = `Nampilake ${filtered.length} saka ${teachers.length} Guru`;
+            document.getElementById('table-guru-info').innerText = `Menampilkan ${filtered.length} dari ${teachers.length} Guru`;
 
             if (filtered.length === 0) {
-                body.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">Ora ana data guru sing ditemokake</td></tr>`;
+                body.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-slate-400">Tidak ada data guru ditemukan</td></tr>`;
                 return;
             }
 
@@ -1260,28 +1263,28 @@
             const newId = teachers.length > 0 ? Math.max(...teachers.map(t => t.id)) + 1 : 1;
             teachers.push({ id: newId, nip, nama_guru: nama, username, password, mata_pelajaran: mapel, role: 'guru', verified: true });
             
-            saveDataToStorage();
+            saveDataToStorage(true);
             closeModalGuru();
             renderTableGuru();
             updateStatistics();
-            showToast('Guru anyar kasil ditambahake', 'success');
+            showToast('Guru baru berhasil ditambahkan', 'success');
         }
 
         function deleteGuru(id) {
-            if (confirm("Serius arep mbusak data guru iki?")) {
+            if (confirm("Yakin ingin menghapus data guru ini?")) {
                 teachers = teachers.filter(t => t.id !== id);
-                if (window.firebaseDb) {
-                    deleteDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString()));
+                if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString()));
                 }
-                saveDataToStorage();
+                saveDataToStorage(true);
                 renderTableGuru();
                 updateStatistics();
-                showToast('Data guru wis dibusak', 'info');
+                showToast('Data guru telah dibusak', 'info');
             }
         }
 
         function renderGuruDashboard() {
-            document.getElementById('guru-welcome-name').innerText = `Sugeng Rawuh, ${currentUser.nama_guru}`;
+            document.getElementById('guru-welcome-name').innerText = `Selamat Datang, ${currentUser.nama_guru}`;
             document.getElementById('guru-welcome-mapel').innerText = currentUser.mata_pelajaran;
 
             const grid = document.getElementById('grid-modul');
@@ -1323,7 +1326,7 @@
                         
                         <div class="flex gap-1 w-full border-t border-slate-50 pt-2">
                             <button onclick="viewCetakModul(${m.id})" class="flex-1 bg-slate-800 hover:bg-slate-950 text-white py-1.5 rounded text-[11px] font-bold transition flex items-center justify-center gap-1">
-                                <i class="fa-solid fa-print"></i> Ndeleng Hasil Cetak
+                                <i class="fa-solid fa-print"></i> Lihat Hasil Cetak
                             </button>
                         </div>
                     </div>
@@ -1336,7 +1339,7 @@
 
         function openFormModul() {
             selectedModulId = null;
-            document.getElementById('creator-title').innerText = "Gawe Modul Ajar Anyar";
+            document.getElementById('creator-title').innerText = "Buat Modul Ajar Baru";
             document.getElementById('modul-judul').value = '';
             document.getElementById('modul-penyusun').value = currentUser.nama_guru;
             document.getElementById('modul-institusi').value = 'SDIT Gema Insan Mandiri';
@@ -1433,7 +1436,7 @@
             const kelas = document.getElementById('modul-kelas').value.trim();
 
             if (!judul || !penyusun || !institusi) {
-                return showToast('Lengkapi kolom sing wajib diisi (*)', 'error');
+                return showToast('Lengkapi kolom yang wajib diisi (*)', 'error');
             }
 
             const details = [];
@@ -1515,20 +1518,20 @@
                 });
             }
 
-            saveDataToStorage(true); // Sync menyang Cloud
+            saveDataToStorage(true); // Sync ke Cloud
             backToGuruDashboard();
-            showToast('Modul kasil disimpen & disinkronisasi!', 'success');
+            showToast('Modul berhasil disimpan & disinkronisasi!', 'success');
         }
 
         function deleteModul(id) {
-            if (confirm("Arep mbusak modul ajar iki?")) {
+            if (confirm("Ingin menghapus modul ajar ini?")) {
                 modul_ajar = modul_ajar.filter(m => m.id !== id);
-                if (window.firebaseDb) {
-                    deleteDoc(doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString()));
+                if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString()));
                 }
                 saveDataToStorage(true);
                 renderGuruDashboard();
-                showToast('Modul dibusak', 'info');
+                showToast('Modul dihapus', 'info');
             }
         }
 
@@ -1627,7 +1630,7 @@
             navigate('page-guru-dashboard');
         }
 
-        // EXPORT WORD & EXCEL (Kanthi Penanganan Format NIY)
+        // EXPORT WORD & EXCEL (Dengan Penanganan Format NIY)
         function exportModulToWord() {
             let m = modul_ajar.find(mod => mod.id === selectedModulId);
             if (!m) return;
