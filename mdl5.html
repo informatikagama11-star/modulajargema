@@ -285,6 +285,16 @@
                             </button>
                         </form>
                     </div>
+
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                        <h3 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-vial text-amber-500"></i> Pengujian Koneksi Firebase
+                        </h3>
+                        <p class="text-xs text-slate-500 mb-4">Uji coba kirim dokumen langsung ke koleksi Firestore proyek modulajargama.</p>
+                        <button type="button" onclick="tesKirimData()" class="bg-amber-600 hover:bg-amber-700 text-white font-semibold px-4 py-2 rounded-xl text-xs transition">
+                            Uji Kirim Data Firestore
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -698,7 +708,7 @@
     <!-- FIREBASE INTEGRATION MODULAJARGAMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Konfigurasi Firebase Proyek modulajargama
         const firebaseConfig = {
@@ -723,9 +733,23 @@
         window.firebaseAppId = appId;
         window.doc = doc;
         window.setDoc = setDoc;
+        window.addDoc = addDoc;
         window.deleteDoc = deleteDoc;
 
         console.log("Firebase & Firestore berhasil terhubung!");
+
+        // Fungsi Uji Kirim Data
+        window.tesKirimData = async function() {
+            try {
+                await addDoc(collection(db, "tes_koleksi"), {
+                    pesan: "Halo Firebase! Data pertama berhasil masuk!",
+                    waktu: new Date().toLocaleString("id-ID")
+                });
+                alert("BERHASIL! Coba cek halaman Firebase Console Anda sekarang.");
+            } catch (error) {
+                alert("Gagal mengirim: " + error.message);
+            }
+        };
 
         // Real-time Sync Listeners
         function setupFirestoreSync() {
