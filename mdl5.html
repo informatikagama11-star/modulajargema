@@ -80,7 +80,7 @@
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900">Portal Administrasi Guru</h2>
-                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun simulasi Anda</p>
+                <p class="text-sm text-slate-500 mt-1">Silakan masuk menggunakan akun Anda</p>
             </div>
 
             <form onsubmit="handleLogin(event)">
@@ -741,15 +741,18 @@
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Konfigurasi Firebase Lingkungan Run-time
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "",
-            authDomain: "demo-app.firebaseapp.com",
-            projectId: "demo-app",
-            storageBucket: "demo-app.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+        // Konfigurasi Firebase Proyek e-learninginformatikakoding
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCY0Vocns8h7tztnu7vcuGTmO3t9CijXM",
+            authDomain: "e-learninginformatikakoding.firebaseapp.com",
+            databaseURL: "https://e-learninginformatikakoding-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "e-learninginformatikakoding",
+            storageBucket: "e-learninginformatikakoding.firebasestorage.app",
+            messagingSenderId: "348044729326",
+            appId: "1:348044729326:web:a7665799e4715de89d8cff",
+            measurementId: "G-2B1HQP5RTX"
         };
+        
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'modul-ajar-gmi-app';
 
         // Inisialisasi Layanan Firebase
@@ -1279,7 +1282,7 @@
                 saveDataToStorage(true);
                 renderTableGuru();
                 updateStatistics();
-                showToast('Data guru telah dibusak', 'info');
+                showToast('Data guru telah dihapus', 'info');
             }
         }
 
