@@ -698,11 +698,9 @@
     <!-- FIREBASE INTEGRATION MODULAJARGAMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-analytics.js";
 
-        // Firebase Configuration
+        // Konfigurasi Firebase Proyek modulajargama
         const firebaseConfig = {
             apiKey: "AIzaSyAvrIJhitGnNxhH1M5g7TMJvT0CRzohYZU",
             authDomain: "modulajargama.firebaseapp.com",
@@ -714,108 +712,86 @@
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'modulajargama-app';
 
-        // Inisialisasi Layanan Firebase
+        // Inisialisasi Firebase & Firestore
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-        try {
-            getAnalytics(app);
-        } catch (e) {
-            console.log("Analytics skipped/initialized");
-        }
 
-        // Ekspor variabel Firebase ke window
+        // Global Ekspor
+        window.app = app;
+        window.db = db;
         window.firebaseDb = db;
-        window.firebaseAuth = auth;
         window.firebaseAppId = appId;
         window.doc = doc;
         window.setDoc = setDoc;
         window.deleteDoc = deleteDoc;
 
-        // Autentikasi Wajib Sebelum Operasi Firestore
-        async function initRealtimeSync() {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (err) {
-                console.warn("Autentikasi Firebase Fallback:", err);
-                if (window.showToast) {
-                    window.showToast("Cek Firebase Console: Pastikan Anonymous Auth diaktifkan", "error");
-                }
-            }
+        console.log("Firebase & Firestore berhasil terhubung!");
 
-            onAuthStateChanged(auth, (user) => {
-                if (!user) return;
-                window.isFirebaseAuthed = true;
-
-                // 1. Listener Real-time Data Guru
-                const guruCol = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
-                onSnapshot(guruCol, (snapshot) => {
-                    let updatedTeachers = [];
-                    snapshot.forEach(docSnap => {
-                        updatedTeachers.push(docSnap.data());
-                    });
-                    if (updatedTeachers.length > 0) {
-                        window.teachers = updatedTeachers;
-                        localStorage.setItem('mad_teachers', JSON.stringify(updatedTeachers));
-                        if (window.currentPage === 'page-admin-dashboard') {
-                            window.renderTableGuru();
-                            window.renderAdminTtdGuruList();
-                        }
-                        window.updateStatistics();
-                    } else if (window.teachers && window.teachers.length > 0) {
-                        // Inisialisasi dokumen pertama jika koleksi cloud masih kosong
-                        window.teachers.forEach(t => {
-                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
-                        });
+        // Real-time Sync Listeners
+        function setupFirestoreSync() {
+            // 1. Sync Guru
+            const guruCol = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
+            onSnapshot(guruCol, (snapshot) => {
+                let updatedTeachers = [];
+                snapshot.forEach(docSnap => {
+                    updatedTeachers.push(docSnap.data());
+                });
+                if (updatedTeachers.length > 0) {
+                    window.teachers = updatedTeachers;
+                    localStorage.setItem('mad_teachers', JSON.stringify(updatedTeachers));
+                    if (window.currentPage === 'page-admin-dashboard') {
+                        window.renderTableGuru();
+                        window.renderAdminTtdGuruList();
                     }
-                }, (error) => console.error("Error listener guru:", error));
-
-                // 2. Listener Real-time Data Modul Ajar
-                const modulCol = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
-                onSnapshot(modulCol, (snapshot) => {
-                    let updatedModul = [];
-                    snapshot.forEach(docSnap => {
-                        updatedModul.push(docSnap.data());
+                    window.updateStatistics();
+                } else if (window.teachers && window.teachers.length > 0) {
+                    window.teachers.forEach(t => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'teachers', t.id.toString()), t);
                     });
-                    if (updatedModul.length > 0) {
-                        window.modul_ajar = updatedModul;
-                        localStorage.setItem('mad_modul_ajar', JSON.stringify(updatedModul));
-                        if (window.currentPage === 'page-guru-dashboard') {
-                            window.renderGuruDashboard();
-                        }
-                        window.updateStatistics();
-                    } else if (window.modul_ajar && window.modul_ajar.length > 0) {
-                        window.modul_ajar.forEach(m => {
-                            setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
-                        });
+                }
+            }, (error) => console.log("Info Firestore guru:", error));
+
+            // 2. Sync Modul Ajar
+            const modulCol = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
+            onSnapshot(modulCol, (snapshot) => {
+                let updatedModul = [];
+                snapshot.forEach(docSnap => {
+                    updatedModul.push(docSnap.data());
+                });
+                if (updatedModul.length > 0) {
+                    window.modul_ajar = updatedModul;
+                    localStorage.setItem('mad_modul_ajar', JSON.stringify(updatedModul));
+                    if (window.currentPage === 'page-guru-dashboard') {
+                        window.renderGuruDashboard();
                     }
-                }, (error) => console.error("Error listener modul:", error));
-
-                // 3. Listener Settings System
-                const settingsCol = collection(db, 'artifacts', appId, 'public', 'data', 'settings');
-                onSnapshot(settingsCol, (snapshot) => {
-                    snapshot.forEach(docSnap => {
-                        if (docSnap.id === 'general') {
-                            const data = docSnap.data();
-                            if (data.active_tahun_ajaran) {
-                                window.active_tahun_ajaran = data.active_tahun_ajaran;
-                                localStorage.setItem('mad_tahun_ajaran', data.active_tahun_ajaran);
-                            }
-                            if (data.admins) {
-                                window.admins = data.admins;
-                                localStorage.setItem('mad_admins', JSON.stringify(data.admins));
-                            }
-                        }
+                    window.updateStatistics();
+                } else if (window.modul_ajar && window.modul_ajar.length > 0) {
+                    window.modul_ajar.forEach(m => {
+                        setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', m.id.toString()), m);
                     });
-                }, (error) => console.error("Error listener settings:", error));
-            });
+                }
+            }, (error) => console.log("Info Firestore modul:", error));
+
+            // 3. Sync Settings
+            const settingsCol = collection(db, 'artifacts', appId, 'public', 'data', 'settings');
+            onSnapshot(settingsCol, (snapshot) => {
+                snapshot.forEach(docSnap => {
+                    if (docSnap.id === 'general') {
+                        const data = docSnap.data();
+                        if (data.active_tahun_ajaran) {
+                            window.active_tahun_ajaran = data.active_tahun_ajaran;
+                            localStorage.setItem('mad_tahun_ajaran', data.active_tahun_ajaran);
+                        }
+                        if (data.admins) {
+                            window.admins = data.admins;
+                            localStorage.setItem('mad_admins', JSON.stringify(data.admins));
+                        }
+                    }
+                });
+            }, (error) => console.log("Info Firestore settings:", error));
         }
 
-        window.initRealtimeSync = initRealtimeSync;
+        window.initRealtimeSync = setupFirestoreSync;
     </script>
 
     <!-- LOGIKA APLIKASI DIGITAL -->
@@ -1097,11 +1073,11 @@
             if (!val) return showToast('Tahun Ajaran tidak boleh kosong', 'error');
             active_tahun_ajaran = val;
             
-            if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+            if (window.firebaseDb) {
                 window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
                     active_tahun_ajaran,
                     admins
-                }, { merge: true });
+                }, { merge: true }).catch(err => console.error(err));
             }
             showToast(`Tahun Ajaran aktif diperbarui menjadi: ${val}`, 'success');
         }
@@ -1135,11 +1111,11 @@
                     localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
                     localStorage.setItem('mad_admins', JSON.stringify(admins));
 
-                    if (window.firebaseDb && window.firebaseAuth?.currentUser) {
+                    if (window.firebaseDb) {
                         window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'settings', 'general'), {
                             active_tahun_ajaran,
                             admins
-                        }, { merge: true });
+                        }, { merge: true }).catch(err => console.error(err));
                     }
                 }
             } else {
@@ -1150,8 +1126,8 @@
                     localStorage.setItem('mad_current_user', JSON.stringify(currentUser));
                     localStorage.setItem('mad_teachers', JSON.stringify(teachers));
 
-                    if (window.firebaseDb && window.firebaseAuth?.currentUser) {
-                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', currentUser.id.toString()), teachers[guruIdx]);
+                    if (window.firebaseDb) {
+                        window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', currentUser.id.toString()), teachers[guruIdx]).catch(err => console.error(err));
                     }
                 }
                 closeModalUbahPassGuru();
@@ -1294,8 +1270,8 @@
             
             localStorage.setItem('mad_teachers', JSON.stringify(teachers));
 
-            if (window.firebaseDb && window.firebaseAuth?.currentUser && targetGuruObj) {
-                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', targetGuruObj.id.toString()), targetGuruObj);
+            if (window.firebaseDb && targetGuruObj) {
+                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', targetGuruObj.id.toString()), targetGuruObj).catch(err => console.error(err));
             }
 
             closeModalGuru();
@@ -1309,8 +1285,8 @@
                 teachers = teachers.filter(t => t.id !== id);
                 localStorage.setItem('mad_teachers', JSON.stringify(teachers));
 
-                if (window.firebaseDb && window.firebaseAuth?.currentUser) {
-                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString()));
+                if (window.firebaseDb) {
+                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'teachers', id.toString())).catch(err => console.error(err));
                 }
                 renderTableGuru();
                 updateStatistics();
@@ -1573,8 +1549,8 @@
 
             localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
 
-            if (window.firebaseDb && window.firebaseAuth?.currentUser && targetModulObj) {
-                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', targetModulObj.id.toString()), targetModulObj);
+            if (window.firebaseDb && targetModulObj) {
+                window.setDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', targetModulObj.id.toString()), targetModulObj).catch(err => console.error(err));
             }
 
             backToGuruDashboard();
@@ -1586,8 +1562,8 @@
                 modul_ajar = modul_ajar.filter(m => m.id !== id);
                 localStorage.setItem('mad_modul_ajar', JSON.stringify(modul_ajar));
 
-                if (window.firebaseDb && window.firebaseAuth?.currentUser) {
-                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString()));
+                if (window.firebaseDb) {
+                    window.deleteDoc(window.doc(window.firebaseDb, 'artifacts', window.firebaseAppId, 'public', 'data', 'modul_ajar', id.toString())).catch(err => console.error(err));
                 }
                 renderGuruDashboard();
                 showToast('Modul dihapus', 'info');
