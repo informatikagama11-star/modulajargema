@@ -40,7 +40,7 @@
 
     <!-- STATUS KONEKSI REALTIME CLOUD -->
     <div id="cloud-sync-badge" class="fixed bottom-4 left-4 z-50 bg-emerald-900/90 text-white text-xs px-3.5 py-2 rounded-full shadow-lg backdrop-blur flex items-center gap-2 no-print border border-emerald-500/30">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span id="cloud-ping-dot" class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
         <span id="cloud-status-text" class="font-medium">Terhubung ke Database Cloud (Realtime)</span>
     </div>
 
@@ -82,7 +82,7 @@
         <!-- LOADING OVERLAY REALTIME -->
         <div id="loading-spinner" class="flex flex-col items-center justify-center my-20 space-y-4">
             <div class="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-            <p class="text-slate-500 font-medium text-sm">Menghubungkan ke Server Cloud Realtime...</p>
+            <p id="loading-spinner-text" class="text-slate-500 font-medium text-sm">Menghubungkan ke Server Cloud Realtime...</p>
         </div>
 
         <!-- 1. HALAMAN LOGIN (Awal Aplikasi) -->
@@ -124,8 +124,9 @@
                 </button>
             </form>
 
-            <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400">
+            <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400 space-y-1">
                 <p>Default Login Admin: <strong class="text-slate-600">admin</strong> / <strong class="text-slate-600">admin123</strong></p>
+                <p>Default Login Guru: <strong class="text-slate-600">suci</strong> / <strong class="text-slate-600">suci123</strong></p>
             </div>
         </div>
 
@@ -157,7 +158,7 @@
                     </div>
                     <div>
                         <p class="text-slate-400 text-xs font-semibold uppercase tracking-wider">Status Sinkronisasi</p>
-                        <p class="text-base font-bold text-emerald-600 flex items-center gap-1.5">
+                        <p id="stat-sync-label" class="text-base font-bold text-emerald-600 flex items-center gap-1.5">
                             <i class="fa-solid fa-rotate animate-spin text-xs"></i> Otomatis & Realtime
                         </p>
                     </div>
@@ -707,7 +708,7 @@
 
                 <div class="flex gap-2">
                     <button type="button" onclick="closeModalGuru()" class="w-1/2 border border-slate-200 text-slate-700 font-semibold py-2 rounded-lg text-sm hover:bg-slate-50 transition">Batal</button>
-                    <button type="submit" id="btn-save-guru" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan ke Cloud</button>
+                    <button type="submit" id="btn-save-guru" class="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg text-sm transition shadow">Simpan</button>
                 </div>
             </form>
         </div>
@@ -717,26 +718,68 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // CONFIG FIREBASE & PATHS
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "",
-            authDomain: "demo-app.firebaseapp.com",
-            projectId: "demo-app",
-            storageBucket: "demo-app.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
+        // CONFIG FIREBASE RESMI DARI FIREBASE CONSOLE ANDA
+        const firebaseConfig = typeof __firebase_config !== 'undefined' && __firebase_config ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyAvrIJhitGnNxhH1M5g7TMJvT0CRzohYZU",
+            authDomain: "modulajargama.firebaseapp.com",
+            projectId: "modulajargama",
+            storageBucket: "modulajargama.firebasestorage.app",
+            messagingSenderId: "586561142348",
+            appId: "1:586561142348:web:ae38a027a204396056fee9",
+            measurementId: "G-G9T86LLD0J"
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sdit-gmi-modul-app';
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+        let app = null;
+        let auth = null;
+        let db = null;
+        let isCloudConnected = false;
 
-        // REALTIME STATE
-        let teachers = [];
-        let modul_ajar = [];
+        // SEED DEFAULT DATA LOKAL (FALLBACK JIKA OFFLINE / TERJADI KENDALA KONEKSI)
+        let teachers = [
+            { id: '1', nip: 'NIY.005.054.024', nama_guru: 'Suci Safina Suliasanu, S.Kom.', username: 'suci', password: 'suci123', mata_pelajaran: 'Koding dan Kecerdasan Artifisial', role: 'guru', verified: true }
+        ];
+        let modul_ajar = [
+            {
+                id: '101',
+                teacher_username: 'suci',
+                judul_modul: 'Jaringan Komputer dan Internet',
+                kelas: 'VI/II / Fase C',
+                alokasi_waktu: '2 JP X 35 Menit',
+                nama_penyusun: 'Suci Safina Suliasanu, S.Kom.',
+                institusi: 'SDIT Gema Insan Mandiri',
+                tahun: '2025/2026',
+                jenjang: 'SD',
+                ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: 'NIY.005.054.024' },
+                ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
+                nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
+                nip_kepsek: 'NIY.005.039.023',
+                gambar_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop',
+                details: [
+                    { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: 'Jaringan komputer, internet, modem Wi-Fi, keamanan online, keamanan jaringan.', component_img: '' },
+                    { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa\nb. Berpikir Kritis\nc. Bergotong Royong\nd. Kreatif', component_img: '' },
+                    { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board\ne. Buku Koding & AI Kelas 6', component_img: '' },
+                    { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: 'Peserta didik reguler maksimum 30 orang.', component_img: '' },
+                    { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Deep Learning', component_img: '' },
+                    { id: 6, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'a. Mengenal jaringan komputer.\nb. Mengenal perangkat jaringan.\nc. Menggunakan internet secara bertanggung jawab.', component_img: '' },
+                    { id: 7, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Peserta didik memahami cara berhubungan ke internet, merawat modem wi-fi, dan menjaga privasi data.', component_img: '' },
+                    { id: 8, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah perangkat modem wi-fi perlu perawatan?\n2. Bagaimana praktik baik berinternet?', component_img: '' },
+                    { id: 9, nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', isTable: true, isi_poin: JSON.stringify([
+                        { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'Salam, doa, presensi, apersepsi.' },
+                        { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'Penayangan materi, diskusi kelompok, pengerjaan LKPD.' },
+                        { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Refleksi, kesimpulan, apresiasi, dan doa penutup.' }
+                    ]), component_img: '' },
+                    { id: 10, nama_poin: 'Rubrik Penilaian Pembelajaran', isRubric: true, isi_poin: JSON.stringify([
+                        { kriteria: 'Pemahaman Materi', s4: 'Sangat Jelas', s3: 'Cukup Jelas', s2: 'Sebagian', s1: 'Tidak Paham' },
+                        { kriteria: 'Kerjasama Kelompok', s4: 'Sangat Aktif', s3: 'Aktif', s2: 'Cukup', s1: 'Pasif' }
+                    ]), component_img: '' },
+                    { id: 11, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan: Kuis Interaktif.\nRemedial: Bimbingan ulang.', component_img: '' },
+                    { id: 12, nama_poin: 'Lampiran LKPD', isi_poin: 'Soal latihan pemahaman jaringan komputer.', component_img: '' }
+                ]
+            }
+        ];
         let system_settings = {
             active_tahun_ajaran: '2025/2026',
             admin_username: 'admin',
@@ -746,14 +789,13 @@
         };
 
         let currentUser = null;
-        let firebaseAuthUser = null;
         let selectedModulId = null;
         let activeAdminTab = 'guru';
 
         // PATHS COLLECTION FIREBASE
-        const teachersColRef = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
-        const modulColRef = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
-        const settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+        let teachersColRef = null;
+        let modulColRef = null;
+        let settingsDocRef = null;
 
         // DEFAULT COMPONENT MODUL
         const DEFAULT_COMPONENTS = [
@@ -778,25 +820,85 @@
             { nama_poin: 'Lampiran LKPD', isi_poin: '', component_img: '' }
         ];
 
-        // INIT AUTH & REALTIME LISTENERS
+        // INIT APP DENGAN TIMEOUT PROTEKSI
         async function initApp() {
+            let isResolved = false;
+
+            const connectionTimeout = setTimeout(() => {
+                if (!isResolved) {
+                    isResolved = true;
+                    setOfflineFallbackMode();
+                }
+            }, 3000);
+
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
+                if (firebaseConfig && firebaseConfig.apiKey && firebaseConfig.apiKey !== "") {
+                    app = initializeApp(firebaseConfig);
+                    auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    teachersColRef = collection(db, 'artifacts', appId, 'public', 'data', 'teachers');
+                    modulColRef = collection(db, 'artifacts', appId, 'public', 'data', 'modul_ajar');
+                    settingsDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'settings', 'config');
+
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    onAuthStateChanged(auth, (user) => {
+                        if (user && !isResolved) {
+                            isResolved = true;
+                            clearTimeout(connectionTimeout);
+                            isCloudConnected = true;
+                            updateBadgeStatus(true);
+                            subscribeRealtimeData();
+                        }
+                    });
                 } else {
-                    await signInAnonymously(auth);
+                    clearTimeout(connectionTimeout);
+                    isResolved = true;
+                    setOfflineFallbackMode();
                 }
             } catch (err) {
-                console.warn("Auth Fallback:", err);
-                await signInAnonymously(auth);
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                firebaseAuthUser = user;
-                if (user) {
-                    subscribeRealtimeData();
+                console.warn("Firebase Init Error, beralih ke Mode Lokal:", err);
+                if (!isResolved) {
+                    isResolved = true;
+                    clearTimeout(connectionTimeout);
+                    setOfflineFallbackMode();
                 }
-            });
+            }
+        }
+
+        function setOfflineFallbackMode() {
+            isCloudConnected = false;
+            updateBadgeStatus(false);
+            
+            document.getElementById('loading-spinner').classList.add('hidden');
+            if (!currentUser) {
+                navigate('page-login');
+            }
+            updateStatistics();
+            renderTableGuru();
+            renderAdminTtdGuruList();
+            showToast('Menggunakan Mode Standar Lokal', 'info');
+        }
+
+        function updateBadgeStatus(connected) {
+            const badgeText = document.getElementById('cloud-status-text');
+            const dot = document.getElementById('cloud-ping-dot');
+            const syncLabel = document.getElementById('stat-sync-label');
+
+            if (connected) {
+                badgeText.innerText = "Terhubung ke Database Cloud (modulajargama)";
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-ping";
+                if (syncLabel) syncLabel.innerHTML = '<i class="fa-solid fa-rotate animate-spin text-xs"></i> Otomatis & Realtime';
+            } else {
+                badgeText.innerText = "Mode Siap Pakai (Standar Lokal)";
+                dot.className = "w-2 h-2 rounded-full bg-amber-400";
+                if (syncLabel) syncLabel.innerHTML = '<i class="fa-solid fa-hard-drive text-xs"></i> Tersimpan di Browser';
+            }
         }
 
         // REALTIME SUBSCRIPTION SNAPSHOTS
@@ -806,7 +908,6 @@
                 if (docSnap.exists()) {
                     system_settings = { ...system_settings, ...docSnap.data() };
                 } else {
-                    // Seed initial settings
                     setDoc(settingsDocRef, system_settings);
                 }
                 document.getElementById('admin-tahun-ajaran').value = system_settings.active_tahun_ajaran;
@@ -821,7 +922,6 @@
                     teachers.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Seed teacher default jika kosong
                 if (snapshot.empty) {
                     const defaultTeacherDoc = doc(teachersColRef);
                     setDoc(defaultTeacherDoc, {
@@ -839,12 +939,14 @@
                 renderTableGuru();
                 renderAdminTtdGuruList();
 
-                // Sembunyikan spinner loading saat data cloud siap
                 document.getElementById('loading-spinner').classList.add('hidden');
                 if (!currentUser) {
                     navigate('page-login');
                 }
-            }, (error) => console.error("Teachers listener error:", error));
+            }, (error) => {
+                console.error("Teachers listener error:", error);
+                setOfflineFallbackMode();
+            });
 
             // 3. Modul Ajar Listener
             onSnapshot(modulColRef, (snapshot) => {
@@ -853,46 +955,9 @@
                     modul_ajar.push({ id: doc.id, ...doc.data() });
                 });
 
-                // Seed modul default jika kosong
                 if (snapshot.empty) {
                     const defaultModulDoc = doc(modulColRef);
-                    setDoc(defaultModulDoc, {
-                        teacher_id: 'default_teacher',
-                        teacher_username: 'suci',
-                        judul_modul: 'Jaringan Komputer dan Internet',
-                        kelas: 'VI/II / Fase C',
-                        alokasi_waktu: '2 JP X 35 Menit',
-                        nama_penyusun: 'Suci Safina Suliasanu, S.Kom.',
-                        institusi: 'SDIT Gema Insan Mandiri',
-                        tahun: '2025/2026',
-                        jenjang: 'SD',
-                        ttd_guru: { hasImage: false, isChecked: true, imageBase64: '', nip: 'NIY.005.054.024' },
-                        ttd_kepsek: { hasImage: false, isChecked: true, imageBase64: '' },
-                        nama_kepsek: 'Muhamad Fadlillah, S.Kom.',
-                        nip_kepsek: 'NIY.005.039.023',
-                        gambar_url: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=800&auto=format&fit=crop',
-                        details: [
-                            { id: 1, nama_poin: 'Kompetensi Awal', isi_poin: 'Jaringan komputer, internet, modem Wi-Fi, keamanan online, keamanan jaringan.', component_img: 'https://images.unsplash.com/photo-1551703599-6b3dbb3f6a23?w=500&auto=format&fit=crop' },
-                            { id: 2, nama_poin: 'Profil Pelajar Pancasila', isi_poin: 'a. Bertakwa kepada Tuhan Yang Maha Esa\nb. Berpikir Kritis\nc. Bergotong Royong\nd. Kreatif', component_img: '' },
-                            { id: 3, nama_poin: 'Sarana dan Prasarana', isi_poin: 'a. Alat tulis\nb. Proyektor\nc. Laptop\nd. White board\ne. Buku Koding & AI Kelas 6', component_img: '' },
-                            { id: 4, nama_poin: 'Target Peserta Didik', isi_poin: 'Peserta didik reguler maksimum 30 orang.', component_img: '' },
-                            { id: 5, nama_poin: 'Model Pembelajaran', isi_poin: 'Deep Learning', component_img: '' },
-                            { id: 6, nama_poin: 'Tujuan Pembelajaran', isi_poin: 'a. Mengenal jaringan komputer.\nb. Mengenal perangkat jaringan.\nc. Menggunakan internet secara bertanggung jawab.', component_img: '' },
-                            { id: 7, nama_poin: 'Pemahaman Bermakna', isi_poin: 'Peserta didik memahami cara berhubungan ke internet, merawat modem wi-fi, dan menjaga privasi data.', component_img: '' },
-                            { id: 8, nama_poin: 'Pertanyaan Pemantik', isi_poin: '1. Apakah perangkat modem wi-fi perlu perawatan?\n2. Bagaimana praktik baik berinternet?', component_img: '' },
-                            { id: 9, nama_poin: 'Kegiatan Pembelajaran (Pertemuan Pertama)', isTable: true, isi_poin: JSON.stringify([
-                                { fase: 'Kegiatan Pendahuluan', waktu: '10 Menit', detail: 'Salam, doa, presensi, apersepsi.' },
-                                { fase: 'Kegiatan Inti', waktu: '45 Menit', detail: 'Penayangan materi, diskusi kelompok, pengerjaan LKPD.' },
-                                { fase: 'Kegiatan Penutup', waktu: '15 Menit', detail: 'Refleksi, kesimpulan, apresiasi, dan doa penutup.' }
-                            ]), component_img: '' },
-                            { id: 10, nama_poin: 'Rubrik Penilaian Pembelajaran', isRubric: true, isi_poin: JSON.stringify([
-                                { kriteria: 'Pemahaman Materi', s4: 'Sangat Jelas', s3: 'Cukup Jelas', s2: 'Sebagian', s1: 'Tidak Paham' },
-                                { kriteria: 'Kerjasama Kelompok', s4: 'Sangat Aktif', s3: 'Aktif', s2: 'Cukup', s1: 'Pasif' }
-                            ]), component_img: '' },
-                            { id: 11, nama_poin: 'Remedial & Pengayaan', isi_poin: 'Pengayaan: Kuis Interaktif.\nRemedial: Bimbingan ulang.', component_img: '' },
-                            { id: 12, nama_poin: 'Lampiran LKPD', isi_poin: 'Soal latihan pemahaman jaringan komputer.', component_img: '' }
-                        ]
-                    });
+                    setDoc(defaultModulDoc, modul_ajar[0]);
                 }
 
                 updateStatistics();
@@ -970,7 +1035,7 @@
 
             if (userInp === system_settings.admin_username && passInp === system_settings.admin_password) {
                 currentUser = { username: system_settings.admin_username, role: 'admin' };
-                showToast('Login Admin Berhasil! Terhubung Cloud.', 'success');
+                showToast('Login Admin Berhasil!', 'success');
                 navigate('page-admin-dashboard');
                 switchAdminTab('guru');
                 return;
@@ -985,7 +1050,7 @@
                 return;
             }
 
-            showToast('Username / Password salah atau tidak terdaftar di Cloud!', 'error');
+            showToast('Username / Password salah!', 'error');
         }
 
         function logout() {
@@ -1139,14 +1204,18 @@
         async function toggleTeacherVerification(id) {
             const t = teachers.find(item => item.id === id);
             if (t) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
-                await updateDoc(docRef, { verified: !t.verified });
-                showToast(`Status otorisasi QR ${t.nama_guru} diperbarui di Cloud`, 'success');
+                t.verified = !t.verified;
+                if (isCloudConnected && db) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
+                    await updateDoc(docRef, { verified: t.verified });
+                }
+                showToast(`Status otorisasi QR ${t.nama_guru} diperbarui`, 'success');
+                renderAdminTtdGuruList();
             }
         }
 
         function openModalGuru() {
-            document.getElementById('modal-guru-title').innerText = "Tambah Guru Baru (Cloud)";
+            document.getElementById('modal-guru-title').innerText = "Tambah Guru Baru";
             document.getElementById('guru-id').value = '';
             document.getElementById('guru-nip').value = '';
             document.getElementById('guru-nama').value = '';
@@ -1184,15 +1253,27 @@
                 verified: true
             };
 
-            if (id) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
-                await updateDoc(docRef, guruPayload);
-                showToast('Data guru diperbarui di Cloud Realtime!', 'success');
+            if (isCloudConnected && db) {
+                if (id) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
+                    await updateDoc(docRef, guruPayload);
+                } else {
+                    await addDoc(teachersColRef, guruPayload);
+                }
             } else {
-                await addDoc(teachersColRef, guruPayload);
-                showToast('Guru baru berhasil disimpan di Cloud Realtime!', 'success');
+                if (id) {
+                    const idx = teachers.findIndex(t => t.id === id);
+                    if (idx !== -1) teachers[idx] = { ...teachers[idx], ...guruPayload };
+                } else {
+                    guruPayload.id = Date.now().toString();
+                    teachers.push(guruPayload);
+                }
+                renderTableGuru();
+                renderAdminTtdGuruList();
+                updateStatistics();
             }
 
+            showToast('Data guru berhasil disimpan!', 'success');
             closeModalGuru();
         }
 
@@ -1200,7 +1281,7 @@
             const guru = teachers.find(t => t.id === id);
             if (!guru) return;
 
-            document.getElementById('modal-guru-title').innerText = "Edit Data Guru (Cloud)";
+            document.getElementById('modal-guru-title').innerText = "Edit Data Guru";
             document.getElementById('guru-id').value = guru.id;
             document.getElementById('guru-nip').value = guru.nip;
             document.getElementById('guru-nama').value = guru.nama_guru;
@@ -1212,10 +1293,17 @@
         }
 
         async function deleteGuru(id) {
-            if (confirm("Apakah Anda yakin ingin menghapus data guru ini dari Cloud?")) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
-                await deleteDoc(docRef);
-                showToast('Data guru telah dihapus dari Cloud', 'info');
+            if (confirm("Apakah Anda yakin ingin menghapus data guru ini?")) {
+                if (isCloudConnected && db) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'teachers', id);
+                    await deleteDoc(docRef);
+                } else {
+                    teachers = teachers.filter(t => t.id !== id);
+                    renderTableGuru();
+                    renderAdminTtdGuruList();
+                    updateStatistics();
+                }
+                showToast('Data guru telah dihapus', 'info');
             }
         }
 
@@ -1225,16 +1313,24 @@
                 showToast('Tahun Ajaran tidak boleh kosong', 'error');
                 return;
             }
-            await setDoc(settingsDocRef, { active_tahun_ajaran: val }, { merge: true });
-            showToast(`Tahun Ajaran Cloud diperbarui ke: ${val}`, 'success');
+            system_settings.active_tahun_ajaran = val;
+            if (isCloudConnected && db) {
+                await setDoc(settingsDocRef, { active_tahun_ajaran: val }, { merge: true });
+            }
+            showToast(`Tahun Ajaran diperbarui ke: ${val}`, 'success');
         }
 
         async function saveKepsekSettings() {
             const nama = document.getElementById('admin-kepsek-name').value.trim();
             const niy = document.getElementById('admin-kepsek-niy').value.trim();
 
-            await setDoc(settingsDocRef, { kepsek_nama: nama, kepsek_niy: niy }, { merge: true });
-            showToast('Data Kepala Sekolah diperbarui di Cloud', 'success');
+            system_settings.kepsek_nama = nama;
+            system_settings.kepsek_niy = niy;
+
+            if (isCloudConnected && db) {
+                await setDoc(settingsDocRef, { kepsek_nama: nama, kepsek_niy: niy }, { merge: true });
+            }
+            showToast('Data Kepala Sekolah diperbarui', 'success');
         }
 
         async function handleUpdateProfilAdmin(event) {
@@ -1248,8 +1344,13 @@
                 return;
             }
 
-            await setDoc(settingsDocRef, { admin_username: usernameInp, admin_password: newPass }, { merge: true });
-            showToast('Kredensial Admin Cloud berhasil diubah', 'success');
+            system_settings.admin_username = usernameInp;
+            system_settings.admin_password = newPass;
+
+            if (isCloudConnected && db) {
+                await setDoc(settingsDocRef, { admin_username: usernameInp, admin_password: newPass }, { merge: true });
+            }
+            showToast('Kredensial Admin berhasil diubah', 'success');
         }
 
         function exportDataGuru() {
@@ -1262,11 +1363,11 @@
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "Database_Guru_Cloud.csv");
+            link.setAttribute("download", "Database_Guru.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            showToast('Ekspor CSV dari Cloud berhasil', 'success');
+            showToast('Ekspor CSV berhasil', 'success');
         }
 
         function importDataGuru(event) {
@@ -1284,7 +1385,7 @@
                     if (!line) continue;
                     const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, ''));
                     if (cols.length >= 5) {
-                        await addDoc(teachersColRef, {
+                        const payload = {
                             nip: cols[0],
                             nama_guru: cols[1],
                             username: cols[2],
@@ -1292,11 +1393,22 @@
                             mata_pelajaran: cols[4],
                             role: 'guru',
                             verified: true
-                        });
+                        };
+                        if (isCloudConnected && db) {
+                            await addDoc(teachersColRef, payload);
+                        } else {
+                            payload.id = Date.now().toString() + i;
+                            teachers.push(payload);
+                        }
                         count++;
                     }
                 }
-                showToast(`Impor Cloud Berhasil! ${count} Guru disimpan.`, 'success');
+                if (!isCloudConnected) {
+                    renderTableGuru();
+                    renderAdminTtdGuruList();
+                    updateStatistics();
+                }
+                showToast(`Impor Berhasil! ${count} Guru disimpan.`, 'success');
             };
             reader.readAsText(file);
             event.target.value = '';
@@ -1311,7 +1423,6 @@
             const emptyState = document.getElementById('empty-state-modul');
             grid.innerHTML = '';
 
-            // Tampilkan modul guru aktif atau seluruh modul jika diizinkan
             const myModul = modul_ajar.filter(m => m.teacher_username === currentUser.username || m.nama_penyusun === currentUser.nama_guru);
 
             if (myModul.length === 0) {
@@ -1331,8 +1442,8 @@
                     <div class="space-y-2">
                         <div class="flex justify-between items-start gap-2">
                             <span class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">${m.kelas}</span>
-                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 bg-emerald-50 text-emerald-700 border-emerald-100">
-                                <i class="fa-solid fa-cloud"></i> TERHUBUNG CLOUD
+                            <span class="text-[10px] font-bold px-2.5 py-1 rounded-full border flex items-center gap-1 ${isCloudConnected ? 'bg-emerald-50 text-emerald-700 border-emerald-100' : 'bg-slate-100 text-slate-700'}">
+                                <i class="fa-solid ${isCloudConnected ? 'fa-cloud' : 'fa-hard-drive'}"></i> ${isCloudConnected ? 'CLOUD' : 'LOKAL'}
                             </span>
                         </div>
                         <h4 class="font-bold text-slate-900 line-clamp-2 leading-snug hover:text-indigo-600 transition cursor-pointer" onclick="editExistingModul('${m.id}')">${m.judul_modul}</h4>
@@ -1364,7 +1475,7 @@
 
         function openFormModul() {
             selectedModulId = null;
-            document.getElementById('creator-title').innerText = "Buat Modul Ajar Baru (Cloud Realtime)";
+            document.getElementById('creator-title').innerText = "Buat Modul Ajar Baru";
             
             document.getElementById('modul-judul').value = '';
             document.getElementById('modul-penyusun').value = currentUser.nama_guru;
@@ -1394,7 +1505,7 @@
             if (!m) return;
 
             selectedModulId = m.id;
-            document.getElementById('creator-title').innerText = "Penyuntingan Modul Cloud";
+            document.getElementById('creator-title').innerText = "Penyuntingan Modul Ajar";
 
             document.getElementById('modul-judul').value = m.judul_modul;
             document.getElementById('modul-penyusun').value = m.nama_penyusun;
@@ -1728,23 +1839,38 @@
                 details
             };
 
-            if (selectedModulId) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', selectedModulId);
-                await updateDoc(docRef, modulPayload);
-                showToast('Modul berhasil diperbarui di Cloud Realtime!', 'success');
+            if (isCloudConnected && db) {
+                if (selectedModulId) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', selectedModulId);
+                    await updateDoc(docRef, modulPayload);
+                } else {
+                    await addDoc(modulColRef, modulPayload);
+                }
             } else {
-                await addDoc(modulColRef, modulPayload);
-                showToast('Modul baru tersimpan secara otomatis di Cloud Realtime!', 'success');
+                if (selectedModulId) {
+                    const idx = modul_ajar.findIndex(m => m.id === selectedModulId);
+                    if (idx !== -1) modul_ajar[idx] = { ...modul_ajar[idx], ...modulPayload };
+                } else {
+                    modulPayload.id = Date.now().toString();
+                    modul_ajar.push(modulPayload);
+                }
+                renderGuruDashboard();
             }
 
+            showToast('Modul berhasil disimpan!', 'success');
             backToGuruDashboard();
         }
 
         async function deleteModul(id) {
-            if (confirm("Hapus modul ajar ini dari Cloud?")) {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', id);
-                await deleteDoc(docRef);
-                showToast('Modul dihapus dari Cloud', 'info');
+            if (confirm("Hapus modul ajar ini?")) {
+                if (isCloudConnected && db) {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'modul_ajar', id);
+                    await deleteDoc(docRef);
+                } else {
+                    modul_ajar = modul_ajar.filter(m => m.id !== id);
+                    renderGuruDashboard();
+                }
+                showToast('Modul dihapus', 'info');
             }
         }
 
@@ -1776,7 +1902,7 @@
 
             const isAnyBarcodeActive = m.ttd_guru?.isChecked || m.ttd_kepsek?.isChecked;
             document.getElementById('print-verification-status').innerHTML = isAnyBarcodeActive
-                ? `Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-shield-check"></i> Barcode QR Terverifikasi Cloud</span>`
+                ? `Status Keabsahan: <span class="text-emerald-600 font-semibold"><i class="fa-solid fa-shield-check"></i> Barcode QR Terverifikasi</span>`
                 : `Status Keabsahan: <span class="text-amber-600 font-semibold"><i class="fa-solid fa-file-signature"></i> Tanda Tangan Basah</span>`;
 
             const printImgContainer = document.getElementById('print-image-container');
@@ -1898,7 +2024,7 @@
                 const qrKepsek = generateQRCodeSVG(`MAD-VERIFY-KEPSEK:${m.nama_kepsek}:${m.nip_kepsek}`);
                 ttdAreaKepsek.innerHTML = `
                     <div class="p-1 bg-white border border-slate-300 rounded-md shadow-sm">${qrKepsek}</div>
-                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Cloud Kepsek</span>
+                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Kepsek</span>
                 `;
             } else {
                 ttdAreaKepsek.innerHTML = `<div class="h-16 flex items-end justify-center"><span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span></div><div class="w-40 border-b border-slate-400 mt-2"></div>`;
@@ -1909,7 +2035,7 @@
                 const qrGuru = generateQRCodeSVG(`MAD-VERIFY-GURU:${m.nama_penyusun}:${m.ttd_guru?.nip}`);
                 ttdAreaGuru.innerHTML = `
                     <div class="p-1 bg-white border border-slate-300 rounded-md shadow-sm">${qrGuru}</div>
-                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Cloud Guru</span>
+                    <span class="text-[9px] text-slate-400 mt-1 uppercase tracking-wider">Verifikasi Guru</span>
                 `;
             } else {
                 ttdAreaGuru.innerHTML = `<div class="h-16 flex items-end justify-center"><span class="text-slate-300 italic text-[10px] select-none">( Tanda Tangan Basah )</span></div><div class="w-40 border-b border-slate-400 mt-2"></div>`;
@@ -1918,7 +2044,7 @@
             const today = new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
             document.getElementById('print-date-today').innerText = `Jakarta, ${today}`;
             const now = new Date();
-            document.getElementById('print-datetime').innerText = `Dicetak dari Cloud: ${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID')}`;
+            document.getElementById('print-datetime').innerText = `Dicetak: ${now.toLocaleDateString('id-ID')} ${now.toLocaleTimeString('id-ID')}`;
 
             navigate('page-print-preview');
         }
@@ -1933,7 +2059,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(m, null, 4));
             const link = document.createElement("a");
             link.setAttribute("href", dataStr);
-            link.setAttribute("download", `Modul_Cloud_${m.judul_modul.replace(/\s+/g, '_')}.json`);
+            link.setAttribute("download", `Modul_${m.judul_modul.replace(/\s+/g, '_')}.json`);
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1955,7 +2081,7 @@
             const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(template, null, 4));
             const link = document.createElement("a");
             link.setAttribute("href", dataStr);
-            link.setAttribute("download", "Template_Modul_Digital_Cloud.json");
+            link.setAttribute("download", "Template_Modul_Digital.json");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -1988,8 +2114,14 @@
                             gambar_url: imported.gambar_url || '',
                             details: imported.details || DEFAULT_COMPONENTS
                         };
-                        await addDoc(modulColRef, newModul);
-                        showToast(`Modul '${newModul.judul_modul}' berhasil diimpor ke Cloud!`, 'success');
+                        if (isCloudConnected && db) {
+                            await addDoc(modulColRef, newModul);
+                        } else {
+                            newModul.id = Date.now().toString();
+                            modul_ajar.push(newModul);
+                            renderGuruDashboard();
+                        }
+                        showToast(`Modul '${newModul.judul_modul}' berhasil diimpor!`, 'success');
                     } catch (err) {
                         showToast('Berkas JSON tidak valid.', 'error');
                     }
