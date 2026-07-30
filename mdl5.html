@@ -123,11 +123,6 @@
                     Masuk Sekarang <i class="fa-solid fa-arrow-right-to-bracket ml-2"></i>
                 </button>
             </form>
-
-            <div class="mt-6 pt-4 border-t border-slate-100 text-center text-xs text-slate-400 space-y-1">
-                <p>Default Login Admin: <strong class="text-slate-600">admin</strong> / <strong class="text-slate-600">admin123</strong></p>
-                <p>Default Login Guru: <strong class="text-slate-600">suci</strong> / <strong class="text-slate-600">suci123</strong></p>
-            </div>
         </div>
 
         <!-- 2. DASHBOARD ADMIN -->
@@ -1452,10 +1447,13 @@
 
                     <div class="border-t border-slate-100 pt-3 flex justify-between items-center mt-3">
                         <div class="flex gap-1.5">
-                            <button onclick="editExistingModul('${m.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
+                            <button onclick="editExistingModul('${m.id}')" class="text-indigo-600 hover:bg-indigo-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Edit Modul">
                                 <i class="fa-solid fa-pen-to-square"></i> Edit
                             </button>
-                            <button onclick="deleteModul('${m.id}')" class="text-red-600 hover:bg-red-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition">
+                            <button onclick="duplicateModul('${m.id}')" class="text-emerald-600 hover:bg-emerald-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Duplikat Modul">
+                                <i class="fa-solid fa-copy"></i> Duplikat
+                            </button>
+                            <button onclick="deleteModul('${m.id}')" class="text-red-600 hover:bg-red-50 p-2 rounded-lg text-xs font-semibold flex items-center gap-1 transition" title="Hapus Modul">
                                 <i class="fa-solid fa-trash"></i> Hapus
                             </button>
                         </div>
@@ -1471,6 +1469,32 @@
                 `;
                 grid.appendChild(card);
             });
+        }
+
+        // FUNGSI DUPLIKAT MODUL
+        async function duplicateModul(id) {
+            const sourceModul = modul_ajar.find(mod => mod.id === id);
+            if (!sourceModul) return;
+
+            const duplicatedData = {
+                ...JSON.parse(JSON.stringify(sourceModul)), // Deep copy agar tidak mereferensikan objek lama
+                judul_modul: `${sourceModul.judul_modul} (Salinan)`,
+                nama_penyusun: currentUser ? currentUser.nama_guru : sourceModul.nama_penyusun,
+                teacher_username: currentUser ? currentUser.username : sourceModul.teacher_username
+            };
+            
+            // Hapus ID lama agar tergenerasi ID baru
+            delete duplicatedData.id;
+
+            if (isCloudConnected && db) {
+                await addDoc(modulColRef, duplicatedData);
+            } else {
+                duplicatedData.id = Date.now().toString();
+                modul_ajar.push(duplicatedData);
+                renderGuruDashboard();
+            }
+
+            showToast(`Berhasil menduplikat modul '${sourceModul.judul_modul}'!`, 'success');
         }
 
         function openFormModul() {
@@ -2145,6 +2169,7 @@
         window.togglePasswordVisibility = togglePasswordVisibility;
         window.openFormModul = openFormModul;
         window.editExistingModul = editExistingModul;
+        window.duplicateModul = duplicateModul;
         window.deleteModul = deleteModul;
         window.downloadModulJSON = downloadModulJSON;
         window.downloadJSONTemplate = downloadJSONTemplate;
