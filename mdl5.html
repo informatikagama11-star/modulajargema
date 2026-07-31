@@ -664,7 +664,7 @@
 
                         <div class="flex flex-col items-center justify-between h-48">
                             <div>
-                                <p class="text-slate-500 text-[11px]" id="print-date-today">Bekasi, -</p>
+                                <p class="text-slate-500 text-[11px]" id="print-date-today">Jakarta, -</p>
                                 <p class="font-bold text-slate-900">Guru Mata Pelajaran</p>
                             </div>
                             <div id="print-ttd-area-guru" class="my-2"></div>
@@ -1796,7 +1796,7 @@ Hasilkan data JSON terstruktur sesuai format berikut:
             document.getElementById('print-ttd-area-kepsek').innerHTML = `<img src="${qrUrlKepsek}" class="w-20 h-20 mx-auto rounded border border-slate-200" alt="QR Validasi Kepsek">`;
 
             const now = new Date();
-            const dateStr = `Bekasi, ${now.getDate()} ${['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()]} ${now.getFullYear()}`;
+            const dateStr = `Jakarta, ${now.getDate()} ${['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'][now.getMonth()]} ${now.getFullYear()}`;
             document.getElementById('print-date-today').innerText = dateStr;
         };
 
